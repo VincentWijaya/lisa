@@ -1,4 +1,5 @@
 class WorksController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_work, only: %i[show validate_work verify_work cancel_work barcode_label]
 
   def index

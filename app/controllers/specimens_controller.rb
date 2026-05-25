@@ -1,4 +1,5 @@
 class SpecimensController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_specimen, only: %i[show barcode_labels]
 
   def index
