@@ -1,0 +1,80 @@
+<div class="mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <h1 class="text-3xl font-semibold text-slate-900">Works</h1>
+      <p class="mt-2 text-sm text-slate-600">Track barcode work items, validate, verify, or cancel as needed.</p>
+    </div>
+    <%= link_to "Back to dashboard", root_path, class: "rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50" %>
+  </div>
+
+  <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+    <%= form_with url: works_path, method: :get, local: true, class: "grid gap-4 lg:grid-cols-4" do |form| %>
+      <div>
+        <%= form.label :status, class: "mb-2 block text-sm font-medium text-slate-700" %>
+        <%= form.select :status, options_for_select([["All", ""]] + Work.statuses.keys.map { |status| [status.humanize, status] }, params[:status]), {}, class: "w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" %>
+      </div>
+      <div>
+        <%= form.label :lab_id, "Lab ID", class: "mb-2 block text-sm font-medium text-slate-700" %>
+        <%= form.text_field :lab_id, value: params[:lab_id], class: "w-full rounded-lg border border-slate-300 px-3 py-2 text-sm", placeholder: "Filter by lab ID" %>
+      </div>
+      <div class="lg:col-span-2">
+        <%= form.label :query, "Search", class: "mb-2 block text-sm font-medium text-slate-700" %>
+        <%= form.text_field :query, value: params[:query], class: "w-full rounded-lg border border-slate-300 px-3 py-2 text-sm", placeholder: "Barcode, patient ID, MRN, or patient name" %>
+      </div>
+      <div class="flex items-end gap-3 lg:col-span-4">
+        <%= form.submit "Apply filters", class: "rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700" %>
+        <%= link_to "Reset", works_path, class: "rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-slate-200 text-sm">
+        <thead class="bg-slate-50">
+          <tr>
+            <% ["Barcode ID", "Patient", "Examination", "Result", "Interpretation", "Status", "Created At", "Actions"].each do |heading| %>
+              <th class="px-4 py-3 text-left font-semibold text-slate-700"><%= heading %></th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          <% @works.each do |work| %>
+            <tr>
+              <td class="px-4 py-4 font-medium text-slate-900"><%= link_to work.barcode_id, work_path(work), class: "hover:text-sky-700" %></td>
+              <td class="px-4 py-4 text-slate-700">
+                <div class="font-medium text-slate-900"><%= work.specimen.patient_name %></div>
+                <div class="text-xs text-slate-500"><%= work.specimen.patient_id %> • <%= work.specimen.medical_record_id %></div>
+              </td>
+              <td class="px-4 py-4 text-slate-700"><%= work_display_name(work) %></td>
+              <td class="px-4 py-4 text-slate-700"><%= work_result_value(work) %></td>
+              <td class="px-4 py-4"><%= work_interpretation_badge(work) %></td>
+              <td class="px-4 py-4"><span class="rounded-full px-3 py-1 text-xs font-semibold <%= work_status_classes(work.status) %>"><%= work.status.humanize %></span></td>
+              <td class="px-4 py-4 text-slate-500"><%= l(work.created_at, format: :short) %></td>
+              <td class="px-4 py-4">
+                <div class="flex flex-wrap gap-2">
+                  <%= link_to "View", work_path(work), class: secondary_action_button_classes %>
+                  <% if work.pending? %>
+                    <%= button_to "Validate", validate_work_work_path(work), method: :patch, class: primary_action_button_classes %>
+                  <% end %>
+                  <% if work.validated? %>
+                    <%= button_to "Verify", verify_work_work_path(work), method: :patch, class: primary_action_button_classes("bg-emerald-600 hover:bg-emerald-500") %>
+                  <% end %>
+                  <% unless work.verified? || work.cancelled? %>
+                    <%= button_to "Cancel", cancel_work_work_path(work), method: :patch, class: primary_action_button_classes("bg-rose-600 hover:bg-rose-500") %>
+                  <% end %>
+                  <%= link_to "Print Barcode", barcode_label_work_path(work), class: secondary_action_button_classes, target: "_blank", rel: "noopener" %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+          <% if @works.empty? %>
+            <tr>
+              <td colspan="8" class="px-4 py-10 text-center text-sm text-slate-500">No work records matched the current filters.</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

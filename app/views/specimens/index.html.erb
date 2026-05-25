@@ -1,0 +1,49 @@
+<div class="mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <h1 class="text-3xl font-semibold text-slate-900">Specimens</h1>
+      <p class="mt-2 text-sm text-slate-600">Review specimen intake and print grouped barcode labels.</p>
+    </div>
+    <%= link_to "Back to dashboard", root_path, class: "rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50" %>
+  </div>
+
+  <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-slate-200 text-sm">
+        <thead class="bg-slate-50">
+          <tr>
+            <% ["Order Number", "Patient", "Lab ID", "Status", "Collected At", "Works", "Actions"].each do |heading| %>
+              <th class="px-4 py-3 text-left font-semibold text-slate-700"><%= heading %></th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          <% @specimens.each do |specimen| %>
+            <tr>
+              <td class="px-4 py-4 font-medium text-slate-900"><%= link_to specimen.order_number, specimen_path(specimen), class: "hover:text-sky-700" %></td>
+              <td class="px-4 py-4 text-slate-700">
+                <div class="font-medium text-slate-900"><%= specimen.patient_name %></div>
+                <div class="text-xs text-slate-500"><%= specimen_summary(specimen) %></div>
+              </td>
+              <td class="px-4 py-4 text-slate-700"><%= specimen.lab_id %></td>
+              <td class="px-4 py-4"><span class="rounded-full px-3 py-1 text-xs font-semibold <%= specimen_status_classes(specimen.status) %>"><%= specimen.status.humanize %></span></td>
+              <td class="px-4 py-4 text-slate-500"><%= specimen.collection_datetime ? l(specimen.collection_datetime, format: :short) : "-" %></td>
+              <td class="px-4 py-4 text-slate-700"><%= specimen.works.size %></td>
+              <td class="px-4 py-4">
+                <div class="flex flex-wrap gap-2">
+                  <%= link_to "View", specimen_path(specimen), class: secondary_action_button_classes %>
+                  <%= link_to "Print Labels", barcode_labels_specimen_path(specimen), class: secondary_action_button_classes, target: "_blank", rel: "noopener" %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+          <% if @specimens.empty? %>
+            <tr>
+              <td colspan="7" class="px-4 py-10 text-center text-sm text-slate-500">No specimens have been created yet.</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
