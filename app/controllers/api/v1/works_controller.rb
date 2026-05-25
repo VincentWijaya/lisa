@@ -3,6 +3,9 @@ module Api
     class WorksController < BaseController
       def index
         scope = Work.order(created_at: :desc)
+        last_modified = scope.maximum(:updated_at) || Time.at(0)
+        return unless stale?(last_modified: last_modified, public: false)
+
         pagy, works = pagy(scope, limit: pagination_limit)
         pagy_headers_merge(pagy)
         render json: {
@@ -13,6 +16,8 @@ module Api
 
       def show
         work = Work.find(params[:id])
+        return unless stale?(work, public: false)
+
         render json: WorkSerializer.serialize(work)
       end
 

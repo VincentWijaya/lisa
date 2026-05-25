@@ -19,6 +19,8 @@ class Specimen < ApplicationRecord
   scope :today, -> { where(created_at: Time.current.all_day) }
   scope :with_works, -> { includes(works: :examination) }
 
+  after_commit :expire_dashboard_cache
+
   def age_in_years
     return nil unless birth_date
 
@@ -26,5 +28,11 @@ class Specimen < ApplicationRecord
     years = today.year - birth_date.year
     years -= 1 if today < birth_date + years.years
     years
+  end
+
+  private
+
+  def expire_dashboard_cache
+    Rails.cache.delete("dashboard/stats")
   end
 end

@@ -44,6 +44,8 @@ class Work < ApplicationRecord
     end
   }
 
+  after_commit :expire_dashboard_cache
+
   def latest_result
     if association(:examination_results).loaded?
       examination_results.max_by(&:created_at)
@@ -53,6 +55,10 @@ class Work < ApplicationRecord
   end
 
   private
+
+  def expire_dashboard_cache
+    Rails.cache.delete("dashboard/stats")
+  end
 
   def status_transition_valid
     return if new_record?
