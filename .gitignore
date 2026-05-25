@@ -21,7 +21,7 @@
 !/tmp/pids/
 !/tmp/pids/.keep
 
-# Ignore storage (uploaded files in development and any SQLite databases).
+# Ignore storage (uploaded files in development).
 /storage/*
 !/storage/.keep
 /tmp/storage/*
@@ -34,5 +34,56 @@
 /config/*.key
 
 
+# Ignore built assets
 /app/assets/builds/*
 !/app/assets/builds/.keep
+
+# Ignore PostgreSQL command history and local dump files
+.psql_history
+/db/*.dump
+/db/*.sql
+
+# DO NOT ignore db/schema.rb or db/structure.sql 
+# They are required to boot your database on other machines!
+
+# Ignore master key and credentials for security
+/config/master.key
+/config/credentials/*.key
+
+# =======================================================================
+# Storage, Logs, and Temporary Files
+# =======================================================================
+# Active Storage uploaded files
+/public/assets
+
+# =======================================================================
+# Dependencies & Assets
+# =======================================================================
+# Node modules (if using Webpacker, Shakapacker, or Bun/Yarn)
+/node_modules
+/yarn-error.log
+
+# If using Importmaps, Tailwind, or Propshaft compiled outputs
+# If using Importmaps, Tailwind, or Propshaft compiled outputs
+/app/assets/builds/*
+!/app/assets/builds/.keep
+
+# Bybug / Debugging history
+.byebug_history
+
+# =======================================================================
+# Environment Variables (Sensitive Info)
+# =======================================================================
+.env
+.env*.local
+
+# =======================================================================
+# IDEs, Editors, and OS Artifacts
+# =======================================================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# VS Code
+/.vscode/
