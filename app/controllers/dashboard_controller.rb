@@ -5,16 +5,16 @@ class DashboardController < ApplicationController
   STATS_TTL = 2.minutes
 
   def index
-stats = Rails.cache.fetch(STATS_CACHE_KEY, expires_in: STATS_TTL) do
-  work_counts = Work.group(:status).count
+    stats = Rails.cache.fetch(STATS_CACHE_KEY, expires_in: STATS_TTL) do
+      work_counts = Work.group(:status).count
 
-  {
-    specimens: Specimen.count,
-    pending_works: work_counts["pending"] || 0,
-    validated_works: work_counts["validated"] || 0,
-    verified_works: work_counts["verified"] || 0
-  }
-end
+      {
+        specimens: Specimen.count,
+        pending_works: work_counts["pending"] || 0,
+        validated_works: work_counts["validated"] || 0,
+        verified_works: work_counts["verified"] || 0
+      }
+    end
 
     @summary_cards = [
       { title: I18n.t("dashboard.cards.specimens"),       value: stats[:specimens],       tone: "bg-slate-900 text-white" },
