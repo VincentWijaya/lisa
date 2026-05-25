@@ -3,6 +3,9 @@ module Api
     class SpecimensController < BaseController
       def index
         scope = Specimen.includes(:works).order(created_at: :desc)
+        last_modified = scope.maximum(:updated_at) || Time.at(0)
+        return unless stale?(last_modified: last_modified, public: false)
+
         pagy, specimens = pagy(scope, limit: pagination_limit)
         pagy_headers_merge(pagy)
         render json: {
@@ -13,6 +16,8 @@ module Api
 
       def show
         specimen = Specimen.includes(:works).find(params[:id])
+        return unless stale?(specimen, public: false)
+
         render json: SpecimenSerializer.serialize(specimen)
       end
 
