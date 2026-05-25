@@ -15,22 +15,18 @@ class WorksController < ApplicationController
   end
 
   def validate_work
-    transition_work(status: Work.statuses[:validated], timestamp: { validated_at: Time.current }, notice: "Work validated successfully.")
+    transition_result = Works::ValidateService.call(work: @work)
+    redirect_with_transition_result(transition_result, success_notice: "Work validated successfully.")
   end
 
   def verify_work
-    ActiveRecord::Base.transaction do
-      @work.update!(status: Work.statuses[:verified], verified_at: Time.current)
-      complete_specimen_if_done!(@work.specimen)
-    end
-
-    redirect_back fallback_location: work_path(@work), notice: "Work verified successfully."
-  rescue ActiveRecord::RecordInvalid => e
-    redirect_back fallback_location: work_path(@work), alert: e.record.errors.full_messages.to_sentence
+    transition_result = Works::VerifyService.call(work: @work)
+    redirect_with_transition_result(transition_result, success_notice: "Work verified successfully.")
   end
 
   def cancel_work
-    transition_work(status: Work.statuses[:cancelled], timestamp: { cancelled_at: Time.current }, notice: "Work cancelled successfully.")
+    transition_result = Works::CancelService.call(work: @work)
+    redirect_with_transition_result(transition_result, success_notice: "Work cancelled successfully.")
   end
 
   def barcode_label
@@ -44,17 +40,11 @@ class WorksController < ApplicationController
     @work = Work.includes(:specimen, :examination, :examination_results).find(params[:id])
   end
 
-  def transition_work(status:, timestamp:, notice:)
-    if @work.update({ status: status }.merge(timestamp))
-      redirect_back fallback_location: work_path(@work), notice: notice
+  def redirect_with_transition_result(result, success_notice:)
+    if result.success?
+      redirect_back fallback_location: work_path(@work), notice: success_notice
     else
-      redirect_back fallback_location: work_path(@work), alert: @work.errors.full_messages.to_sentence
+      redirect_back fallback_location: work_path(@work), alert: result.errors.to_sentence
     end
-  end
-
-  def complete_specimen_if_done!(specimen)
-    return unless specimen.works.where.not(status: %w[verified cancelled]).none?
-
-    specimen.update!(status: Specimen.statuses[:complete], completion_datetime: Time.current)
   end
 end

@@ -1,4 +1,13 @@
 Rails.application.routes.draw do
+  namespace :admin do
+      resources :examinations
+      resources :examination_results
+      resources :reference_rules
+      resources :specimens
+      resources :works
+
+      root to: "examinations#index"
+    end
   get "up" => "rails/health#show", as: :rails_health_check
 
   namespace :api do
