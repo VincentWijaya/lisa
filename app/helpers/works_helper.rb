@@ -9,4 +9,53 @@ module WorksHelper
     png = Barby::PngOutputter.new(barcode).to_png(height: 60, xdim: 2, margin: 0)
     "data:image/png;base64,#{Base64.strict_encode64(png)}"
   end
+
+  def work_status_classes(status)
+    case status
+    when "verified" then "bg-emerald-100 text-emerald-800"
+    when "validated" then "bg-sky-100 text-sky-800"
+    when "cancelled" then "bg-rose-100 text-rose-800"
+    else "bg-amber-100 text-amber-800"
+    end
+  end
+
+  def work_display_name(work)
+    work.test_codes_text.presence || work.examination.name
+  end
+
+  def work_result_value(work)
+    result = work.latest_result
+    return "-" unless result
+
+    [result.result_value, result.result_unit.presence].compact.join(" ")
+  end
+
+  def work_interpretation_label(work)
+    work.latest_result&.interpretation&.humanize || "-"
+  end
+
+  def work_interpretation_badge(work)
+    label = work_interpretation_label(work)
+    return label if label == "-"
+
+    content_tag(:span, label, class: "rounded-full px-3 py-1 text-xs font-semibold #{interpretation_classes(work.latest_result&.interpretation)}")
+  end
+
+  def primary_action_button_classes(tone = "bg-slate-900 hover:bg-slate-700")
+    "rounded-lg #{tone} px-3 py-2 text-xs font-semibold text-white"
+  end
+
+  def secondary_action_button_classes
+    "rounded-lg border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+  end
+
+  private
+
+  def interpretation_classes(interpretation)
+    case interpretation
+    when "critical" then "bg-rose-100 text-rose-800"
+    when "abnormal" then "bg-amber-100 text-amber-800"
+    else "bg-emerald-100 text-emerald-800"
+    end
+  end
 end

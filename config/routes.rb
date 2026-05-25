@@ -16,15 +16,20 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :works, only: [] do
+  resources :works, only: [:index, :show] do
     member do
+      patch :validate_work
+      patch :verify_work
+      patch :cancel_work
       get :barcode_label
     end
   end
 
-  resources :specimens, only: [] do
+  resources :specimens, only: [:index, :show] do
     member do
       get :barcode_labels
     end
   end
+
+  root to: "dashboard#index"
 end

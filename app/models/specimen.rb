@@ -17,6 +17,7 @@ class Specimen < ApplicationRecord
   validates :status,       presence: true
 
   scope :today, -> { where(created_at: Time.current.all_day) }
+  scope :with_works, -> { includes(works: :examination) }
 
   def age_in_years
     return nil unless birth_date

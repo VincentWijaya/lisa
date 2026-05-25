@@ -1,0 +1,66 @@
+<div class="mx-auto max-w-5xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
+  <div class="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:flex-row sm:items-start sm:justify-between">
+    <div>
+      <p class="text-sm font-medium text-sky-700">Specimen Detail</p>
+      <h1 class="mt-2 text-3xl font-semibold text-slate-900"><%= @specimen.order_number %></h1>
+      <p class="mt-2 text-sm text-slate-600"><%= @specimen.patient_name %> • <%= specimen_summary(@specimen) %></p>
+    </div>
+    <div class="flex gap-2">
+      <%= link_to "Print Labels", barcode_labels_specimen_path(@specimen), class: secondary_action_button_classes, target: "_blank", rel: "noopener" %>
+      <%= link_to "Back to specimens", specimens_path, class: secondary_action_button_classes %>
+    </div>
+  </div>
+
+  <div class="grid gap-6 lg:grid-cols-2">
+    <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <h2 class="text-lg font-semibold text-slate-900">Patient Details</h2>
+      <dl class="mt-4 space-y-3 text-sm text-slate-700">
+        <div class="flex justify-between gap-4"><dt class="font-medium">Patient ID</dt><dd><%= @specimen.patient_id %></dd></div>
+        <div class="flex justify-between gap-4"><dt class="font-medium">Medical Record</dt><dd><%= @specimen.medical_record_id %></dd></div>
+        <div class="flex justify-between gap-4"><dt class="font-medium">Birth Date</dt><dd><%= @specimen.birth_date %></dd></div>
+        <div class="flex justify-between gap-4"><dt class="font-medium">Gender</dt><dd><%= @specimen.gender %></dd></div>
+      </dl>
+    </section>
+
+    <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <h2 class="text-lg font-semibold text-slate-900">Collection Details</h2>
+      <dl class="mt-4 space-y-3 text-sm text-slate-700">
+        <div class="flex justify-between gap-4"><dt class="font-medium">Lab ID</dt><dd><%= @specimen.lab_id %></dd></div>
+        <div class="flex justify-between gap-4"><dt class="font-medium">Department</dt><dd><%= @specimen.department %></dd></div>
+        <div class="flex justify-between gap-4"><dt class="font-medium">Collected At</dt><dd><%= @specimen.collection_datetime ? l(@specimen.collection_datetime, format: :short) : "-" %></dd></div>
+        <div class="flex justify-between gap-4"><dt class="font-medium">Status</dt><dd><span class="rounded-full px-3 py-1 text-xs font-semibold <%= specimen_status_classes(@specimen.status) %>"><%= @specimen.status.humanize %></span></dd></div>
+      </dl>
+    </section>
+  </div>
+
+  <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+    <h2 class="text-lg font-semibold text-slate-900">Associated Works</h2>
+    <div class="mt-4 overflow-x-auto">
+      <table class="min-w-full divide-y divide-slate-200 text-sm">
+        <thead class="bg-slate-50">
+          <tr>
+            <% ["Barcode", "Examination", "Status", "Result", "Actions"].each do |heading| %>
+              <th class="px-4 py-3 text-left font-semibold text-slate-700"><%= heading %></th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          <% @works.each do |work| %>
+            <tr>
+              <td class="px-4 py-3 font-medium text-slate-900"><%= link_to work.barcode_id, work_path(work), class: "hover:text-sky-700" %></td>
+              <td class="px-4 py-3 text-slate-700"><%= work_display_name(work) %></td>
+              <td class="px-4 py-3"><span class="rounded-full px-3 py-1 text-xs font-semibold <%= work_status_classes(work.status) %>"><%= work.status.humanize %></span></td>
+              <td class="px-4 py-3 text-slate-700"><%= work_result_value(work) %></td>
+              <td class="px-4 py-3"><%= link_to "Print Barcode", barcode_label_work_path(work), class: secondary_action_button_classes, target: "_blank", rel: "noopener" %></td>
+            </tr>
+          <% end %>
+          <% if @works.empty? %>
+            <tr>
+              <td colspan="5" class="px-4 py-8 text-center text-sm text-slate-500">No works linked to this specimen.</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
