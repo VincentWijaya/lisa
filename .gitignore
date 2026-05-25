@@ -1,0 +1,6 @@
+LISA_requirements.md
+
+.env
+
+# Allow settings.local.json even if *.local.json is ignored
+!settings.local.json
