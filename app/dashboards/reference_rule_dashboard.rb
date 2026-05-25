@@ -35,9 +35,10 @@ class ReferenceRuleDashboard < Administrate::BaseDashboard
   # Feel free to add, remove, or rearrange items.
   COLLECTION_ATTRIBUTES = %i[
     id
-    abnormal_values
+    loinc_code
+    name
+    description
     active
-    allowed_values
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
