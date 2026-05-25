@@ -15,4 +15,16 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  resources :works, only: [] do
+    member do
+      get :barcode_label
+    end
+  end
+
+  resources :specimens, only: [] do
+    member do
+      get :barcode_labels
+    end
+  end
 end

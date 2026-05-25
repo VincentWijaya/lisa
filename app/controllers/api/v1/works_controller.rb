@@ -10,6 +10,11 @@ module Api
         work = Work.find(params[:id])
         render json: WorkSerializer.serialize(work)
       end
+
+      def barcode_label
+        work = Work.includes(:specimen, :examination).find(params[:id])
+        render json: Works::LabelDataService.call(work)
+      end
     end
   end
 end
