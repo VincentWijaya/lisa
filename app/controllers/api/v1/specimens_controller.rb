@@ -2,8 +2,13 @@ module Api
   module V1
     class SpecimensController < BaseController
       def index
-        specimens = Specimen.includes(:works).order(created_at: :desc)
-        render json: SpecimenSerializer.serialize_collection(specimens)
+        scope = Specimen.includes(:works).order(created_at: :desc)
+        pagy, specimens = pagy(scope, limit: pagination_limit)
+        pagy_headers_merge(pagy)
+        render json: {
+          data: SpecimenSerializer.serialize_collection(specimens),
+          pagination: pagy_metadata(pagy)
+        }
       end
 
       def show

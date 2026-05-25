@@ -180,3 +180,10 @@ en:
       in_progress: "In Progress"
       complete: "Complete"
       cancelled: "Cancelled"
+
+  # Pagination
+  pagination:
+    previous: "Previous"
+    next: "Next"
+    showing: "Showing %{from}–%{to} of %{count} records"
+    aria_label: "Page navigation"

@@ -2,8 +2,13 @@ module Api
   module V1
     class WorksController < BaseController
       def index
-        works = Work.order(created_at: :desc)
-        render json: WorkSerializer.serialize_collection(works)
+        scope = Work.order(created_at: :desc)
+        pagy, works = pagy(scope, limit: pagination_limit)
+        pagy_headers_merge(pagy)
+        render json: {
+          data: WorkSerializer.serialize_collection(works),
+          pagination: pagy_metadata(pagy)
+        }
       end
 
       def show
