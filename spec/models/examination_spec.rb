@@ -17,7 +17,7 @@ RSpec.describe Examination, type: :model do
       examination.default_result_type = "unsupported"
 
       expect(examination).not_to be_valid
-      expect(examination.errors[:default_result_type]).to include("is not included in the list")
+      expect(examination.errors[:default_result_type]).to be_present
     end
   end
 end

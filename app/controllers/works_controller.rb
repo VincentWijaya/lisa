@@ -17,17 +17,17 @@ class WorksController < ApplicationController
 
   def validate_work
     transition_result = Works::ValidateService.call(work: @work)
-    redirect_with_transition_result(transition_result, success_notice: "Work validated successfully.")
+    redirect_with_transition_result(transition_result, success_notice: t("works.flash.validated"))
   end
 
   def verify_work
     transition_result = Works::VerifyService.call(work: @work)
-    redirect_with_transition_result(transition_result, success_notice: "Work verified successfully.")
+    redirect_with_transition_result(transition_result, success_notice: t("works.flash.verified"))
   end
 
   def cancel_work
     transition_result = Works::CancelService.call(work: @work)
-    redirect_with_transition_result(transition_result, success_notice: "Work cancelled successfully.")
+    redirect_with_transition_result(transition_result, success_notice: t("works.flash.cancelled"))
   end
 
   def barcode_label

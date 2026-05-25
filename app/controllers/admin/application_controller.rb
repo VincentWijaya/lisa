@@ -11,8 +11,8 @@ module Admin
     private
 
     def authenticate_admin!
-      redirect_to login_path, alert: "Please log in to continue." unless current_user
-      redirect_to root_path, alert: "Access denied. Admin privileges required." unless current_user&.admin?
+      redirect_to login_path, alert: I18n.t("sessions.flash.login_required") unless current_user
+      redirect_to root_path, alert: I18n.t("sessions.flash.access_denied") unless current_user&.admin?
     end
 
     def current_user

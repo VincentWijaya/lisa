@@ -1,0 +1,333 @@
+id:
+  app_name: "LISA"
+  app_tagline: "Sistem Informasi Laboratorium"
+
+  # ── Date & Time ──────────────────────────────────────────────────────────────
+  date:
+    formats:
+      default: "%d/%m/%Y"
+      short: "%d %b %Y"
+      long: "%d %B %Y"
+    month_names:
+      - ~
+      - Januari
+      - Februari
+      - Maret
+      - April
+      - Mei
+      - Juni
+      - Juli
+      - Agustus
+      - September
+      - Oktober
+      - November
+      - Desember
+    abbr_month_names:
+      - ~
+      - Jan
+      - Feb
+      - Mar
+      - Apr
+      - Mei
+      - Jun
+      - Jul
+      - Agu
+      - Sep
+      - Okt
+      - Nov
+      - Des
+    day_names:
+      - Minggu
+      - Senin
+      - Selasa
+      - Rabu
+      - Kamis
+      - Jumat
+      - Sabtu
+    abbr_day_names:
+      - Min
+      - Sen
+      - Sel
+      - Rab
+      - Kam
+      - Jum
+      - Sab
+
+  time:
+    formats:
+      default: "%d/%m/%Y %H:%M"
+      short: "%d %b %Y %H:%M"
+      long: "%d %B %Y pukul %H:%M"
+    am: "pagi"
+    pm: "sore"
+
+  # ── Number & Currency ────────────────────────────────────────────────────────
+  number:
+    format:
+      separator: ","
+      delimiter: "."
+      precision: 2
+
+  # ── Active Record ─────────────────────────────────────────────────────────────
+  activerecord:
+    models:
+      user: "Pengguna"
+      role: "Peran"
+      specimen: "Spesimen"
+      work: "Pekerjaan"
+      examination: "Pemeriksaan"
+      examination_result: "Hasil Pemeriksaan"
+      reference_rule: "Aturan Referensi"
+    attributes:
+      user:
+        name: "Nama"
+        email: "Email"
+        password: "Kata sandi"
+        password_confirmation: "Konfirmasi kata sandi"
+        active: "Aktif"
+      role:
+        name: "Nama peran"
+      specimen:
+        patient_id: "ID Pasien"
+        patient_name: "Nama Pasien"
+        birth_date: "Tanggal Lahir"
+        gender: "Jenis Kelamin"
+        lab_id: "ID Lab"
+        order_number: "Nomor Order"
+        status: "Status"
+        medical_record_id: "No. Rekam Medis"
+        department: "Departemen"
+        collection_datetime: "Waktu Pengambilan"
+      work:
+        barcode_id: "ID Barcode"
+        status: "Status"
+        specimen_type: "Jenis Spesimen"
+        test_codes_text: "Kode Pemeriksaan"
+        label_sequence: "Urutan Label"
+        validated_at: "Waktu Validasi"
+        verified_at: "Waktu Verifikasi"
+        cancelled_at: "Waktu Pembatalan"
+      examination:
+        name: "Nama"
+        code: "Kode"
+        status: "Status"
+        specimen_type: "Jenis Spesimen"
+        default_result_type: "Tipe Hasil Default"
+        default_unit: "Satuan Default"
+        label_group: "Grup Label"
+      examination_result:
+        result_value: "Nilai Hasil"
+        result_unit: "Satuan"
+        interpretation: "Interpretasi"
+        source: "Sumber"
+        verified_at: "Waktu Verifikasi"
+      reference_rule:
+        name: "Nama"
+        result_type: "Tipe Hasil"
+        unit: "Satuan"
+        numeric_low_value: "Nilai Bawah"
+        numeric_high_value: "Nilai Atas"
+    errors:
+      messages:
+        record_invalid: "Validasi gagal: %{errors}"
+        taken: "sudah terdaftar"
+        blank: "tidak boleh kosong"
+        too_short: "terlalu pendek (minimal %{count} karakter)"
+        too_long: "terlalu panjang (maksimal %{count} karakter)"
+        invalid: "tidak valid"
+        inclusion: "tidak termasuk dalam daftar yang valid"
+
+  # ── Active Model ──────────────────────────────────────────────────────────────
+  errors:
+    format: "%{attribute} %{message}"
+    messages:
+      accepted: "harus diterima"
+      blank: "tidak boleh kosong"
+      present: "harus kosong"
+      confirmation: "tidak sesuai dengan %{attribute}"
+      empty: "tidak boleh kosong"
+      equal_to: "harus sama dengan %{count}"
+      even: "harus genap"
+      exclusion: "sudah digunakan"
+      greater_than: "harus lebih dari %{count}"
+      greater_than_or_equal_to: "harus lebih dari atau sama dengan %{count}"
+      inclusion: "tidak termasuk dalam daftar"
+      invalid: "tidak valid"
+      less_than: "harus kurang dari %{count}"
+      less_than_or_equal_to: "harus kurang dari atau sama dengan %{count}"
+      model_invalid: "Validasi gagal: %{errors}"
+      not_a_number: "bukan angka"
+      not_an_integer: "harus bilangan bulat"
+      odd: "harus ganjil"
+      other_than: "harus selain %{count}"
+      required: "harus diisi"
+      taken: "sudah terdaftar"
+      too_long:
+        one: "terlalu panjang (maksimal 1 karakter)"
+        other: "terlalu panjang (maksimal %{count} karakter)"
+      too_short:
+        one: "terlalu pendek (minimal 1 karakter)"
+        other: "terlalu pendek (minimal %{count} karakter)"
+      wrong_length:
+        one: "panjang tidak sesuai (harus 1 karakter)"
+        other: "panjang tidak sesuai (harus %{count} karakter)"
+
+  # ── Nav ───────────────────────────────────────────────────────────────────────
+  nav:
+    dashboard: "Dasbor"
+    works: "Pekerjaan"
+    specimens: "Spesimen"
+    admin: "Admin"
+    sign_out: "Keluar"
+
+  # ── Auth / Sessions ───────────────────────────────────────────────────────────
+  sessions:
+    new:
+      title: "Masuk ke akun Anda"
+      email: "Alamat email"
+      password: "Kata sandi"
+      submit: "Masuk"
+    flash:
+      welcome: "Selamat datang kembali, %{name}!"
+      signed_out: "Anda telah keluar."
+      login_required: "Silakan masuk untuk melanjutkan."
+      access_denied: "Anda tidak memiliki izin untuk melakukan tindakan ini."
+      account_inactive: "Akun Anda tidak aktif. Hubungi administrator."
+      invalid_credentials: "Email atau kata sandi tidak valid."
+
+  # ── Dashboard ─────────────────────────────────────────────────────────────────
+  dashboard:
+    title: "Dasbor Laboratorium"
+    subtitle: "Pantau penerimaan spesimen, progres pekerjaan, dan pencetakan barcode."
+    cards:
+      specimens: "Spesimen"
+      pending_works: "Pekerjaan Menunggu"
+      validated_works: "Pekerjaan Tervalidasi"
+      verified_works: "Pekerjaan Terverifikasi"
+    recent_works:
+      title: "Pekerjaan Terbaru"
+      view_all: "Lihat semua"
+    recent_specimens:
+      title: "Spesimen Terbaru"
+      view_all: "Lihat semua"
+
+  # ── Works ─────────────────────────────────────────────────────────────────────
+  works:
+    index:
+      title: "Pekerjaan"
+      subtitle: "Kelola item pekerjaan barcode — validasi, verifikasi, atau batalkan sesuai kebutuhan."
+      back: "Kembali ke dasbor"
+      filters:
+        status: "Status"
+        status_all: "Semua"
+        lab_id: "ID Lab"
+        lab_id_placeholder: "Filter berdasarkan ID lab"
+        search: "Cari"
+        search_placeholder: "Barcode, ID pasien, No. RM, atau nama pasien"
+        apply: "Terapkan Filter"
+        reset: "Reset"
+      table:
+        barcode_id: "ID Barcode"
+        patient: "Pasien"
+        examination: "Pemeriksaan"
+        result: "Hasil"
+        interpretation: "Interpretasi"
+        status: "Status"
+        created_at: "Dibuat"
+        actions: "Aksi"
+      empty: "Tidak ada pekerjaan yang sesuai dengan filter saat ini."
+    show:
+      label: "Detail Pekerjaan"
+      back: "Kembali ke pekerjaan"
+      patient_section: "Pasien & Spesimen"
+      status_section: "Status Pekerjaan"
+      results_section: "Hasil Pemeriksaan"
+      fields:
+        patient: "Pasien"
+        patient_id: "ID Pasien"
+        medical_record: "No. Rekam Medis"
+        lab_id: "ID Lab"
+        department: "Departemen"
+        order_number: "Nomor Order"
+        status: "Status"
+        specimen_type: "Jenis Spesimen"
+        result: "Hasil"
+        interpretation: "Interpretasi"
+        validated_at: "Waktu Validasi"
+        verified_at: "Waktu Verifikasi"
+      results_table:
+        value: "Nilai"
+        unit: "Satuan"
+        interpretation: "Interpretasi"
+        source: "Sumber"
+        verified_at: "Waktu Verifikasi"
+      results_empty: "Belum ada hasil pemeriksaan."
+    actions:
+      view: "Lihat"
+      validate: "Validasi"
+      verify: "Verifikasi"
+      cancel: "Batalkan"
+      print_barcode: "Cetak Barcode"
+    status:
+      pending: "Menunggu"
+      validated: "Tervalidasi"
+      verified: "Terverifikasi"
+      cancelled: "Dibatalkan"
+    flash:
+      validated: "Pekerjaan berhasil divalidasi."
+      verified: "Pekerjaan berhasil diverifikasi."
+      cancelled: "Pekerjaan berhasil dibatalkan."
+
+  # ── Specimens ─────────────────────────────────────────────────────────────────
+  specimens:
+    index:
+      title: "Spesimen"
+      subtitle: "Tinjau penerimaan spesimen dan cetak label barcode berdasarkan grup."
+      back: "Kembali ke dasbor"
+      table:
+        order_number: "Nomor Order"
+        patient: "Pasien"
+        lab_id: "ID Lab"
+        status: "Status"
+        collected_at: "Waktu Pengambilan"
+        works: "Pekerjaan"
+        actions: "Aksi"
+      empty: "Belum ada spesimen yang dibuat."
+    show:
+      label: "Detail Spesimen"
+      back: "Kembali ke spesimen"
+      patient_section: "Data Pasien"
+      collection_section: "Data Pengambilan"
+      works_section: "Pekerjaan Terkait"
+      fields:
+        patient_id: "ID Pasien"
+        medical_record: "No. Rekam Medis"
+        birth_date: "Tanggal Lahir"
+        gender: "Jenis Kelamin"
+        lab_id: "ID Lab"
+        department: "Departemen"
+        collected_at: "Waktu Pengambilan"
+        status: "Status"
+      works_table:
+        barcode: "Barcode"
+        examination: "Pemeriksaan"
+        status: "Status"
+        result: "Hasil"
+        actions: "Aksi"
+      works_empty: "Belum ada pekerjaan yang terhubung ke spesimen ini."
+    actions:
+      view: "Lihat"
+      print_labels: "Cetak Label"
+      print_barcode: "Cetak Barcode"
+    status:
+      pending: "Menunggu"
+      in_progress: "Sedang Diproses"
+      complete: "Selesai"
+      cancelled: "Dibatalkan"
+
+  # ── Admin ─────────────────────────────────────────────────────────────────────
+  admin:
+    users:
+      name: "Pengguna"
+    roles:
+      name: "Peran"
