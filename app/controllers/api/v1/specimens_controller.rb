@@ -24,8 +24,11 @@ module Api
       private
 
       def specimen_params
-        base_params = params[:specimen].present? ? params.require(:specimen) : params
-        base_params.permit(
+        raw_params = params.to_unsafe_h.except("controller", "action", "format")
+        nested_params = raw_params.delete("specimen")
+        merged_params = nested_params.is_a?(Hash) ? nested_params.merge(raw_params) : raw_params
+
+        ActionController::Parameters.new(merged_params).permit(
           :patient_id,
           :patient_name,
           :birth_date,
