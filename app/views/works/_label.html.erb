@@ -1,0 +1,11 @@
+<div class="label<%= ' page-break' if local_assigns[:page_break] %>">
+  <div class="label-line"><strong><%= label_data[:specimenType] %></strong> (<%= label_data[:collectionDatetime] %>)</div>
+  <div class="barcode">
+    <img src="<%= barcode_data_uri(label_data[:barcodeId]) %>" alt="Barcode <%= label_data[:barcodeId] %>">
+  </div>
+  <div class="barcode-text label-line"><%= label_data[:barcodeId] %></div>
+  <div class="patient-name label-line"><%= label_data[:patientName] %></div>
+  <div class="label-line"><%= label_data[:medicalRecordId] %> / <%= label_data[:ageYears] %> Thn / <%= label_data[:gender] %> / <%= label_data[:birthDate] %></div>
+  <div class="label-line"><%= label_data[:testCodesText] %></div>
+  <div><%= label_data[:department] %></div>
+</div>
