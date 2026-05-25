@@ -1,4 +1,6 @@
 class DashboardController < ApplicationController
+  before_action :authenticate_user!
+
   def index
     @summary_cards = [
       { title: "Specimens", value: Specimen.count, tone: "bg-slate-900 text-white" },

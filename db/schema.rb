@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_25_134115) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_25_142559) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -67,6 +67,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_25_134115) do
     t.index ["loinc_code"], name: "index_reference_rules_on_loinc_code"
   end
 
+  create_table "roles", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.bigint "resource_id"
+    t.string "resource_type"
+    t.datetime "updated_at", null: false
+    t.index ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id", unique: true
+    t.index ["name"], name: "index_roles_on_name"
+    t.index ["resource_type", "resource_id"], name: "index_roles_on_resource"
+  end
+
   create_table "specimens", force: :cascade do |t|
     t.date "birth_date", null: false
     t.datetime "collection_datetime"
@@ -86,6 +97,26 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_25_134115) do
     t.index ["order_number"], name: "index_specimens_on_order_number", unique: true
     t.index ["patient_id"], name: "index_specimens_on_patient_id"
     t.index ["status"], name: "index_specimens_on_status"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.string "api_token"
+    t.datetime "created_at", null: false
+    t.string "email", null: false
+    t.string "name", null: false
+    t.string "password_digest", null: false
+    t.datetime "updated_at", null: false
+    t.index ["api_token"], name: "index_users_on_api_token", unique: true
+    t.index ["email"], name: "index_users_on_email", unique: true
+  end
+
+  create_table "users_roles", id: false, force: :cascade do |t|
+    t.bigint "role_id", null: false
+    t.bigint "user_id", null: false
+    t.index ["role_id"], name: "index_users_roles_on_role_id"
+    t.index ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id", unique: true
+    t.index ["user_id"], name: "index_users_roles_on_user_id"
   end
 
   create_table "works", force: :cascade do |t|
@@ -112,6 +143,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_25_134115) do
   add_foreign_key "examination_results", "reference_rules"
   add_foreign_key "examination_results", "works"
   add_foreign_key "reference_rules", "examinations"
+  add_foreign_key "users_roles", "roles"
+  add_foreign_key "users_roles", "users"
   add_foreign_key "works", "examinations"
   add_foreign_key "works", "specimens"
 end

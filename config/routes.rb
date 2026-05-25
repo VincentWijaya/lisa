@@ -1,10 +1,17 @@
 Rails.application.routes.draw do
+  # Authentication
+  resource :session, only: [:new, :create, :destroy]
+  get "login", to: "sessions#new", as: :login
+  delete "logout", to: "sessions#destroy", as: :logout
+
   namespace :admin do
       resources :examinations
       resources :examination_results
       resources :reference_rules
       resources :specimens
       resources :works
+      resources :users
+      resources :roles
 
       root to: "examinations#index"
     end

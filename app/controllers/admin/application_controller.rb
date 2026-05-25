@@ -6,10 +6,17 @@
 # you're free to overwrite the RESTful controller actions.
 module Admin
   class ApplicationController < Administrate::ApplicationController
-    before_action :authenticate_admin
+    before_action :authenticate_admin!
 
-    def authenticate_admin
-      # TODO Add authentication logic here.
+    private
+
+    def authenticate_admin!
+      redirect_to login_path, alert: "Please log in to continue." unless current_user
+      redirect_to root_path, alert: "Access denied. Admin privileges required." unless current_user&.admin?
+    end
+
+    def current_user
+      @current_user ||= User.find_by(id: session[:user_id])
     end
 
     # Override this value to specify the number of elements to display at a time
