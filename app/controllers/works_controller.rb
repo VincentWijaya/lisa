@@ -3,12 +3,13 @@ class WorksController < ApplicationController
   before_action :set_work, only: %i[show validate_work verify_work cancel_work barcode_label]
 
   def index
-    @works = Work.with_details
-                 .order(created_at: :desc)
-                 .filter_by_status(params[:status])
-                 .filter_by_lab_id(params[:lab_id])
-                 .search_term(params[:query])
-                 .distinct
+    scope = Work.with_details
+                .order(created_at: :desc)
+                .filter_by_status(params[:status])
+                .filter_by_lab_id(params[:lab_id])
+                .search_term(params[:query])
+                .distinct
+    @pagy, @works = pagy(scope, limit: 25)
   end
 
   def show

@@ -331,3 +331,10 @@ id:
       name: "Pengguna"
     roles:
       name: "Peran"
+
+  # ── Pagination ────────────────────────────────────────────────────────────────
+  pagination:
+    previous: "Sebelumnya"
+    next: "Berikutnya"
+    showing: "Menampilkan %{from}–%{to} dari %{count} data"
+    aria_label: "Navigasi halaman"

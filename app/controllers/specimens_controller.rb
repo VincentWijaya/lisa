@@ -3,7 +3,8 @@ class SpecimensController < ApplicationController
   before_action :set_specimen, only: %i[show barcode_labels]
 
   def index
-    @specimens = Specimen.with_works.order(created_at: :desc)
+    scope = Specimen.with_works.order(created_at: :desc)
+    @pagy, @specimens = pagy(scope, limit: 25)
   end
 
   def show
