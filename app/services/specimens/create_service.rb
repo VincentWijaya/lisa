@@ -14,11 +14,15 @@ module Specimens
       return ServiceResult.failure(errors: errors) if errors.any?
 
       specimen = nil
+      work_result = nil
 
       Specimen.transaction do
         specimen = create_specimen!
-        create_works!(specimen)
+        work_result = create_works!(specimen)
+        raise ActiveRecord::Rollback if work_result.failure?
       end
+
+      return ServiceResult.failure(errors: work_result.errors) if work_result&.failure?
 
       ServiceResult.success(specimen: specimen)
     rescue ActiveRecord::RecordInvalid => e
@@ -60,13 +64,7 @@ module Specimens
     end
 
     def create_works!(specimen)
-      examination_ids.each_with_index do |examination_id, index|
-        Works::BarcodeGenerator.new(
-          specimen: specimen,
-          examination: examinations.fetch(examination_id),
-          label_sequence: index + 1
-        ).create!
-      end
+      Works::WorkCreationService.call(specimen: specimen, examinations: ordered_examinations)
     end
 
     def next_order_number
@@ -75,6 +73,10 @@ module Specimens
 
     def examination_ids
       @examination_ids ||= Array(params[:examination_ids]).map(&:to_i).uniq
+    end
+
+    def ordered_examinations
+      @ordered_examinations ||= examination_ids.filter_map { |examination_id| examinations[examination_id] }
     end
   end
 end

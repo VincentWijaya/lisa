@@ -1,17 +1,17 @@
 module Works
   class BarcodeGenerator
-    def initialize(specimen:, examination:, label_sequence:)
+    def initialize(specimen:, label_sequence:, examination: nil, examinations: nil)
       @specimen = specimen
-      @examination = examination
+      @examinations = Array(examinations || examination)
       @label_sequence = label_sequence
     end
 
     def create!
       specimen.works.create!(
-        examination: examination,
+        examination: primary_examination,
         barcode_id: barcode_id,
         label_sequence: label_sequence,
-        specimen_type: examination.specimen_type,
+        specimen_type: specimen_type,
         test_codes_text: test_codes_text,
         sample_taken_datetime: specimen.collection_datetime,
         status: Work.statuses[:pending]
@@ -20,17 +20,25 @@ module Works
 
     private
 
-    attr_reader :specimen, :examination, :label_sequence
+    attr_reader :specimen, :examinations, :label_sequence
+
+    def primary_examination
+      examinations.first
+    end
 
     def barcode_id
       "#{specimen.order_number}-#{format('%02d', label_sequence)}"
     end
 
-    def test_codes_text
-      code = examination.code.to_s.strip
-      return if code.blank?
+    def specimen_type
+      examinations.map(&:specimen_type).compact_blank.first
+    end
 
-      "#{code};"
+    def test_codes_text
+      codes = examinations.map { |examination| examination.code.to_s.strip }.reject(&:blank?)
+      return if codes.empty?
+
+      "#{codes.join('; ')};"
     end
   end
 end
