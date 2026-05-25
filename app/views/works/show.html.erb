@@ -1,61 +1,61 @@
 <div class="mx-auto max-w-5xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
   <div class="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:flex-row sm:items-start sm:justify-between">
     <div>
-      <p class="text-sm font-medium text-sky-700">Work Detail</p>
+      <p class="text-sm font-medium text-sky-700"><%= t("works.show.label") %></p>
       <h1 class="mt-2 text-3xl font-semibold text-slate-900"><%= @work.barcode_id %></h1>
       <p class="mt-2 text-sm text-slate-600"><%= work_display_name(@work) %></p>
     </div>
     <div class="flex flex-wrap gap-2">
       <% if @work.pending? %>
-        <%= button_to "Validate", validate_work_work_path(@work), method: :patch, class: primary_action_button_classes %>
+        <%= button_to t("works.actions.validate"), validate_work_work_path(@work), method: :patch, class: primary_action_button_classes %>
       <% end %>
       <% if @work.validated? %>
-        <%= button_to "Verify", verify_work_work_path(@work), method: :patch, class: primary_action_button_classes("bg-emerald-600 hover:bg-emerald-500") %>
+        <%= button_to t("works.actions.verify"), verify_work_work_path(@work), method: :patch, class: primary_action_button_classes("bg-emerald-600 hover:bg-emerald-500") %>
       <% end %>
       <% unless @work.verified? || @work.cancelled? %>
-        <%= button_to "Cancel", cancel_work_work_path(@work), method: :patch, class: primary_action_button_classes("bg-rose-600 hover:bg-rose-500") %>
+        <%= button_to t("works.actions.cancel"), cancel_work_work_path(@work), method: :patch, class: primary_action_button_classes("bg-rose-600 hover:bg-rose-500") %>
       <% end %>
-      <%= link_to "Print Barcode", barcode_label_work_path(@work), class: secondary_action_button_classes, target: "_blank", rel: "noopener" %>
+      <%= link_to t("works.actions.print_barcode"), barcode_label_work_path(@work), class: secondary_action_button_classes, target: "_blank", rel: "noopener" %>
     </div>
   </div>
 
   <div class="grid gap-6 lg:grid-cols-2">
     <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 class="text-lg font-semibold text-slate-900">Patient & Specimen</h2>
+      <h2 class="text-lg font-semibold text-slate-900"><%= t("works.show.patient_section") %></h2>
       <dl class="mt-4 space-y-3 text-sm text-slate-700">
-        <div class="flex justify-between gap-4"><dt class="font-medium">Patient</dt><dd><%= @work.specimen.patient_name %></dd></div>
-        <div class="flex justify-between gap-4"><dt class="font-medium">Patient ID</dt><dd><%= @work.specimen.patient_id %></dd></div>
-        <div class="flex justify-between gap-4"><dt class="font-medium">Medical Record</dt><dd><%= @work.specimen.medical_record_id %></dd></div>
-        <div class="flex justify-between gap-4"><dt class="font-medium">Lab ID</dt><dd><%= @work.specimen.lab_id %></dd></div>
-        <div class="flex justify-between gap-4"><dt class="font-medium">Department</dt><dd><%= @work.specimen.department %></dd></div>
-        <div class="flex justify-between gap-4"><dt class="font-medium">Order Number</dt><dd><%= @work.specimen.order_number %></dd></div>
+        <div class="flex justify-between gap-4"><dt class="font-medium"><%= t("works.show.fields.patient") %></dt><dd><%= @work.specimen.patient_name %></dd></div>
+        <div class="flex justify-between gap-4"><dt class="font-medium"><%= t("works.show.fields.patient_id") %></dt><dd><%= @work.specimen.patient_id %></dd></div>
+        <div class="flex justify-between gap-4"><dt class="font-medium"><%= t("works.show.fields.medical_record") %></dt><dd><%= @work.specimen.medical_record_id %></dd></div>
+        <div class="flex justify-between gap-4"><dt class="font-medium"><%= t("works.show.fields.lab_id") %></dt><dd><%= @work.specimen.lab_id %></dd></div>
+        <div class="flex justify-between gap-4"><dt class="font-medium"><%= t("works.show.fields.department") %></dt><dd><%= @work.specimen.department %></dd></div>
+        <div class="flex justify-between gap-4"><dt class="font-medium"><%= t("works.show.fields.order_number") %></dt><dd><%= @work.specimen.order_number %></dd></div>
       </dl>
     </section>
 
     <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 class="text-lg font-semibold text-slate-900">Work Status</h2>
+      <h2 class="text-lg font-semibold text-slate-900"><%= t("works.show.status_section") %></h2>
       <dl class="mt-4 space-y-3 text-sm text-slate-700">
-        <div class="flex justify-between gap-4"><dt class="font-medium">Status</dt><dd><span class="rounded-full px-3 py-1 text-xs font-semibold <%= work_status_classes(@work.status) %>"><%= @work.status.humanize %></span></dd></div>
-        <div class="flex justify-between gap-4"><dt class="font-medium">Specimen Type</dt><dd><%= @work.specimen_type %></dd></div>
-        <div class="flex justify-between gap-4"><dt class="font-medium">Result</dt><dd><%= work_result_value(@work) %></dd></div>
-        <div class="flex justify-between gap-4"><dt class="font-medium">Interpretation</dt><dd><%= work_interpretation_label(@work) %></dd></div>
-        <div class="flex justify-between gap-4"><dt class="font-medium">Validated At</dt><dd><%= @work.validated_at ? l(@work.validated_at, format: :short) : "-" %></dd></div>
-        <div class="flex justify-between gap-4"><dt class="font-medium">Verified At</dt><dd><%= @work.verified_at ? l(@work.verified_at, format: :short) : "-" %></dd></div>
+        <div class="flex justify-between gap-4"><dt class="font-medium"><%= t("works.show.fields.status") %></dt><dd><span class="rounded-full px-3 py-1 text-xs font-semibold <%= work_status_classes(@work.status) %>"><%= t("works.status.#{@work.status}") %></span></dd></div>
+        <div class="flex justify-between gap-4"><dt class="font-medium"><%= t("works.show.fields.specimen_type") %></dt><dd><%= @work.specimen_type %></dd></div>
+        <div class="flex justify-between gap-4"><dt class="font-medium"><%= t("works.show.fields.result") %></dt><dd><%= work_result_value(@work) %></dd></div>
+        <div class="flex justify-between gap-4"><dt class="font-medium"><%= t("works.show.fields.interpretation") %></dt><dd><%= work_interpretation_label(@work) %></dd></div>
+        <div class="flex justify-between gap-4"><dt class="font-medium"><%= t("works.show.fields.validated_at") %></dt><dd><%= @work.validated_at ? l(@work.validated_at, format: :short) : "-" %></dd></div>
+        <div class="flex justify-between gap-4"><dt class="font-medium"><%= t("works.show.fields.verified_at") %></dt><dd><%= @work.verified_at ? l(@work.verified_at, format: :short) : "-" %></dd></div>
       </dl>
     </section>
   </div>
 
   <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
     <div class="mb-4 flex items-center justify-between">
-      <h2 class="text-lg font-semibold text-slate-900">Results</h2>
-      <%= link_to "Back to works", works_path, class: "text-sm font-medium text-sky-700 hover:text-sky-600" %>
+      <h2 class="text-lg font-semibold text-slate-900"><%= t("works.show.results_section") %></h2>
+      <%= link_to t("works.show.back"), works_path, class: "text-sm font-medium text-sky-700 hover:text-sky-600" %>
     </div>
     <div class="overflow-x-auto">
       <table class="min-w-full divide-y divide-slate-200 text-sm">
         <thead class="bg-slate-50">
           <tr>
-            <% ["Value", "Unit", "Interpretation", "Source", "Verified At"].each do |heading| %>
-              <th class="px-4 py-3 text-left font-semibold text-slate-700"><%= heading %></th>
+            <% %w[value unit interpretation source verified_at].each do |col| %>
+              <th class="px-4 py-3 text-left font-semibold text-slate-700"><%= t("works.show.results_table.#{col}") %></th>
             <% end %>
           </tr>
         </thead>
@@ -71,7 +71,7 @@
           <% end %>
           <% if @results.empty? %>
             <tr>
-              <td colspan="5" class="px-4 py-8 text-center text-sm text-slate-500">No examination results recorded yet.</td>
+              <td colspan="5" class="px-4 py-8 text-center text-sm text-slate-500"><%= t("works.show.results_empty") %></td>
             </tr>
           <% end %>
         </tbody>

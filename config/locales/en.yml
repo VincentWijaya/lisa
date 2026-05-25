@@ -29,3 +29,154 @@
 
 en:
   hello: "Hello world"
+
+  app_name: "LISA"
+  app_tagline: "Laboratory Information System"
+
+  nav:
+    dashboard: "Dashboard"
+    works: "Works"
+    specimens: "Specimens"
+    admin: "Admin"
+    sign_out: "Sign out"
+
+  sessions:
+    new:
+      title: "Sign in to your account"
+      email: "Email address"
+      password: "Password"
+      submit: "Sign in"
+    flash:
+      welcome: "Welcome back, %{name}!"
+      signed_out: "You have been signed out."
+      login_required: "Please log in to continue."
+      access_denied: "You are not authorized to perform this action."
+      account_inactive: "Your account is inactive. Contact an administrator."
+      invalid_credentials: "Invalid email or password."
+
+  dashboard:
+    title: "Laboratory Dashboard"
+    subtitle: "Monitor specimen intake, work progress, and barcode printing."
+    cards:
+      specimens: "Specimens"
+      pending_works: "Pending Works"
+      validated_works: "Validated Works"
+      verified_works: "Verified Works"
+    recent_works:
+      title: "Recent Works"
+      view_all: "View all"
+    recent_specimens:
+      title: "Recent Specimens"
+      view_all: "View all"
+
+  works:
+    index:
+      title: "Works"
+      subtitle: "Track barcode work items, validate, verify, or cancel as needed."
+      back: "Back to dashboard"
+      filters:
+        status: "Status"
+        status_all: "All"
+        lab_id: "Lab ID"
+        lab_id_placeholder: "Filter by lab ID"
+        search: "Search"
+        search_placeholder: "Barcode, patient ID, MRN, or patient name"
+        apply: "Apply filters"
+        reset: "Reset"
+      table:
+        barcode_id: "Barcode ID"
+        patient: "Patient"
+        examination: "Examination"
+        result: "Result"
+        interpretation: "Interpretation"
+        status: "Status"
+        created_at: "Created At"
+        actions: "Actions"
+      empty: "No work records matched the current filters."
+    show:
+      label: "Work Detail"
+      back: "Back to works"
+      patient_section: "Patient & Specimen"
+      status_section: "Work Status"
+      results_section: "Results"
+      fields:
+        patient: "Patient"
+        patient_id: "Patient ID"
+        medical_record: "Medical Record"
+        lab_id: "Lab ID"
+        department: "Department"
+        order_number: "Order Number"
+        status: "Status"
+        specimen_type: "Specimen Type"
+        result: "Result"
+        interpretation: "Interpretation"
+        validated_at: "Validated At"
+        verified_at: "Verified At"
+      results_table:
+        value: "Value"
+        unit: "Unit"
+        interpretation: "Interpretation"
+        source: "Source"
+        verified_at: "Verified At"
+      results_empty: "No examination results recorded yet."
+    actions:
+      view: "View"
+      validate: "Validate"
+      verify: "Verify"
+      cancel: "Cancel"
+      print_barcode: "Print Barcode"
+    status:
+      pending: "Pending"
+      validated: "Validated"
+      verified: "Verified"
+      cancelled: "Cancelled"
+    flash:
+      validated: "Work validated successfully."
+      verified: "Work verified successfully."
+      cancelled: "Work cancelled successfully."
+
+  specimens:
+    index:
+      title: "Specimens"
+      subtitle: "Review specimen intake and print grouped barcode labels."
+      back: "Back to dashboard"
+      table:
+        order_number: "Order Number"
+        patient: "Patient"
+        lab_id: "Lab ID"
+        status: "Status"
+        collected_at: "Collected At"
+        works: "Works"
+        actions: "Actions"
+      empty: "No specimens have been created yet."
+    show:
+      label: "Specimen Detail"
+      back: "Back to specimens"
+      patient_section: "Patient Details"
+      collection_section: "Collection Details"
+      works_section: "Associated Works"
+      fields:
+        patient_id: "Patient ID"
+        medical_record: "Medical Record"
+        birth_date: "Birth Date"
+        gender: "Gender"
+        lab_id: "Lab ID"
+        department: "Department"
+        collected_at: "Collected At"
+        status: "Status"
+      works_table:
+        barcode: "Barcode"
+        examination: "Examination"
+        status: "Status"
+        result: "Result"
+        actions: "Actions"
+      works_empty: "No works linked to this specimen."
+    actions:
+      view: "View"
+      print_labels: "Print Labels"
+      print_barcode: "Print Barcode"
+    status:
+      pending: "Pending"
+      in_progress: "In Progress"
+      complete: "Complete"
+      cancelled: "Cancelled"

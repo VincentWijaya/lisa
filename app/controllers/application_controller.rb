@@ -18,13 +18,13 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate_user!
-    redirect_to login_path, alert: "Please log in to continue." unless logged_in?
+    redirect_to login_path, alert: I18n.t("sessions.flash.login_required") unless logged_in?
   end
 
   def require_role!(*roles)
     authenticate_user!
     return if roles.any? { |role| current_user&.has_role?(role) }
 
-    redirect_to root_path, alert: "You are not authorized to perform this action."
+    redirect_to root_path, alert: I18n.t("sessions.flash.access_denied")
   end
 end

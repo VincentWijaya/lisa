@@ -38,5 +38,10 @@ module Lisa
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    # Default locale: Bahasa Indonesia
+    config.i18n.default_locale = :id
+    config.i18n.available_locales = %i[id en]
+    config.i18n.fallbacks = { id: :en }
   end
 end

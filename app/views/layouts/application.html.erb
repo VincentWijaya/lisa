@@ -30,17 +30,17 @@
           <div class="flex items-center gap-6">
             <%= link_to "LISA", root_path, class: "text-lg font-bold text-slate-900" %>
             <div class="hidden gap-4 sm:flex">
-              <%= link_to "Dashboard", root_path, class: "text-sm font-medium text-slate-600 hover:text-slate-900" %>
-              <%= link_to "Works", works_path, class: "text-sm font-medium text-slate-600 hover:text-slate-900" %>
-              <%= link_to "Specimens", specimens_path, class: "text-sm font-medium text-slate-600 hover:text-slate-900" %>
+              <%= link_to t("nav.dashboard"), root_path, class: "text-sm font-medium text-slate-600 hover:text-slate-900" %>
+              <%= link_to t("nav.works"), works_path, class: "text-sm font-medium text-slate-600 hover:text-slate-900" %>
+              <%= link_to t("nav.specimens"), specimens_path, class: "text-sm font-medium text-slate-600 hover:text-slate-900" %>
               <% if current_user&.admin? %>
-                <%= link_to "Admin", admin_root_path, class: "text-sm font-medium text-sky-600 hover:text-sky-800" %>
+                <%= link_to t("nav.admin"), admin_root_path, class: "text-sm font-medium text-sky-600 hover:text-sky-800" %>
               <% end %>
             </div>
           </div>
           <div class="flex items-center gap-4">
             <span class="text-sm text-slate-500"><%= current_user.name %> <span class="text-xs text-slate-400">(<%= current_user.display_roles %>)</span></span>
-            <%= button_to "Sign out", session_path, method: :delete, class: "rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-50 cursor-pointer" %>
+            <%= button_to t("nav.sign_out"), session_path, method: :delete, class: "rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-50 cursor-pointer" %>
           </div>
         </div>
       </nav>
