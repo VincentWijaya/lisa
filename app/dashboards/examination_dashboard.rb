@@ -31,6 +31,8 @@ class ExaminationDashboard < Administrate::BaseDashboard
   COLLECTION_ATTRIBUTES = %i[
     id
     code
+    name
+    description
     default_result_type
     default_unit
   ].freeze
@@ -48,7 +50,6 @@ class ExaminationDashboard < Administrate::BaseDashboard
     reference_rules
     specimen_type
     status
-    works
     created_at
     updated_at
   ].freeze
@@ -66,7 +67,6 @@ class ExaminationDashboard < Administrate::BaseDashboard
     reference_rules
     specimen_type
     status
-    works
   ].freeze
 
   # COLLECTION_FILTERS
@@ -87,4 +87,9 @@ class ExaminationDashboard < Administrate::BaseDashboard
   # def display_resource(examination)
   #   "Examination ##{examination.id}"
   # end
+  #
+
+  def display_resource(examination)
+    "#{examination.code} - #{examination.name}"
+  end
 end
