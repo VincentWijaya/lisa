@@ -96,4 +96,8 @@ class WorkDashboard < Administrate::BaseDashboard
   # def display_resource(work)
   #   "Work ##{work.id}"
   # end
+
+  def display_resource(work)
+    "#{work.test_codes_text} (#{work.barcode_id})"
+  end
 end

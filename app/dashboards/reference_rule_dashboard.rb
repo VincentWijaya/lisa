@@ -103,4 +103,9 @@ class ReferenceRuleDashboard < Administrate::BaseDashboard
   # def display_resource(reference_rule)
   #   "ReferenceRule ##{reference_rule.id}"
   # end
+  # 
+
+  def display_resource(reference_rule)
+    "#{reference_rule.name} (#{reference_rule.loinc_code})"
+  end
 end

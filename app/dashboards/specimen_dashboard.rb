@@ -93,4 +93,8 @@ class SpecimenDashboard < Administrate::BaseDashboard
   # def display_resource(specimen)
   #   "Specimen ##{specimen.id}"
   # end
+  
+  def display_resource(specimen)
+    "#{specimen.patient_name} (#{specimen.patient_id}) - #{specimen.order_number}"
+  end
 end
