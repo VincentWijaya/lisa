@@ -1,12 +1,14 @@
 module Api
   module V1
     class SpecimensController < BaseController
+      require "pagy/extras/countless"
+
       def index
         scope = Specimen.includes(:works).order(created_at: :desc)
         last_modified = scope.maximum(:updated_at) || Time.at(0)
         return unless stale?(last_modified: last_modified, public: false)
 
-        pagy, specimens = pagy(scope, limit: pagination_limit)
+        pagy, specimens = pagy_countless(scope, limit: pagination_limit)
         pagy_headers_merge(pagy)
         render json: {
           data: SpecimenSerializer.serialize_collection(specimens),

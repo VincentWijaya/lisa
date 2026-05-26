@@ -226,6 +226,7 @@ id:
         search_placeholder: "Barcode, ID pasien, No. RM, atau nama pasien"
         apply: "Terapkan Filter"
         reset: "Reset"
+        barcode_id_placeholder: "Filter berdasarkan barcode ID"
       table:
         barcode_id: "ID Barcode"
         patient: "Pasien"
@@ -316,6 +317,17 @@ id:
       title: "Spesimen"
       subtitle: "Tinjau penerimaan spesimen dan cetak label barcode berdasarkan grup."
       back: "Kembali ke dasbor"
+      filters:
+        status: "Status"
+        status_all: "Semua"
+        patient_name: "Nama Pasien"
+        patient_name_placeholder: "Filter nama pasien"
+        patient_id: "ID Pasien"
+        patient_id_placeholder: "Filter ID pasien"
+        order_number: "Nomor Order"
+        order_number_placeholder: "Filter nomor order"
+        apply: "Terapkan"
+        reset: "Reset"
       table:
         order_number: "Nomor Order"
         patient: "Pasien"
