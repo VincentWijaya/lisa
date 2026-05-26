@@ -172,6 +172,17 @@ en:
       title: "Specimens"
       subtitle: "Review specimen intake and print grouped barcode labels."
       back: "Back to dashboard"
+      filters:
+        status: "Status"
+        status_all: "All"
+        patient_name: "Patient Name"
+        patient_name_placeholder: "Filter by patient name"
+        patient_id: "Patient ID"
+        patient_id_placeholder: "Filter by patient ID"
+        order_number: "Order Number"
+        order_number_placeholder: "Filter by order number"
+        apply: "Apply"
+        reset: "Reset"
       table:
         order_number: "Order Number"
         patient: "Patient"

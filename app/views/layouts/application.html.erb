@@ -31,8 +31,8 @@
             <%= link_to "LISA", root_path, class: "text-lg font-bold text-slate-900" %>
             <div class="hidden gap-4 sm:flex">
               <%= link_to t("nav.dashboard"), root_path, class: "text-sm font-medium text-slate-600 hover:text-slate-900" %>
-              <%= link_to t("nav.works"), works_path, class: "text-sm font-medium text-slate-600 hover:text-slate-900" %>
               <%= link_to t("nav.specimens"), specimens_path, class: "text-sm font-medium text-slate-600 hover:text-slate-900" %>
+              <%= link_to t("nav.works"), works_path, class: "text-sm font-medium text-slate-600 hover:text-slate-900" %>
               <% if current_user&.admin? %>
                 <%= link_to t("nav.admin"), admin_root_path, class: "text-sm font-medium text-sky-600 hover:text-sky-800" %>
               <% end %>
