@@ -174,6 +174,44 @@ if Specimen.count < 5
 end
 
 puts "  ✅ #{Specimen.count} specimens, #{Work.count} works"
+
+# ─── Sample Examination Results ───────────────────────────────────────────────
+
+puts "📊 Creating sample examination results..."
+
+if ExaminationResult.count < 5
+  sample_result_data = [
+    { examination_code: "GLU",  result_value: "95",           unit: "mg/dL", entered_by: "tech1@lisa.local" },
+    { examination_code: "CRE",  result_value: "1.1",          unit: "mg/dL", entered_by: "tech1@lisa.local" },
+    { examination_code: "CHOL", result_value: "185",          unit: "mg/dL", entered_by: "tech2@lisa.local" },
+    { examination_code: "TSH",  result_value: "2.5",          unit: "mIU/L", entered_by: "tech2@lisa.local" },
+    { examination_code: "HBSAG",result_value: "Non-Reactive", unit: nil,     entered_by: "tech1@lisa.local" },
+    { examination_code: "HCV",  result_value: "Non-Reactive", unit: nil,     entered_by: "tech1@lisa.local" },
+  ]
+
+  sample_result_data.each do |data|
+    work = Work.joins(:examination)
+               .where(examinations: { code: data[:examination_code] })
+               .where(status: %w[pending validated])
+               .order(created_at: :desc)
+               .first
+    next unless work
+
+    result = ExaminationResults::CreateService.call(
+      work:   work,
+      params: {
+        result_value: data[:result_value],
+        result_unit:  data[:unit],
+        source:       "manual",
+        entered_by:   data[:entered_by]
+      }
+    )
+
+    puts "  ⚠️  #{data[:examination_code]}: #{result.errors.join(', ')}" if result.failure?
+  end
+end
+
+puts "  ✅ #{ExaminationResult.count} examination results created"
 puts ""
 puts "✅ Seeding complete!"
 puts ""

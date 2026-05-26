@@ -11,6 +11,7 @@ module ExaminationResults
 
     def call
       return ServiceResult.failure(errors: ["Results can only be entered for pending or validated works"]) unless work.pending? || work.validated?
+      return ServiceResult.failure(errors: ["Reference rule is required"]) if params[:reference_rule_id].blank?
 
       reference_rule = selected_reference_rule
       return ServiceResult.failure(errors: errors) if errors.any?

@@ -63,7 +63,9 @@
                   <% unless work.verified? || work.cancelled? %>
                     <%= button_to t("works.actions.cancel"), cancel_work_work_path(work), method: :patch, class: primary_action_button_classes("bg-rose-600 hover:bg-rose-500") %>
                   <% end %>
-                  <%= link_to t("works.actions.print_barcode"), barcode_label_work_path(work), class: secondary_action_button_classes, target: "_blank", rel: "noopener" %>
+                  <% if work.pending? %>
+                    <%= link_to t("works.actions.print_barcode"), barcode_label_work_path(work), class: secondary_action_button_classes, target: "_blank", rel: "noopener" %>
+                  <% end %>
                 </div>
               </td>
             </tr>

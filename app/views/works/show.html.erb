@@ -1,4 +1,6 @@
-<div class="mx-auto max-w-5xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
+<div class="mx-auto max-w-5xl space-y-6 px-4 py-8 sm:px-6 lg:px-8" data-controller="barcode-scanner result-modal">
+
+  <%# ── Header card ─────────────────────────────────────────────────────── %>
   <div class="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:flex-row sm:items-start sm:justify-between">
     <div>
       <p class="text-sm font-medium text-sky-700"><%= t("works.show.label") %></p>
@@ -7,7 +9,11 @@
     </div>
     <div class="flex flex-wrap gap-2">
       <% if @work.pending? %>
-        <%= button_to t("works.actions.validate"), validate_work_work_path(@work), method: :patch, class: primary_action_button_classes %>
+        <button type="button"
+                data-action="click->barcode-scanner#open"
+                class="<%= primary_action_button_classes %>">
+          <%= t("works.actions.scan_validate") %>
+        </button>
       <% end %>
       <% if @work.validated? %>
         <%= button_to t("works.actions.verify"), verify_work_work_path(@work), method: :patch, class: primary_action_button_classes("bg-emerald-600 hover:bg-emerald-500") %>
@@ -19,6 +25,7 @@
     </div>
   </div>
 
+  <%# ── Patient + status cards ─────────────────────────────────────────── %>
   <div class="grid gap-6 lg:grid-cols-2">
     <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
       <h2 class="text-lg font-semibold text-slate-900"><%= t("works.show.patient_section") %></h2>
@@ -45,16 +52,52 @@
     </section>
   </div>
 
+  <%# ── Results section ─────────────────────────────────────────────────── %>
   <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
     <div class="mb-4 flex items-center justify-between">
       <h2 class="text-lg font-semibold text-slate-900"><%= t("works.show.results_section") %></h2>
       <%= link_to t("works.show.back"), works_path, class: "text-sm font-medium text-sky-700 hover:text-sky-600" %>
     </div>
+
+    <%# Add result form — visible for pending and validated works %>
+    <% if @work.validated? %>
+      <div class="mb-6 rounded-xl border border-slate-100 bg-slate-50 p-4">
+        <h3 class="mb-3 text-sm font-semibold text-slate-800"><%= t("works.show.add_result.title") %></h3>
+        <%= form_with url: add_result_work_path(@work), method: :post, class: "grid gap-4 sm:grid-cols-3" do |f| %>
+          <div>
+            <%= f.label :result_value, t("works.show.add_result.result_value"), class: "block text-xs font-medium text-slate-700 mb-1" %>
+            <%= f.text_field :result_value, name: "examination_result[result_value]",
+                class: "block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500",
+                required: true, placeholder: "e.g. 95", autocomplete: "off" %>
+          </div>
+          <div>
+            <%= f.label :result_unit, t("works.show.add_result.result_unit"), class: "block text-xs font-medium text-slate-700 mb-1" %>
+            <%= f.text_field :result_unit, name: "examination_result[result_unit]",
+                class: "block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500",
+                placeholder: @work.examination.default_unit.presence || "mg/dL", required: true %>
+          </div>
+          <div>
+            <%= f.label :reference_rule_id, t("works.show.add_result.reference_rule"), class: "block text-xs font-medium text-slate-700 mb-1" %>
+            <%= f.select :reference_rule_id,
+                options_for_select(@reference_rules.map { |r| [r.name, r.id] }),
+                { include_blank: t("works.show.add_result.reference_rule_placeholder") },
+                name: "examination_result[reference_rule_id]",
+                required: true,
+                class: "block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" %>
+          </div>
+          <div class="sm:col-span-3 flex justify-end">
+            <%= f.submit t("works.show.add_result.submit"), class: "rounded-lg bg-sky-600 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-500 cursor-pointer" %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <%# Results table %>
     <div class="overflow-x-auto">
       <table class="min-w-full divide-y divide-slate-200 text-sm">
         <thead class="bg-slate-50">
           <tr>
-            <% %w[value unit interpretation source verified_at].each do |col| %>
+            <% %w[reference_rule value unit interpretation reference_range source verified_at actions].each do |col| %>
               <th class="px-4 py-3 text-left font-semibold text-slate-700"><%= t("works.show.results_table.#{col}") %></th>
             <% end %>
           </tr>
@@ -62,20 +105,139 @@
         <tbody class="divide-y divide-slate-100">
           <% @results.each do |result| %>
             <tr>
-              <td class="px-4 py-3 text-slate-700"><%= result.result_value %></td>
+              <td class="px-4 py-3 text-slate-700"><%= reference_rule_display(result) %></td>
+              <td class="px-4 py-3 font-medium text-slate-900"><%= result.result_value %></td>
               <td class="px-4 py-3 text-slate-700"><%= result.result_unit.presence || "-" %></td>
               <td class="px-4 py-3"><%= result.interpretation.present? ? result.interpretation.humanize : "-" %></td>
+              <td class="px-4 py-3 text-slate-500 text-xs"><%= reference_range_display(result) %></td>
               <td class="px-4 py-3 text-slate-700"><%= result.source.humanize %></td>
               <td class="px-4 py-3 text-slate-700"><%= result.verified_at ? l(result.verified_at, format: :short) : "-" %></td>
+              <td class="px-4 py-3">
+                <div class="flex items-center gap-2">
+                  <% if @work.pending? || @work.validated? %>
+                    <button type="button"
+                            data-action="click->result-modal#open"
+                            data-result-value="<%= result.result_value %>"
+                            data-result-unit="<%= result.result_unit %>"
+                            data-result-reference-rule-id="<%= result.reference_rule_id %>"
+                            data-update-url="<%= work_examination_result_path(@work, result) %>"
+                            class="text-xs font-medium text-sky-700 hover:text-sky-500">
+                      <%= t("works.result_actions.edit") %>
+                    </button>
+                    <%= button_to t("works.result_actions.delete"),
+                        work_examination_result_path(@work, result),
+                        method: :delete,
+                        form: { data: { turbo_confirm: t("works.result_actions.delete_confirm") } },
+                        class: "text-xs font-medium text-rose-600 hover:text-rose-500 bg-transparent border-0 p-0 cursor-pointer" %>
+                  <% end %>
+                  <% unless result.verified_at.present? %>
+                    <%= button_to t("works.result_actions.verify"),
+                        verify_work_examination_result_path(@work, result),
+                        method: :patch,
+                        class: "text-xs font-medium text-emerald-700 hover:text-emerald-500 bg-transparent border-0 p-0 cursor-pointer" %>
+                  <% end %>
+                </div>
+              </td>
             </tr>
           <% end %>
           <% if @results.empty? %>
             <tr>
-              <td colspan="5" class="px-4 py-8 text-center text-sm text-slate-500"><%= t("works.show.results_empty") %></td>
+              <td colspan="8" class="px-4 py-8 text-center text-sm text-slate-500"><%= t("works.show.results_empty") %></td>
             </tr>
           <% end %>
         </tbody>
       </table>
     </div>
   </section>
+
+  <%# ── Barcode scanner modal ───────────────────────────────────────────── %>
+  <% if @work.pending? %>
+    <div data-barcode-scanner-target="modal"
+         class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 p-4">
+      <div class="w-full max-w-md rounded-2xl bg-white shadow-xl">
+        <div class="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+          <h2 class="text-lg font-semibold text-slate-900"><%= t("works.scan_modal.title") %></h2>
+          <button type="button" data-action="click->barcode-scanner#close"
+                  class="text-slate-400 hover:text-slate-600 text-xl leading-none">&times;</button>
+        </div>
+        <div class="p-6 space-y-4">
+          <p class="text-sm text-slate-600"><%= t("works.scan_modal.instruction") %></p>
+          <div class="relative overflow-hidden rounded-xl bg-slate-900 aspect-video">
+            <video data-barcode-scanner-target="video"
+                   class="w-full h-full object-cover"
+                   playsinline muted autoplay></video>
+          </div>
+          <p class="text-xs text-slate-500 text-center" data-barcode-scanner-target="status"></p>
+          <%= form_with url: scan_validate_work_path(@work), method: :post, data: { "barcode-scanner-target": "scanForm" } do |f| %>
+            <div>
+              <%= f.label :barcode_id, t("works.scan_modal.manual_label"), class: "block text-xs font-medium text-slate-700 mb-1" %>
+              <%= f.text_field :barcode_id, data: { "barcode-scanner-target": "input" },
+                  class: "block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500",
+                  placeholder: @work.barcode_id, autocomplete: "off" %>
+            </div>
+            <div class="mt-4 flex gap-3 justify-end">
+              <button type="button" data-action="click->barcode-scanner#close"
+                      class="<%= secondary_action_button_classes %>">
+                <%= t("works.scan_modal.cancel") %>
+              </button>
+              <button type="button" data-action="click->barcode-scanner#submitManual"
+                      class="<%= primary_action_button_classes %>">
+                <%= t("works.scan_modal.submit") %>
+              </button>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <%# ── Edit result modal ───────────────────────────────────────────────── %>
+  <% if @work.pending? || @work.validated? %>
+    <div data-result-modal-target="modal"
+         class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 p-4">
+      <div class="w-full max-w-md rounded-2xl bg-white shadow-xl">
+        <div class="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+          <h2 class="text-lg font-semibold text-slate-900"><%= t("works.edit_result_modal.title") %></h2>
+          <button type="button" data-action="click->result-modal#close"
+                  class="text-slate-400 hover:text-slate-600 text-xl leading-none">&times;</button>
+        </div>
+        <div class="p-6">
+          <%= form_with url: "#", method: :patch, data: { "result-modal-target": "form" }, class: "space-y-4" do |f| %>
+            <input type="hidden" name="_method" value="patch">
+            <div>
+              <%= f.label :result_value, t("works.show.add_result.result_value"), class: "block text-xs font-medium text-slate-700 mb-1" %>
+              <%= f.text_field :result_value, name: "examination_result[result_value]",
+                  data: { "result-modal-target": "valueInput" },
+                  class: "block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500",
+                  required: true %>
+            </div>
+            <div>
+              <%= f.label :result_unit, t("works.show.add_result.result_unit"), class: "block text-xs font-medium text-slate-700 mb-1" %>
+              <%= f.text_field :result_unit, name: "examination_result[result_unit]",
+                  data: { "result-modal-target": "unitInput" },
+                  class: "block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" %>
+            </div>
+            <div>
+              <%= f.label :reference_rule_id, t("works.show.add_result.reference_rule"), class: "block text-xs font-medium text-slate-700 mb-1" %>
+              <%= f.select :reference_rule_id,
+                  options_for_select(@reference_rules.map { |r| [r.name, r.id] }),
+                  { include_blank: t("works.show.add_result.reference_rule_placeholder") },
+                  name: "examination_result[reference_rule_id]",
+                  required: true,
+                  data: { "result-modal-target": "referenceRuleSelect" },
+                  class: "block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" %>
+            </div>
+            <div class="flex gap-3 justify-end pt-2">
+              <button type="button" data-action="click->result-modal#close"
+                      class="<%= secondary_action_button_classes %>">
+                <%= t("works.edit_result_modal.cancel") %>
+              </button>
+              <%= f.submit t("works.edit_result_modal.submit"), class: "rounded-lg bg-sky-600 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-500 cursor-pointer" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
 </div>

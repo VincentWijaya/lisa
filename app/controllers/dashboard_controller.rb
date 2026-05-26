@@ -23,7 +23,7 @@ class DashboardController < ApplicationController
       { title: I18n.t("dashboard.cards.verified_works"),  value: stats[:verified_works],  tone: "bg-emerald-100 text-emerald-900" }
     ]
 
-    @recent_works    = Work.with_details.order(created_at: :desc).limit(10)
-    @recent_specimens = Specimen.with_works.order(created_at: :desc).limit(10)
+    @recent_works    = Work.with_details.order(created_at: :desc).where(status: :pending).limit(10)
+    @recent_specimens = Specimen.with_works.order(created_at: :desc).where(status: :pending).limit(10)
   end
 end

@@ -41,6 +41,32 @@ module WorksHelper
     content_tag(:span, label, class: "rounded-full px-3 py-1 text-xs font-semibold #{interpretation_classes(work.latest_result&.interpretation)}")
   end
 
+  def reference_rule_display(result)
+    rule = result.reference_rule
+    return "-" unless rule
+
+    rule.name
+  end
+
+  def reference_range_display(result)
+    rule = result.reference_rule
+    return "-" unless rule
+
+    if rule.numeric? && (rule.numeric_low_value.present? || rule.numeric_high_value.present?)
+      low  = rule.numeric_low_value&.to_s&.delete_suffix(".0000").presence || rule.numeric_low_value&.to_f&.to_s
+      high = rule.numeric_high_value&.to_s&.delete_suffix(".0000").presence || rule.numeric_high_value&.to_f&.to_s
+      range = [low, high].compact.join(" – ")
+      unit  = rule.unit.presence || result.result_unit.presence
+      [range, unit].compact.join(" ")
+    elsif rule.reference_value.present?
+      rule.reference_value
+    elsif rule.normal_values.present?
+      rule.normal_values.join(", ")
+    else
+      "-"
+    end
+  end
+
   def primary_action_button_classes(tone = "bg-slate-900 hover:bg-slate-700")
     "rounded-lg #{tone} px-3 py-2 text-xs font-semibold text-white"
   end
