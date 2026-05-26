@@ -38,6 +38,13 @@ Rails.application.routes.draw do
       patch :verify_work
       patch :cancel_work
       get :barcode_label
+      post :add_result
+      post :scan_validate
+    end
+    resources :examination_results, only: [:update, :destroy], module: :works do
+      member do
+        patch :verify
+      end
     end
   end
 

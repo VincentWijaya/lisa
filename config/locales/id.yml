@@ -174,7 +174,7 @@ id:
 
   # ── Nav ───────────────────────────────────────────────────────────────────────
   nav:
-    dashboard: "Dasbor"
+    dashboard: "Dasboard"
     works: "Pekerjaan"
     specimens: "Spesimen"
     admin: "Admin"
@@ -259,12 +259,23 @@ id:
         value: "Nilai"
         unit: "Satuan"
         interpretation: "Interpretasi"
+        reference_rule: "Aturan Referensi"
+        reference_range: "Rentang Referensi"
         source: "Sumber"
         verified_at: "Waktu Verifikasi"
+        actions: "Aksi"
       results_empty: "Belum ada hasil pemeriksaan."
+      add_result:
+        title: "Tambah Hasil"
+        result_value: "Nilai Hasil"
+        result_unit: "Satuan"
+        reference_rule: "Aturan Referensi"
+        reference_rule_placeholder: "Pilih aturan referensi"
+        submit: "Simpan Hasil"
     actions:
       view: "Lihat"
       validate: "Validasi"
+      scan_validate: "Scan untuk Validasi"
       verify: "Verifikasi"
       cancel: "Batalkan"
       print_barcode: "Cetak Barcode"
@@ -277,6 +288,27 @@ id:
       validated: "Pekerjaan berhasil divalidasi."
       verified: "Pekerjaan berhasil diverifikasi."
       cancelled: "Pekerjaan berhasil dibatalkan."
+      result_added: "Hasil berhasil ditambahkan."
+      result_updated: "Hasil berhasil diperbarui."
+      result_deleted: "Hasil berhasil dihapus."
+      result_verified: "Hasil berhasil diverifikasi."
+      barcode_mismatch: "Barcode yang dipindai '%{scanned}' tidak cocok dengan pekerjaan ini (%{expected})."
+      work_not_pending: "Pekerjaan ini tidak dapat divalidasi — status saat ini adalah '%{status}'."
+    scan_modal:
+      title: "Scan Barcode untuk Validasi"
+      instruction: "Arahkan kamera ke label barcode, atau ketik ID barcode di bawah ini."
+      manual_label: "ID Barcode"
+      submit: "Validasi"
+      cancel: "Batal"
+    edit_result_modal:
+      title: "Edit Hasil"
+      submit: "Simpan Perubahan"
+      cancel: "Batal"
+    result_actions:
+      edit: "Edit"
+      delete: "Hapus"
+      verify: "Verifikasi"
+      delete_confirm: "Hapus hasil ini?"
 
   # ── Specimens ─────────────────────────────────────────────────────────────────
   specimens:

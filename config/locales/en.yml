@@ -116,12 +116,23 @@ en:
         value: "Value"
         unit: "Unit"
         interpretation: "Interpretation"
+        reference_rule: "Reference Rule"
+        reference_range: "Reference Range"
         source: "Source"
         verified_at: "Verified At"
+        actions: "Actions"
       results_empty: "No examination results recorded yet."
+      add_result:
+        title: "Add Result"
+        result_value: "Result Value"
+        result_unit: "Unit (optional)"
+        reference_rule: "Reference Rule (optional)"
+        reference_rule_placeholder: "Select a reference rule"
+        submit: "Save Result"
     actions:
       view: "View"
       validate: "Validate"
+      scan_validate: "Scan to Validate"
       verify: "Verify"
       cancel: "Cancel"
       print_barcode: "Print Barcode"
@@ -134,6 +145,27 @@ en:
       validated: "Work validated successfully."
       verified: "Work verified successfully."
       cancelled: "Work cancelled successfully."
+      result_added: "Result added successfully."
+      result_updated: "Result updated successfully."
+      result_deleted: "Result deleted successfully."
+      result_verified: "Result verified successfully."
+      barcode_mismatch: "Scanned barcode '%{scanned}' does not match this work (%{expected})."
+      work_not_pending: "This work cannot be validated — current status is '%{status}'."
+    scan_modal:
+      title: "Scan Barcode to Validate"
+      instruction: "Point the camera at the barcode label, or type the barcode ID below."
+      manual_label: "Barcode ID"
+      submit: "Validate"
+      cancel: "Cancel"
+    edit_result_modal:
+      title: "Edit Result"
+      submit: "Save Changes"
+      cancel: "Cancel"
+    result_actions:
+      edit: "Edit"
+      delete: "Delete"
+      verify: "Verify"
+      delete_confirm: "Delete this result?"
 
   specimens:
     index:
