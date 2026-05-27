@@ -99,9 +99,9 @@ Visit `/admin/users` and `/admin/roles` (requires `admin` account) to:
 
 Running `bin/rails db:seed` creates:
 
-- **22 examinations** across panels: Chemistry (CHEM), Lipid (LIPID), Liver Function (LFT), Serology (SERO), Thyroid (THYROID), Hematology, Urinalysis
-- **24 reference rules** with numeric reference ranges (with LOINC codes) and qualitative value sets
-- **5 sample patients** with works
+- **14 examinations** across Indonesian MCU panels: HEMATOLOGI (Darah Lengkap, LED, Golongan Darah), KIMIA KLINIK (Glukosa, HbA1C, Profil Lemak, Fungsi Hati, Fungsi Ginjal), IMUNOSEROLOGI (Anti HIV, VDRL), HEPATITIS (Anti HBs, HBsAg), URINALISIS (Urine Lengkap, Sedimen Urine)
+- **68 reference rules** with Indonesian parameter names, LOINC codes, units, and reference ranges from MCU PDF templates
+- **5 sample patients** with works and seeded examination results
 - **5 users** (one per role)
 
 ---
@@ -113,6 +113,7 @@ app/
 ├── controllers/
 │   ├── api/v1/              # JSON REST API controllers
 │   │   ├── base_controller.rb
+│   │   ├── analyzer_controller.rb
 │   │   ├── specimens_controller.rb
 │   │   └── works_controller.rb
 │   ├── admin/               # Administrate backoffice controllers
@@ -145,6 +146,8 @@ app/
 │   └── examination_result_serializer.rb
 └── services/                # Business logic service objects
     ├── service_result.rb
+    ├── analyzer/
+    │   └── ingest_service.rb
     ├── auth/
     │   └── login_service.rb
     ├── specimens/
@@ -189,6 +192,7 @@ reference_rules     → belongs_to examination
 - `patient_id`, `patient_name`, `birth_date`, `gender`, `lab_id` — required
 - `order_number` — unique daily sequence, e.g. `2605250001` (`YYMMDD` + 4-digit counter)
 - `status` — `pending` | `in_progress` | `complete` | `cancelled`
+- `referring_doctor`, `affiliation`, `patient_address`, `responsible_doctor` — optional, used in print report
 
 **works**
 - `barcode_id` — unique, e.g. `2605250001-01`
@@ -201,6 +205,13 @@ reference_rules     → belongs_to examination
 - `result_type` — `numeric` | `qualitative` | `text`
 - `allowed_values`, `normal_values`, `abnormal_values`, `critical_values` — JSONB arrays
 - `numeric_low_value`, `numeric_high_value` — for numeric ranges
+- `loinc_code` — standard LOINC code (used for instrument result matching)
+- `local_code` — instrument-specific local code (fallback for matching)
+- `reference_value` — display string shown on printed reports (e.g. `"13.5 - 18.0"`, `"< 200"`)
+
+**examinations**
+- `category` — report grouping label (e.g. `HEMATOLOGI`, `KIMIA KLINIK`) — used on the print report
+- `label_group` — groups exams sharing one barcode label / work record
 
 ---
 
@@ -258,7 +269,7 @@ PATCH /api/v1/works/:id/verify     # validated → verified (auto-completes spec
 PATCH /api/v1/works/:id/cancel     # pending|validated → cancelled
 ```
 
-### Submit Result
+### Submit Result (manual)
 
 ```
 POST /api/v1/works/:id/results
@@ -270,6 +281,48 @@ POST /api/v1/works/:id/results
   "referenceRuleId": 2,
   "source": "manual"
 }
+```
+
+### Analyzer Ingest (lab instrument push)
+
+```
+POST /api/v1/analyzer/results
+```
+
+Accepts a bulk result payload from a lab analyzer. Each result is matched to an `ExaminationResult` via `loinc_code` (preferred) or `local_code`. Unmatched results (no reference rule or no work found) are silently skipped and counted.
+
+**Request:**
+```json
+{
+  "patient_id": "1234",
+  "gender": "Female",
+  "message_datetime": "20260316150051",
+  "message_control_id": "3",
+  "results": [
+    { "loinc": "6690-2", "local_code": null, "test_name": "WBC",
+      "value": 7.59, "unit": "10*3/uL", "reference_range": "4.00-10.00", "flag": "N" },
+    { "loinc": null, "local_code": "08001", "test_name": "Take Mode",
+      "value": "O", "unit": "", "reference_range": "", "flag": "" }
+  ]
+}
+```
+
+**Response `201`:**
+```json
+{
+  "processed": 2,
+  "created": 1,
+  "skipped": 1,
+  "results": [
+    { "id": 12, "workId": 5, "resultValue": "7.59", "resultUnit": "10*3/uL",
+      "interpretation": "normal", "source": "instrument", ... }
+  ]
+}
+```
+
+**Response `422`:**
+```json
+{ "errors": ["No active specimen found for patient_id: 1234"] }
 ```
 
 ### Barcode Label
@@ -355,6 +408,7 @@ Specimen becomes `complete` automatically when **all** related works are `verifi
 | `/specimens/:id` | Specimen detail with all works |
 | `/works/:id/barcode_label` | Printable barcode label |
 | `/specimens/:id/barcode_labels` | All printable labels for specimen |
+| `/specimens/:id/print_report` | Printable MCU lab report (A4, grouped by category) |
 | `/admin` | Administrate backoffice (admin only) |
 
 ---
@@ -374,7 +428,7 @@ Visit `/admin` (requires `admin` account) to manage all master data and user acc
 ## Running Tests
 
 ```bash
-bundle exec rspec                   # all tests (73 examples)
+bundle exec rspec                   # all tests (93 examples)
 bundle exec rspec spec/models       # model specs
 bundle exec rspec spec/services     # service specs
 bundle exec rspec spec/requests     # API + session request specs
