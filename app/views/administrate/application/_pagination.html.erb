@@ -1,0 +1,8 @@
+<% if resources.is_a?(Kaminari::PaginatableWithoutCount) %>
+  <div class="pagination">
+    <%= link_to_previous_page resources, "← Previous", param_name: local_assigns.fetch(:param_name, "_page") %>
+    <%= link_to_next_page resources, "Next →", param_name: local_assigns.fetch(:param_name, "_page") %>
+  </div>
+<% else %>
+  <%= paginate resources, param_name: local_assigns.fetch(:param_name, "_page") %>
+<% end %>
