@@ -63,7 +63,7 @@
     <% if @work.validated? %>
       <div class="mb-6 rounded-xl border border-slate-100 bg-slate-50 p-4">
         <h3 class="mb-3 text-sm font-semibold text-slate-800"><%= t("works.show.add_result.title") %></h3>
-        <%= form_with url: add_result_work_path(@work), method: :post, class: "grid gap-4 sm:grid-cols-3" do |f| %>
+        <%= form_with url: add_result_work_path(@work), method: :post, class: "grid gap-4 sm:grid-cols-3", data: { controller: "unit-prefill" } do |f| %>
           <div>
             <%= f.label :result_value, t("works.show.add_result.result_value"), class: "block text-xs font-medium text-slate-700 mb-1" %>
             <%= f.text_field :result_value, name: "examination_result[result_value]",
@@ -74,15 +74,17 @@
             <%= f.label :result_unit, t("works.show.add_result.result_unit"), class: "block text-xs font-medium text-slate-700 mb-1" %>
             <%= f.text_field :result_unit, name: "examination_result[result_unit]",
                 class: "block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500",
-                placeholder: @work.examination.default_unit.presence || "mg/dL", required: true %>
+                placeholder: "mg/dL", required: true,
+                data: { unit_prefill_target: "unit" } %>
           </div>
           <div>
             <%= f.label :reference_rule_id, t("works.show.add_result.reference_rule"), class: "block text-xs font-medium text-slate-700 mb-1" %>
             <%= f.select :reference_rule_id,
-                options_for_select(@reference_rules.map { |r| [r.name, r.id] }),
+                options_for_select(@reference_rules.map { |r| [r.name, r.id, { data: { unit: r.unit.to_s } }] }),
                 { include_blank: t("works.show.add_result.reference_rule_placeholder") },
                 name: "examination_result[reference_rule_id]",
                 required: true,
+                data: { unit_prefill_target: "rule", action: "change->unit-prefill#fill" },
                 class: "block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" %>
           </div>
           <div class="sm:col-span-3 flex justify-end">
