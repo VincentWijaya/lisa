@@ -1,6 +1,4 @@
 class SpecimensController < ApplicationController
-  require "pagy/extras/countless"
-
   before_action :authenticate_user!
   before_action :set_specimen, only: %i[show barcode_labels]
 
@@ -11,7 +9,7 @@ class SpecimensController < ApplicationController
                     .filter_by_patient_id(params[:patient_id])
                     .filter_by_order_number(params[:order_number])
                     .order(created_at: :desc)
-    @pagy, @specimens = pagy_countless(scope, limit: 10)
+    @pagy, @specimens = pagy(:countless, scope, limit: 10)
   end
 
   def show
