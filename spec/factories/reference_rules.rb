@@ -11,5 +11,7 @@ FactoryBot.define do
     normal_values { [] }
     abnormal_values { [] }
     critical_values { [] }
+    loinc_code { nil }
+    local_code { nil }
   end
 end
