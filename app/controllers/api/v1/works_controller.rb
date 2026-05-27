@@ -1,15 +1,13 @@
 module Api
   module V1
     class WorksController < BaseController
-      require "pagy/extras/countless"
-
       def index
         scope = Work.order(created_at: :desc)
         last_modified = scope.maximum(:updated_at) || Time.at(0)
         return unless stale?(last_modified: last_modified, public: false)
 
-        pagy, works = pagy_countless(scope, limit: pagination_limit)
-        pagy_headers_merge(pagy)
+        pagy, works = pagy(:countless, scope, limit: pagination_limit)
+        response.headers.merge!(pagy.headers_hash)
         render json: {
           data: WorkSerializer.serialize_collection(works),
           pagination: pagy_metadata(pagy)

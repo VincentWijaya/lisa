@@ -1,6 +1,4 @@
 class WorksController < ApplicationController
-  require "pagy/extras/countless"
-
   before_action :authenticate_user!
   before_action :set_work, only: %i[show validate_work verify_work cancel_work barcode_label add_result scan_validate]
 
@@ -11,7 +9,7 @@ class WorksController < ApplicationController
                 .filter_by_lab_id(params[:lab_id])
                 .search_term(params[:query])
                 .distinct
-    @pagy, @works = pagy_countless(scope, limit: 10)
+    @pagy, @works = pagy(:countless, scope, limit: 10)
   end
 
   def show
