@@ -51,7 +51,6 @@ class ReferenceRuleDashboard < Administrate::BaseDashboard
     critical_values
     description
     examination
-    examination_results
     loinc_code
     name
     normal_values
@@ -74,7 +73,6 @@ class ReferenceRuleDashboard < Administrate::BaseDashboard
     critical_values
     description
     examination
-    examination_results
     loinc_code
     name
     normal_values

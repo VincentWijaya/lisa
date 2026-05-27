@@ -58,6 +58,10 @@ module Specimens
         lab_id: params[:lab_id],
         department: params[:department],
         collection_datetime: params[:collection_datetime],
+        referring_doctor: params[:referring_doctor],
+        affiliation: params[:affiliation],
+        patient_address: params[:patient_address],
+        responsible_doctor: params[:responsible_doctor],
         order_number: next_order_number,
         status: Specimen.statuses[:pending]
       )

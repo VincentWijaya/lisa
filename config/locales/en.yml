@@ -203,6 +203,10 @@ en:
         medical_record: "Medical Record"
         birth_date: "Birth Date"
         gender: "Gender"
+        referring_doctor: "Referring Doctor"
+        affiliation: "Affiliation"
+        responsible_doctor: "Responsible Doctor"
+        patient_address: "Patient Address"
         lab_id: "Lab ID"
         department: "Department"
         collected_at: "Collected At"
@@ -217,6 +221,7 @@ en:
     actions:
       view: "View"
       print_labels: "Print Labels"
+      print_report: "Print Report"
       print_barcode: "Print Barcode"
     status:
       pending: "Pending"

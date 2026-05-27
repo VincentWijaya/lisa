@@ -10,5 +10,9 @@ FactoryBot.define do
     department { "Emergency" }
     collection_datetime { Time.zone.parse("2026-05-25 10:30:00") }
     status { "pending" }
+    referring_doctor { nil }
+    affiliation { nil }
+    patient_address { nil }
+    responsible_doctor { nil }
   end
 end

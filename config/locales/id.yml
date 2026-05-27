@@ -98,6 +98,10 @@ id:
         medical_record_id: "No. Rekam Medis"
         department: "Departemen"
         collection_datetime: "Waktu Pengambilan"
+        referring_doctor: "Dokter Pengirim"
+        affiliation: "Affiliasi"
+        patient_address: "Alamat Pasien"
+        responsible_doctor: "Dr. Penanggung Jawab"
       work:
         barcode_id: "ID Barcode"
         status: "Status"
@@ -115,6 +119,7 @@ id:
         default_result_type: "Tipe Hasil Default"
         default_unit: "Satuan Default"
         label_group: "Grup Label"
+        category: "Kategori"
       examination_result:
         result_value: "Nilai Hasil"
         result_unit: "Satuan"
@@ -348,6 +353,10 @@ id:
         medical_record: "No. Rekam Medis"
         birth_date: "Tanggal Lahir"
         gender: "Jenis Kelamin"
+        referring_doctor: "Dokter Pengirim"
+        affiliation: "Affiliasi"
+        responsible_doctor: "Dr. Penanggung Jawab"
+        patient_address: "Alamat Pasien"
         lab_id: "ID Lab"
         department: "Departemen"
         collected_at: "Waktu Pengambilan"
@@ -362,6 +371,7 @@ id:
     actions:
       view: "Lihat"
       print_labels: "Cetak Label"
+      print_report: "Cetak Laporan"
       print_barcode: "Cetak Barcode"
     status:
       pending: "Menunggu"
