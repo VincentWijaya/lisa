@@ -12,7 +12,7 @@ class WorkDashboard < Administrate::BaseDashboard
     barcode_id: Field::String,
     cancelled_at: Field::DateTime,
     examination: Field::BelongsTo,
-    examination_results: Field::HasMany,
+    examination_results: HasManyCountlessField,
     label_sequence: Field::Number,
     manual_input: Field::Boolean,
     sample_taken_datetime: Field::DateTime,

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hasil Laboratorium – <%= @specimen&.order_number %></title>
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        font-family: Arial, sans-serif;
+        font-size: 11px;
+        color: #000;
+        background: #fff;
+        padding: 20px;
+      }
+
+      /* ── Print controls (hidden when printing) ── */
+      .print-controls {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 16px;
+        padding: 12px;
+        background: #f3f4f6;
+        border-radius: 8px;
+      }
+      .btn-print {
+        padding: 8px 20px;
+        background: #1d4ed8;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        font-size: 13px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+      .btn-back {
+        padding: 8px 16px;
+        background: #fff;
+        color: #374151;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 13px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+      }
+
+      /* ── Report page ── */
+      .report-page {
+        width: 100%;
+        max-width: 780px;
+        margin: 0 auto;
+        border: 1px solid #ccc;
+        padding: 20px 24px;
+      }
+
+      /* ── Header ── */
+      .report-header {
+        text-align: center;
+        border-bottom: 2px solid #000;
+        padding-bottom: 10px;
+        margin-bottom: 12px;
+      }
+      .report-title {
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin-bottom: 4px;
+      }
+      .report-subtitle { font-size: 10px; color: #555; }
+
+      /* ── Patient info grid ── */
+      .patient-info {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2px 16px;
+        border: 1px solid #999;
+        padding: 8px 10px;
+        margin-bottom: 12px;
+        font-size: 10.5px;
+      }
+      .patient-info-row { display: flex; gap: 4px; }
+      .patient-info-label { min-width: 130px; font-weight: 600; }
+      .patient-info-value { flex: 1; }
+      .patient-info-full { grid-column: 1 / -1; }
+
+      /* ── Results table ── */
+      .results-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 12px;
+        font-size: 10.5px;
+      }
+      .results-table th {
+        background: #e5e7eb;
+        border: 1px solid #999;
+        padding: 4px 6px;
+        text-align: left;
+        font-weight: 700;
+        font-size: 10px;
+      }
+      .results-table td {
+        border: 1px solid #ccc;
+        padding: 3px 6px;
+        vertical-align: top;
+      }
+      .category-row td {
+        background: #f3f4f6;
+        font-weight: 700;
+        font-size: 10.5px;
+        padding: 4px 6px;
+        border-top: 1px solid #888;
+        border-bottom: 1px solid #888;
+      }
+      .result-flag {
+        color: #c00;
+        font-weight: 700;
+        margin-left: 2px;
+      }
+      .col-name  { width: 38%; }
+      .col-value { width: 12%; text-align: right; }
+      .col-ref   { width: 28%; }
+      .col-unit  { width: 10%; text-align: center; }
+      .col-note  { width: 12%; }
+
+      /* ── Collection times ── */
+      .collection-section {
+        font-size: 10px;
+        margin-top: 10px;
+        border-top: 1px solid #ccc;
+        padding-top: 8px;
+      }
+      .collection-section p { margin-bottom: 2px; }
+
+      /* ── Footer ── */
+      .report-footer {
+        margin-top: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        border-top: 1px solid #ccc;
+        padding-top: 10px;
+        font-size: 10px;
+      }
+      .validator-box { text-align: center; }
+      .validator-name { font-weight: 700; margin-top: 24px; font-size: 11px; }
+      .disclaimer { max-width: 400px; font-size: 9.5px; color: #555; line-height: 1.4; }
+      .lab-footer-info { font-size: 9px; color: #666; margin-top: 8px; }
+
+      /* ── Page break ── */
+      .page-break { page-break-after: always; }
+
+      /* ── Print styles ── */
+      @media print {
+        body { padding: 0; }
+        .print-controls { display: none; }
+        .report-page { border: none; max-width: 100%; padding: 10px 16px; }
+      }
+
+      @page { size: A4; margin: 10mm 12mm; }
+    </style>
+  </head>
+  <body>
+    <div class="print-controls">
+      <button class="btn-print" onclick="window.print()">🖨 Cetak Laporan</button>
+      <%= link_to "← Kembali", :back, class: "btn-back" %>
+    </div>
+    <%= yield %>
+  </body>
+</html>

@@ -1,0 +1,172 @@
+<%
+  lab_name    = ENV.fetch("LAB_NAME",    "LABORATORIUM")
+  lab_address = ENV.fetch("LAB_ADDRESS", "")
+  lab_phone   = ENV.fetch("LAB_PHONE",   "")
+  lab_email   = ENV.fetch("LAB_EMAIL",   "")
+%>
+
+<div class="report-page">
+  <%# ── Report Header ── %>
+  <div class="report-header">
+    <div class="report-title">HASIL LABORATORIUM</div>
+    <div class="report-subtitle"><%= lab_name %></div>
+  </div>
+
+  <%# ── Patient Info ── %>
+  <div class="patient-info">
+    <div class="patient-info-row">
+      <span class="patient-info-label">Tgl. Registrasi</span>
+      <span>:</span>
+      <span class="patient-info-value"><%= l(@specimen.created_at.to_date, format: :default) %></span>
+    </div>
+    <div class="patient-info-row">
+      <span class="patient-info-label">Jenis Kelamin</span>
+      <span>:</span>
+      <span class="patient-info-value"><%= @specimen.gender %></span>
+    </div>
+
+    <div class="patient-info-row">
+      <span class="patient-info-label">Nama Pasien</span>
+      <span>:</span>
+      <span class="patient-info-value"><strong><%= @specimen.patient_name %></strong></span>
+    </div>
+    <div class="patient-info-row">
+      <span class="patient-info-label">Dokter Pengirim</span>
+      <span>:</span>
+      <span class="patient-info-value"><%= @specimen.referring_doctor.presence || "-" %></span>
+    </div>
+
+    <div class="patient-info-row">
+      <span class="patient-info-label">No. Lab</span>
+      <span>:</span>
+      <span class="patient-info-value"><%= @specimen.order_number %></span>
+    </div>
+    <div class="patient-info-row">
+      <span class="patient-info-label">Tgl. Lahir / Usia</span>
+      <span>:</span>
+      <span class="patient-info-value">
+        <%= l(@specimen.birth_date, format: :default) %>
+        / <%= full_age_display(@specimen.birth_date, @specimen.created_at.to_date) %>
+      </span>
+    </div>
+
+    <div class="patient-info-row">
+      <span class="patient-info-label">Identitas</span>
+      <span>:</span>
+      <span class="patient-info-value"><%= @specimen.patient_id %></span>
+    </div>
+    <div class="patient-info-row">
+      <span class="patient-info-label">Affiliasi</span>
+      <span>:</span>
+      <span class="patient-info-value"><%= @specimen.affiliation.presence || "-" %></span>
+    </div>
+
+    <div class="patient-info-row">
+      <span class="patient-info-label">No. Medrec</span>
+      <span>:</span>
+      <span class="patient-info-value"><%= @specimen.medical_record_id.presence || "-" %></span>
+    </div>
+    <div class="patient-info-row">
+      <span class="patient-info-label">Dr. Penanggung Jawab</span>
+      <span>:</span>
+      <span class="patient-info-value"><%= @specimen.responsible_doctor.presence || "-" %></span>
+    </div>
+
+    <% if @specimen.patient_address.present? %>
+      <div class="patient-info-row patient-info-full">
+        <span class="patient-info-label">Alamat Pasien</span>
+        <span>:</span>
+        <span class="patient-info-value"><%= @specimen.patient_address %></span>
+      </div>
+    <% end %>
+  </div>
+
+  <%# ── Results Table ── %>
+  <table class="results-table">
+    <thead>
+      <tr>
+        <th class="col-name">JENIS PEMERIKSAAN</th>
+        <th class="col-value">HASIL</th>
+        <th class="col-ref">NILAI RUJUKAN</th>
+        <th class="col-unit">SATUAN</th>
+        <th class="col-note">KETERANGAN</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @grouped_works.each do |category, works| %>
+        <tr class="category-row">
+          <td colspan="5"><%= category %></td>
+        </tr>
+        <% works.each do |work| %>
+          <% results = work.examination_results.includes(:reference_rule).order(:id) %>
+          <%# Sub-header for the examination name when it has multiple results %>
+          <% if results.many? %>
+            <tr>
+              <td colspan="5" style="padding-left:12px; font-style:italic; font-size:10px; background:#fafafa; border:1px solid #ddd;">
+                <%= work.examination.name %> :
+              </td>
+            </tr>
+          <% end %>
+          <% if results.any? %>
+            <% results.each do |result| %>
+              <% ref_rule = result.reference_rule %>
+              <% flag = result_flag(result.interpretation) %>
+              <tr>
+                <td class="col-name" style="<%= 'padding-left:18px;' if results.many? %>">
+                  <%= ref_rule&.name || work.examination.name %>
+                </td>
+                <td class="col-value">
+                  <%= result.result_value %>
+                  <% if flag.present? %><span class="result-flag"><%= flag %></span><% end %>
+                </td>
+                <td class="col-ref"><%= format_reference_range(ref_rule) %></td>
+                <td class="col-unit"><%= result.result_unit.presence || ref_rule&.unit %></td>
+                <td class="col-note"></td>
+              </tr>
+            <% end %>
+          <% else %>
+            <%# Work with no results yet — show placeholder row %>
+            <tr>
+              <td class="col-name"><%= work.examination.name %></td>
+              <td class="col-value" colspan="4" style="color:#999; font-style:italic;">Belum ada hasil</td>
+            </tr>
+          <% end %>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%# ── Collection Times ── %>
+  <% if @collection_times.any? %>
+    <div class="collection-section">
+      <p><strong>Waktu Pengambilan Spesimen/Penerimaan Specimen</strong></p>
+      <% @collection_times.each do |type, taken_at| %>
+        <p>- <%= type %> : <%= l(taken_at, format: :default) %></p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%# ── Footer ── %>
+  <div class="report-footer">
+    <div>
+      <% if lab_address.present? || lab_phone.present? %>
+        <div class="lab-footer-info">
+          <% if lab_address.present? %><div><%= lab_address %></div><% end %>
+          <% if lab_phone.present? %><div>T: <%= lab_phone %></div><% end %>
+          <% if lab_email.present? %><div><%= lab_email %></div><% end %>
+        </div>
+      <% end %>
+      <div class="lab-footer-info">Tgl. Cetak : <%= l(Time.current, format: :default) %></div>
+    </div>
+
+    <div class="disclaimer">
+      Hasil laboratorium harus diinterpretasi bersama dengan gambaran klinis dan pemeriksaan diagnostik lainnya.<br>
+      Tanda * menunjukkan nilai diatas atau dibawah nilai rujukan.
+    </div>
+
+    <div class="validator-box">
+      <p>Validator,</p>
+      <div class="validator-name"><%= @validator&.name %></div>
+    </div>
+  </div>
+</div>

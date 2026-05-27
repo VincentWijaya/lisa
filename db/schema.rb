@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_25_150050) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_27_025807) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -33,6 +33,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_25_150050) do
   end
 
   create_table "examinations", force: :cascade do |t|
+    t.string "category"
     t.string "code"
     t.datetime "created_at", null: false
     t.string "default_result_type"
@@ -43,6 +44,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_25_150050) do
     t.string "specimen_type"
     t.string "status", default: "active", null: false
     t.datetime "updated_at", null: false
+    t.index ["category"], name: "index_examinations_on_category"
     t.index ["code"], name: "index_examinations_on_code", unique: true, where: "(code IS NOT NULL)"
     t.index ["status"], name: "index_examinations_on_status"
   end
@@ -81,6 +83,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_25_150050) do
   end
 
   create_table "specimens", force: :cascade do |t|
+    t.string "affiliation"
     t.date "birth_date", null: false
     t.datetime "collection_datetime"
     t.datetime "completion_datetime"
@@ -90,8 +93,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_25_150050) do
     t.string "lab_id", null: false
     t.string "medical_record_id"
     t.string "order_number", null: false
+    t.text "patient_address"
     t.string "patient_id", null: false
     t.string "patient_name", null: false
+    t.string "referring_doctor"
+    t.string "responsible_doctor"
     t.string "status", default: "pending", null: false
     t.datetime "updated_at", null: false
     t.index ["created_at"], name: "index_specimens_on_created_at"

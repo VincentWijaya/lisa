@@ -10,6 +10,10 @@ class SpecimenSerializer < ApplicationSerializer
       labId: object.lab_id,
       orderNumber: object.order_number,
       status: object.status,
+      referringDoctor: object.referring_doctor,
+      affiliation: object.affiliation,
+      patientAddress: object.patient_address,
+      responsibleDoctor: object.responsible_doctor,
       works: WorkSerializer.serialize_collection(object.works.order(:label_sequence))
     }
   end

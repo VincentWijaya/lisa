@@ -8,5 +8,6 @@ FactoryBot.define do
     status { "active" }
     specimen_type { "Blood" }
     label_group { nil }
+    category { nil }
   end
 end

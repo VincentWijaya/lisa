@@ -6,6 +6,7 @@
       <p class="mt-2 text-sm text-slate-600"><%= @specimen.patient_name %> • <%= specimen_summary(@specimen) %></p>
     </div>
     <div class="flex gap-2">
+      <%= link_to t("specimens.actions.print_report"), print_report_specimen_path(@specimen), class: secondary_action_button_classes, target: "_blank", rel: "noopener" %>
       <%= link_to t("specimens.actions.print_labels"), barcode_labels_specimen_path(@specimen), class: secondary_action_button_classes, target: "_blank", rel: "noopener" %>
       <%= link_to t("specimens.show.back"), specimens_path, class: secondary_action_button_classes %>
     </div>
@@ -19,6 +20,12 @@
         <div class="flex justify-between gap-4"><dt class="font-medium"><%= t("specimens.show.fields.medical_record") %></dt><dd><%= @specimen.medical_record_id %></dd></div>
         <div class="flex justify-between gap-4"><dt class="font-medium"><%= t("specimens.show.fields.birth_date") %></dt><dd><%= @specimen.birth_date %></dd></div>
         <div class="flex justify-between gap-4"><dt class="font-medium"><%= t("specimens.show.fields.gender") %></dt><dd><%= @specimen.gender %></dd></div>
+        <div class="flex justify-between gap-4"><dt class="font-medium"><%= t("specimens.show.fields.referring_doctor") %></dt><dd><%= @specimen.referring_doctor.presence || "-" %></dd></div>
+        <div class="flex justify-between gap-4"><dt class="font-medium"><%= t("specimens.show.fields.affiliation") %></dt><dd><%= @specimen.affiliation.presence || "-" %></dd></div>
+        <div class="flex justify-between gap-4"><dt class="font-medium"><%= t("specimens.show.fields.responsible_doctor") %></dt><dd><%= @specimen.responsible_doctor.presence || "-" %></dd></div>
+        <% if @specimen.patient_address.present? %>
+          <div class="flex justify-between gap-4"><dt class="font-medium"><%= t("specimens.show.fields.patient_address") %></dt><dd><%= @specimen.patient_address %></dd></div>
+        <% end %>
       </dl>
     </section>
 
