@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_27_025807) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_27_035817) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -57,6 +57,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_27_025807) do
     t.jsonb "critical_values", default: [], null: false
     t.text "description"
     t.bigint "examination_id", null: false
+    t.string "local_code"
     t.string "loinc_code"
     t.string "name", null: false
     t.jsonb "normal_values", default: [], null: false
@@ -68,6 +69,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_27_025807) do
     t.datetime "updated_at", null: false
     t.index ["active"], name: "index_reference_rules_on_active"
     t.index ["examination_id"], name: "index_reference_rules_on_examination_id"
+    t.index ["local_code"], name: "index_reference_rules_on_local_code"
     t.index ["loinc_code"], name: "index_reference_rules_on_loinc_code"
   end
 
