@@ -41,12 +41,21 @@ module Analyzer
     end
 
     def find_specimen
-      specimen = Specimen.where(patient_id: params[:patient_id])
-                         .where.not(status: "cancelled")
-                         .order(created_at: :desc)
-                         .first
-      @errors << "No active specimen found for patient_id: #{params[:patient_id]}" if specimen.nil?
-      specimen
+      specimens = Specimen.where(patient_id: params[:patient_id])
+                          .where.not(status: "cancelled")
+                          .order(created_at: :desc)
+
+      if specimens.empty?
+        @errors << "No active specimen found for patient_id: #{params[:patient_id]}"
+        return nil
+      end
+
+      if specimens.size > 1
+        @errors << "Multiple active specimens found for patient_id: #{params[:patient_id]}"
+        return nil
+      end
+
+      specimens.first
     end
 
     def process_result(specimen, item)

@@ -98,6 +98,16 @@ RSpec.describe Analyzer::IngestService do
       end
     end
 
+    context "when multiple active specimens exist for patient_id" do
+      before { create(:specimen, patient_id: "1234", status: "pending") }
+
+      it { is_expected.to be_failure }
+
+      it "returns a descriptive error" do
+        expect(result.errors.first).to match(/Multiple active specimens found/)
+      end
+    end
+
     context "when patient_id is blank" do
       let(:params) { super().merge(patient_id: "") }
 
