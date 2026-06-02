@@ -68,4 +68,18 @@ RSpec.describe "POST /api/v1/analyzer/results" do
       expect(json["errors"]).to be_present
     end
   end
+
+  context "when multiple active specimens exist for patient" do
+    before { create(:specimen, patient_id: "1234", status: "pending") }
+
+    it "returns 422" do
+      post_results
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
+    it "returns descriptive error" do
+      post_results
+      expect(json["errors"]).to include(match(/Multiple active specimens found/))
+    end
+  end
 end
