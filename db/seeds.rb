@@ -38,20 +38,43 @@ puts "  ✅ #{User.count} users created"
 
 puts "🔬 Creating examinations..."
 
-# One examination per test panel / group.
+# One examination per analyzer row/test.
 # label_group → examinations sharing one barcode label.
 # category    → report grouping (header in print report).
+darah_lengkap_codes = %w[RDW-CV RDW-SD MONO LYMPH SEG BAND EOS BASO MCHC MCH MCV RBC PLT HCT WBC HGB].freeze
+elektrolit_codes = %w[CL K NA].freeze
+fungsi_ginjal_codes = %w[CRE UR].freeze
+
 examinations_data = [
-  # ── HEMATOLOGI ──
-  { code: "HEMA-DL",    name: "Darah Lengkap",         category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: nil      },
+  # ── HEMATOLOGI / DARAH LENGKAP ──
+  { code: "RDW-CV",     name: "RDW-CV",                category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "%"      },
+  { code: "RDW-SD",     name: "RDW-SD",                category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "fL"     },
+  { code: "MONO",       name: "Monosit",               category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "%"      },
+  { code: "LYMPH",      name: "Limfosit",              category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "%"      },
+  { code: "SEG",        name: "Segmen",                category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "%"      },
+  { code: "BAND",       name: "Batang",                category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "%"      },
+  { code: "EOS",        name: "Eosinofil",             category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "%"      },
+  { code: "BASO",       name: "Basofil",               category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "%"      },
+  { code: "MCHC",       name: "MCHC",                  category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "g/dL"   },
+  { code: "MCH",        name: "MCH",                   category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "pg"     },
+  { code: "MCV",        name: "MCV",                   category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "fL"     },
+  { code: "RBC",        name: "ERITROSIT",             category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "10⁶/µL" },
+  { code: "PLT",        name: "Trombosit",             category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "10³/µL" },
+  { code: "HCT",        name: "Hematokrit",            category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "%"      },
+  { code: "WBC",        name: "Lekosit",               category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "10³/µL" },
+  { code: "HGB",        name: "Hemoglobin",            category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "g/dL"   },
   { code: "LED",        name: "LED",                   category: "HEMATOLOGI",    label_group: nil,               specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "mm/jam" },
   { code: "GOLDAR",     name: "Golongan Darah",        category: "HEMATOLOGI",    label_group: "Golongan Darah",  specimen_type: "Darah EDTA",  default_result_type: "qualitative", default_unit: nil      },
   # ── KIMIA KLINIK ──
-  { code: "GDP",        name: "Glukosa Darah Puasa",   category: "KIMIA KLINIK",  label_group: nil,               specimen_type: "Darah Beku",  default_result_type: "numeric",     default_unit: "mg/dL"  },
+  { code: "CL",         name: "Chloride (Cl)",         category: "KIMIA KLINIK",  label_group: "Elektrolit",      specimen_type: "Darah Beku",  default_result_type: "numeric",     default_unit: "mmol/L" },
+  { code: "K",          name: "Kalium (K)",            category: "KIMIA KLINIK",  label_group: "Elektrolit",      specimen_type: "Darah Beku",  default_result_type: "numeric",     default_unit: "mmol/L" },
+  { code: "NA",         name: "Natrium (Na)",          category: "KIMIA KLINIK",  label_group: "Elektrolit",      specimen_type: "Darah Beku",  default_result_type: "numeric",     default_unit: "mmol/L" },
+  { code: "CRE",        name: "CREATININE",            category: "KIMIA KLINIK",  label_group: "Fungsi Ginjal",   specimen_type: "Darah Beku",  default_result_type: "numeric",     default_unit: "mg/dL"  },
+  { code: "UR",         name: "UREUM",                 category: "KIMIA KLINIK",  label_group: "Fungsi Ginjal",   specimen_type: "Darah Beku",  default_result_type: "numeric",     default_unit: "mg/dL"  },
+  { code: "GDS",        name: "GULA DARAH SEWAKTU",    category: "KIMIA KLINIK",  label_group: nil,               specimen_type: "Darah Beku",  default_result_type: "numeric",     default_unit: "mg/dL"  },
   { code: "HBA1C",      name: "Panel HbA1C",           category: "KIMIA KLINIK",  label_group: "HbA1C",           specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "%"      },
   { code: "LEMAK",      name: "Profil Lemak",          category: "KIMIA KLINIK",  label_group: "Profil Lemak",    specimen_type: "Darah Beku",  default_result_type: "numeric",     default_unit: "mg/dL"  },
   { code: "FUNGSI-H",   name: "Fungsi Hati",           category: "KIMIA KLINIK",  label_group: "Fungsi Hati",     specimen_type: "Darah Beku",  default_result_type: "numeric",     default_unit: "U/L"    },
-  { code: "FUNGSI-G",   name: "Fungsi Ginjal",         category: "KIMIA KLINIK",  label_group: "Fungsi Ginjal",   specimen_type: "Darah Beku",  default_result_type: "numeric",     default_unit: "mg/dL"  },
   # ── IMUNOSEROLOGI ──
   { code: "HIV",        name: "Anti HIV",              category: "IMUNOSEROLOGI", label_group: nil,               specimen_type: "Darah Beku",  default_result_type: "qualitative", default_unit: nil      },
   { code: "VDRL",       name: "VDRL",                  category: "IMUNOSEROLOGI", label_group: nil,               specimen_type: "Darah Beku",  default_result_type: "qualitative", default_unit: nil      },
@@ -77,6 +100,11 @@ examinations_data.each do |attrs|
   exam.save!
 end
 
+# Retire previous panel-style seed rows now represented by screenshot tests.
+Examination.where(code: %w[HEMA-DL FUNGSI-G GDP]).find_each do |exam|
+  exam.update!(status: "inactive")
+end
+
 puts "  ✅ #{Examination.count} examinations seeded"
 
 # ─── Reference Rules ──────────────────────────────────────────────────────────
@@ -85,10 +113,13 @@ puts "📏 Creating reference rules..."
 
 def upsert_ref_rule(exam_code, name:, result_type:, low: nil, high: nil, unit: nil,
                     normal: [], abnormal: [], critical: [], allowed: [],
-                    reference_value: nil, loinc: nil)
+                    reference_value: nil, loinc: nil, previous_names: [])
   exam = Examination.find_by!(code: exam_code)
-  rule = ReferenceRule.find_or_initialize_by(examination_id: exam.id, name: name)
+  rule = ReferenceRule.find_by(examination_id: exam.id, name: name)
+  rule ||= ReferenceRule.where(examination_id: exam.id, name: previous_names).order(:id).first if previous_names.any?
+  rule ||= ReferenceRule.new(examination: exam)
   rule.assign_attributes(
+    name:               name,
     result_type:        result_type,
     numeric_low_value:  low,
     numeric_high_value: high,
@@ -104,28 +135,26 @@ def upsert_ref_rule(exam_code, name:, result_type:, low: nil, high: nil, unit: n
   rule.save!
 end
 
-# ── Darah Lengkap (CBC) – each parameter is a separate reference rule ──
-upsert_ref_rule "HEMA-DL", name: "Hemoglobin (Pria)",       result_type: "numeric",     low: 13.5, high: 18.0,  unit: "g/dL",      reference_value: "13.5 - 18.0",  loinc: "718-7"
-upsert_ref_rule "HEMA-DL", name: "Hemoglobin (Wanita)",     result_type: "numeric",     low: 12.0, high: 16.0,  unit: "g/dL",      reference_value: "12.0 - 16.0",  loinc: "718-7"
-upsert_ref_rule "HEMA-DL", name: "Hematokrit (Pria)",       result_type: "numeric",     low: 40,   high: 54,    unit: "%",         reference_value: "40 - 54",       loinc: "20570-8"
-upsert_ref_rule "HEMA-DL", name: "Hematokrit (Wanita)",     result_type: "numeric",     low: 38,   high: 47,    unit: "%",         reference_value: "38 - 47",       loinc: "20570-8"
-upsert_ref_rule "HEMA-DL", name: "Eritrosit (Pria)",        result_type: "numeric",     low: 4.20, high: 6.00,  unit: "10⁶/µL",   reference_value: "4.20 - 6.00",   loinc: "789-8"
-upsert_ref_rule "HEMA-DL", name: "Eritrosit (Wanita)",      result_type: "numeric",     low: 3.80, high: 5.40,  unit: "10⁶/µL",   reference_value: "3.80 - 5.40",   loinc: "789-8"
-upsert_ref_rule "HEMA-DL", name: "MCV",                     result_type: "numeric",     low: 80,   high: 100,   unit: "fL",        reference_value: "80 - 100",      loinc: "787-2"
-upsert_ref_rule "HEMA-DL", name: "MCH",                     result_type: "numeric",     low: 26,   high: 34,    unit: "pg",        reference_value: "26 - 34",       loinc: "785-6"
-upsert_ref_rule "HEMA-DL", name: "MCHC",                    result_type: "numeric",     low: 32,   high: 36,    unit: "g/dL",      reference_value: "32 - 36",       loinc: "786-4"
-upsert_ref_rule "HEMA-DL", name: "RDW",                     result_type: "numeric",     low: 11.5, high: 14.5,  unit: "%",         reference_value: "11.5 - 14.5",   loinc: "788-0"
-upsert_ref_rule "HEMA-DL", name: "Leukosit",                result_type: "numeric",     low: 3.6,  high: 10.6,  unit: "10³/µL",   reference_value: "3.6 - 10.6",    loinc: "6690-2"
-upsert_ref_rule "HEMA-DL", name: "Basofil",                 result_type: "numeric",     low: 0,    high: 2,     unit: "%",         reference_value: "0 - 2",         loinc: "706-4"
-upsert_ref_rule "HEMA-DL", name: "Eosinofil",               result_type: "numeric",     low: 1,    high: 3,     unit: "%",         reference_value: "1 - 3",         loinc: "713-8"
-upsert_ref_rule "HEMA-DL", name: "Neutrofil",               result_type: "numeric",     low: 50,   high: 70,    unit: "%",         reference_value: "50 - 70",       loinc: "770-8"
-upsert_ref_rule "HEMA-DL", name: "Limfosit",                result_type: "numeric",     low: 18,   high: 42,    unit: "%",         reference_value: "18 - 42",       loinc: "736-9"
-upsert_ref_rule "HEMA-DL", name: "Monosit",                 result_type: "numeric",     low: 2,    high: 11,    unit: "%",         reference_value: "2 - 11",        loinc: "5905-5"
-upsert_ref_rule "HEMA-DL", name: "Limfosit Absolut",        result_type: "numeric",     low: 1.5,  high: nil,   unit: "10³/µL",   reference_value: "> 1.5",         loinc: "731-0"
-upsert_ref_rule "HEMA-DL", name: "Rasio Neutrofil/Limfosit",result_type: "text",                              unit: nil,         reference_value: "-"
-upsert_ref_rule "HEMA-DL", name: "Trombosit",               result_type: "numeric",     low: 150,  high: 450,   unit: "10³/µL",   reference_value: "150 - 450",     loinc: "777-3"
-upsert_ref_rule "HEMA-DL", name: "PDW",                     result_type: "numeric",     low: 9.1,  high: 15.3,  unit: "fL",        reference_value: "9.1 - 15.3"
-upsert_ref_rule "HEMA-DL", name: "MPV",                     result_type: "numeric",     low: 8.7,  high: 11.8,  unit: "fL",        reference_value: "8.7 - 11.8"
+# ── Darah Lengkap (CBC) – names follow the screenshot order ──
+upsert_ref_rule "RDW-CV", name: "RDW-CV",                result_type: "numeric", low: 11.5, high: 14.5, unit: "%",       reference_value: "11.5 - 14.5", loinc: "788-0",  previous_names: ["RDW"]
+upsert_ref_rule "RDW-SD", name: "RDW-SD",                result_type: "numeric", low: 39,   high: 46,   unit: "fL",      reference_value: "39 - 46",      loinc: "21000-5"
+upsert_ref_rule "MONO",   name: "Monosit",               result_type: "numeric", low: 2,    high: 11,   unit: "%",       reference_value: "2 - 11",       loinc: "5905-5"
+upsert_ref_rule "LYMPH",  name: "Limfosit",              result_type: "numeric", low: 18,   high: 42,   unit: "%",       reference_value: "18 - 42",      loinc: "736-9"
+upsert_ref_rule "SEG",    name: "Segmen",                result_type: "numeric", low: 50,   high: 70,   unit: "%",       reference_value: "50 - 70",      loinc: "770-8",  previous_names: ["Neutrofil"]
+upsert_ref_rule "BAND",   name: "Batang",                result_type: "numeric", low: 0,    high: 5,    unit: "%",       reference_value: "0 - 5",        loinc: "764-1"
+upsert_ref_rule "EOS",    name: "Eosinofil",             result_type: "numeric", low: 1,    high: 3,    unit: "%",       reference_value: "1 - 3",        loinc: "713-8"
+upsert_ref_rule "BASO",   name: "Basofil",               result_type: "numeric", low: 0,    high: 2,    unit: "%",       reference_value: "0 - 2",        loinc: "706-4"
+upsert_ref_rule "MCHC",   name: "MCHC",                  result_type: "numeric", low: 32,   high: 36,   unit: "g/dL",    reference_value: "32 - 36",      loinc: "786-4"
+upsert_ref_rule "MCH",    name: "MCH",                   result_type: "numeric", low: 26,   high: 34,   unit: "pg",      reference_value: "26 - 34",      loinc: "785-6"
+upsert_ref_rule "MCV",    name: "MCV",                   result_type: "numeric", low: 80,   high: 100,  unit: "fL",      reference_value: "80 - 100",     loinc: "787-2"
+upsert_ref_rule "RBC",    name: "ERITROSIT (Pria)",      result_type: "numeric", low: 4.20, high: 6.00, unit: "10⁶/µL", reference_value: "4.20 - 6.00",  loinc: "789-8",  previous_names: ["Eritrosit (Pria)"]
+upsert_ref_rule "RBC",    name: "ERITROSIT (Wanita)",    result_type: "numeric", low: 3.80, high: 5.40, unit: "10⁶/µL", reference_value: "3.80 - 5.40",  loinc: "789-8",  previous_names: ["Eritrosit (Wanita)"]
+upsert_ref_rule "PLT",    name: "Trombosit",             result_type: "numeric", low: 150,  high: 450,  unit: "10³/µL", reference_value: "150 - 450",    loinc: "777-3"
+upsert_ref_rule "HCT",    name: "Hematokrit (Pria)",     result_type: "numeric", low: 40,   high: 54,   unit: "%",       reference_value: "40 - 54",      loinc: "20570-8"
+upsert_ref_rule "HCT",    name: "Hematokrit (Wanita)",   result_type: "numeric", low: 38,   high: 47,   unit: "%",       reference_value: "38 - 47",      loinc: "20570-8"
+upsert_ref_rule "WBC",    name: "Lekosit",               result_type: "numeric", low: 3.6,  high: 10.6, unit: "10³/µL", reference_value: "3.6 - 10.6",   loinc: "6690-2",  previous_names: ["Leukosit"]
+upsert_ref_rule "HGB",    name: "Hemoglobin (Pria)",     result_type: "numeric", low: 13.5, high: 18.0, unit: "g/dL",    reference_value: "13.5 - 18.0", loinc: "718-7",  previous_names: ["Hemoglobin Male"]
+upsert_ref_rule "HGB",    name: "Hemoglobin (Wanita)",   result_type: "numeric", low: 12.0, high: 16.0, unit: "g/dL",    reference_value: "12.0 - 16.0", loinc: "718-7",  previous_names: ["Hemoglobin Female"]
 
 # ── LED ──
 upsert_ref_rule "LED", name: "LED (Pria)",   result_type: "numeric", low: 0, high: 15, unit: "mm/jam", reference_value: "0 - 15",  loinc: "4537-7"
@@ -137,11 +166,19 @@ upsert_ref_rule "GOLDAR", name: "Golongan Darah", result_type: "qualitative",
 upsert_ref_rule "GOLDAR", name: "Rhesus", result_type: "qualitative",
   allowed: ["Positif (+)", "Negatif (-)"], normal: ["Positif (+)"], abnormal: ["Negatif (-)"]
 
-# ── Glukosa Darah Puasa ──
-upsert_ref_rule "GDP", name: "Glukosa Darah Puasa", result_type: "numeric",
+# ── Gula Darah Sewaktu ──
+upsert_ref_rule "GDS", name: "GULA DARAH SEWAKTU", result_type: "numeric",
   high: 100, unit: "mg/dL",
   reference_value: "Normal: < 100 | Gangguan Toleransi: 100–126 | Diabetes: > 126",
   loinc: "1558-6"
+
+# ── Elektrolit ──
+upsert_ref_rule "CL", name: "Chloride (Cl)", result_type: "numeric",
+  low: 98, high: 107, unit: "mmol/L", reference_value: "98 - 107", loinc: "2075-0"
+upsert_ref_rule "K", name: "Kalium (K)", result_type: "numeric",
+  low: 3.6, high: 5.2, unit: "mmol/L", reference_value: "3.6 - 5.2", loinc: "2823-3"
+upsert_ref_rule "NA", name: "Natrium (Na)", result_type: "numeric",
+  low: 135, high: 145, unit: "mmol/L", reference_value: "135 - 145", loinc: "2951-2"
 
 # ── Panel HbA1C ──
 upsert_ref_rule "HBA1C", name: "HbA1C",                           result_type: "numeric", unit: "%",
@@ -170,11 +207,9 @@ upsert_ref_rule "FUNGSI-H", name: "Albumin",                result_type: "numeri
 upsert_ref_rule "FUNGSI-H", name: "Gamma GT",               result_type: "numeric", low: 8,  high: 61,  unit: "U/L",   reference_value: "8 - 61",   loinc: "2324-2"
 
 # ── Fungsi Ginjal ──
-upsert_ref_rule "FUNGSI-G", name: "Ureum",               result_type: "numeric", low: 15, high: 45,  unit: "mg/dL", reference_value: "15 - 45",    loinc: "3094-0"
-upsert_ref_rule "FUNGSI-G", name: "Kreatinin (Pria)",    result_type: "numeric", low: 0.7,high: 1.2, unit: "mg/dL", reference_value: "0.7 - 1.2",  loinc: "2160-0"
-upsert_ref_rule "FUNGSI-G", name: "Kreatinin (Wanita)",  result_type: "numeric", low: 0.5,high: 1.0, unit: "mg/dL", reference_value: "0.5 - 1.0",  loinc: "2160-0"
-upsert_ref_rule "FUNGSI-G", name: "Asam Urat (Pria)",    result_type: "numeric", low: 3.4,high: 7.0, unit: "mg/dL", reference_value: "3.4 - 7.0",  loinc: "3084-1"
-upsert_ref_rule "FUNGSI-G", name: "Asam Urat (Wanita)",  result_type: "numeric", low: 2.4,high: 6.0, unit: "mg/dL", reference_value: "2.4 - 6.0",  loinc: "3084-1"
+upsert_ref_rule "CRE", name: "CREATININE (Pria)",   result_type: "numeric", low: 0.7, high: 1.2, unit: "mg/dL", reference_value: "0.7 - 1.2", loinc: "2160-0", previous_names: ["Kreatinin (Pria)", "Adult Male Creatinine"]
+upsert_ref_rule "CRE", name: "CREATININE (Wanita)", result_type: "numeric", low: 0.5, high: 1.0, unit: "mg/dL", reference_value: "0.5 - 1.0", loinc: "2160-0", previous_names: ["Kreatinin (Wanita)", "Adult Female Creatinine"]
+upsert_ref_rule "UR",  name: "UREUM",               result_type: "numeric", low: 15,  high: 45,  unit: "mg/dL", reference_value: "15 - 45",   loinc: "3094-0", previous_names: ["Ureum", "BUN Adult"]
 
 # ── Anti HIV ──
 upsert_ref_rule "HIV", name: "Anti HIV", result_type: "qualitative",
@@ -235,43 +270,51 @@ puts "  ✅ #{ReferenceRule.count} reference rules seeded"
 puts "🧪 Creating sample specimens..."
 
 if Specimen.count < 5
-  darah_lengkap = Examination.find_by!(code: "HEMA-DL")
+  exam_ids_for = lambda do |codes|
+    exams = Examination.where(code: codes).index_by(&:code)
+    codes.map { |code| exams.fetch(code).id }
+  end
+
+  darah_lengkap_ids = exam_ids_for.call(darah_lengkap_codes)
+  elektrolit_ids = exam_ids_for.call(elektrolit_codes)
+  fungsi_ginjal_ids = exam_ids_for.call(fungsi_ginjal_codes)
+
   profil_lemak  = Examination.find_by!(code: "LEMAK")
   hba1c         = Examination.find_by!(code: "HBA1C")
   anti_hiv      = Examination.find_by!(code: "HIV")
   urine_l       = Examination.find_by!(code: "URINE-L")
-  fungsi_ginjal = Examination.find_by!(code: "FUNGSI-G")
+  gula_darah_sewaktu = Examination.find_by!(code: "GDS")
 
   sample_patients = [
     {
       patient_id: "P-10001", patient_name: "Budi Santoso",      birth_date: "1985-04-12",
       gender: "Laki-laki",   medical_record_id: "RM-2024-001",  lab_id: "LAB-01",
       department: "Penyakit Dalam", referring_doctor: "dr. Andi Kusuma, Sp.PD",
-      examination_ids: [darah_lengkap.id, profil_lemak.id]
+      examination_ids: darah_lengkap_ids + [profil_lemak.id]
     },
     {
       patient_id: "P-10002", patient_name: "Siti Rahayu",       birth_date: "1992-07-23",
       gender: "Perempuan",   medical_record_id: "RM-2024-002",  lab_id: "LAB-01",
       department: "Kebidanan", referring_doctor: "dr. Dewi Lestari, Sp.OG",
-      examination_ids: [darah_lengkap.id, hba1c.id]
+      examination_ids: darah_lengkap_ids + [hba1c.id]
     },
     {
       patient_id: "P-10003", patient_name: "Ahmad Wijaya",      birth_date: "1970-11-05",
       gender: "Laki-laki",   medical_record_id: "RM-2024-003",  lab_id: "LAB-01",
       department: "Kardiologi", referring_doctor: "dr. Hendra Gunawan, Sp.JP",
-      examination_ids: [profil_lemak.id, hba1c.id, anti_hiv.id]
+      examination_ids: [profil_lemak.id, hba1c.id, gula_darah_sewaktu.id, anti_hiv.id]
     },
     {
       patient_id: "P-10004", patient_name: "Dewi Susanti",      birth_date: "1955-02-28",
       gender: "Perempuan",   medical_record_id: nil,             lab_id: "LAB-02",
       department: "Geriatri",
-      examination_ids: [fungsi_ginjal.id, darah_lengkap.id]
+      examination_ids: elektrolit_ids + fungsi_ginjal_ids + darah_lengkap_ids
     },
     {
       patient_id: "P-10005", patient_name: "Rizki Pratama",     birth_date: "2001-09-18",
       gender: "Laki-laki",   medical_record_id: "RM-2024-005",  lab_id: "LAB-01",
       department: "IGD",
-      examination_ids: [darah_lengkap.id, urine_l.id, anti_hiv.id]
+      examination_ids: darah_lengkap_ids + [urine_l.id, anti_hiv.id]
     },
   ]
 
@@ -301,27 +344,37 @@ puts "📊 Creating sample examination results..."
 if ExaminationResult.count < 5
   tech1 = User.find_by!(email: "tech1@lisa.local")
 
-  # Map: exam code → list of {ref_rule_name, result_value}
+  # Map: primary work exam code → seeded result rows.
   sample_results = {
-    "HEMA-DL" => [
-      { ref: "Hemoglobin (Pria)",        val: "15.3",       unit: "g/dL"    },
-      { ref: "Hematokrit (Pria)",        val: "45.5",       unit: "%"       },
-      { ref: "Eritrosit (Pria)",         val: "5.58",       unit: "10⁶/µL" },
-      { ref: "MCV",                      val: "82",         unit: "fL"      },
-      { ref: "MCH",                      val: "27",         unit: "pg"      },
-      { ref: "MCHC",                     val: "34",         unit: "g/dL"    },
-      { ref: "RDW",                      val: "11.8",       unit: "%"       },
-      { ref: "Leukosit",                 val: "7.6",        unit: "10³/µL" },
-      { ref: "Basofil",                  val: "0.5",        unit: "%"       },
-      { ref: "Eosinofil",                val: "7.0",        unit: "%"       },
-      { ref: "Neutrofil",                val: "49.5",       unit: "%"       },
-      { ref: "Limfosit",                 val: "34.6",       unit: "%"       },
-      { ref: "Monosit",                  val: "8.4",        unit: "%"       },
-      { ref: "Limfosit Absolut",         val: "2.63",       unit: "10³/µL" },
-      { ref: "Rasio Neutrofil/Limfosit", val: "1.43",       unit: nil       },
-      { ref: "Trombosit",                val: "333",        unit: "10³/µL" },
-      { ref: "PDW",                      val: "10.6",       unit: "fL"      },
-      { ref: "MPV",                      val: "9.6",        unit: "fL"      },
+    "RDW-CV" => [
+      { exam: "RDW-CV", ref: "RDW-CV",              val: "11.8", unit: "%"       },
+      { exam: "RDW-SD", ref: "RDW-SD",              val: "42",   unit: "fL"      },
+      { exam: "MONO",   ref: "Monosit",             val: "8.4",  unit: "%"       },
+      { exam: "LYMPH",  ref: "Limfosit",            val: "34.6", unit: "%"       },
+      { exam: "SEG",    ref: "Segmen",              val: "49.5", unit: "%"       },
+      { exam: "BAND",   ref: "Batang",              val: "2.0",  unit: "%"       },
+      { exam: "EOS",    ref: "Eosinofil",           val: "7.0",  unit: "%"       },
+      { exam: "BASO",   ref: "Basofil",             val: "0.5",  unit: "%"       },
+      { exam: "MCHC",   ref: "MCHC",                val: "34",   unit: "g/dL"    },
+      { exam: "MCH",    ref: "MCH",                 val: "27",   unit: "pg"      },
+      { exam: "MCV",    ref: "MCV",                 val: "82",   unit: "fL"      },
+      { exam: "RBC",    ref: "ERITROSIT (Pria)",    val: "5.58", unit: "10⁶/µL" },
+      { exam: "PLT",    ref: "Trombosit",           val: "333",  unit: "10³/µL" },
+      { exam: "HCT",    ref: "Hematokrit (Pria)",   val: "45.5", unit: "%"       },
+      { exam: "WBC",    ref: "Lekosit",             val: "7.6",  unit: "10³/µL" },
+      { exam: "HGB",    ref: "Hemoglobin (Pria)",   val: "15.3", unit: "g/dL"    },
+    ],
+    "CL" => [
+      { exam: "CL", ref: "Chloride (Cl)", val: "101", unit: "mmol/L" },
+      { exam: "K",  ref: "Kalium (K)",    val: "4.2", unit: "mmol/L" },
+      { exam: "NA", ref: "Natrium (Na)",  val: "139", unit: "mmol/L" },
+    ],
+    "CRE" => [
+      { exam: "CRE", ref: "CREATININE (Pria)", val: "1.1", unit: "mg/dL" },
+      { exam: "UR",  ref: "UREUM",             val: "32",  unit: "mg/dL" },
+    ],
+    "GDS" => [
+      { ref: "GULA DARAH SEWAKTU", val: "95", unit: "mg/dL" },
     ],
     "LEMAK" => [
       { ref: "Kolesterol Total",   val: "211", unit: "mg/dL" },
@@ -348,7 +401,8 @@ if ExaminationResult.count < 5
     exam    = Examination.find_by!(code: exam_code)
 
     rows.each do |row|
-      ref_rule = ReferenceRule.find_by(examination: exam, name: row[:ref])
+      ref_exam = row[:exam] ? Examination.find_by!(code: row[:exam]) : exam
+      ref_rule = ReferenceRule.find_by!(examination: ref_exam, name: row[:ref])
 
       ExaminationResult.find_or_create_by!(work: work, reference_rule: ref_rule) do |er|
         er.result_value = row[:val]
