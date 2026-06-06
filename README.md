@@ -64,21 +64,25 @@ The app will be available at `http://localhost:3000`. Log in with any of the see
 
 ## Deployment
 
-Production deploys run through GitHub Actions with Kamal when changes are pushed to `master`, or manually from the `Deploy` workflow. For the first deployment to a fresh VPS, run the workflow manually with `Run Kamal setup for the first deployment` enabled.
+Production deploys run through GitHub Actions with Hostinger when changes are pushed to `main` or `production`.
 
-Add these repository or `production` environment secrets in GitHub:
+Add these repository secrets in GitHub:
 
 | Secret | Description |
 |---|---|
-| `SSH_HOST` | VPS hostname or IP address |
-| `SSH_PORT` | SSH port, usually `22` |
-| `SSH_USERNAME` | SSH user on the VPS |
-| `SSH_PRIVATE_KEY` | Private key that can SSH into the VPS |
+| `HOSTINGER_API_KEY` | Hostinger API key generated from hPanel |
+| `PERSONAL_ACCESS_TOKEN` | GitHub token for private repository access |
 | `RAILS_MASTER_KEY` | Rails credentials master key |
-| `LISA_DATABASE_PASSWORD` | Production PostgreSQL password |
-| `SSH_KNOWN_HOSTS` | Optional pinned host key output for stricter SSH verification |
+| `DATABASE_URL` | Production PostgreSQL connection URL |
+| `LISA_DATABASE_PASSWORD` | Production PostgreSQL password used by Rails database config |
 
-The VPS user must be able to run Docker commands. If the user is not `root`, add it to the `docker` group before deploying.
+Add this repository variable in GitHub:
+
+| Variable | Description |
+|---|---|
+| `HOSTINGER_VM_ID` | Hostinger VPS virtual machine ID |
+
+The deployment workflow uses `docker/docker-compose.yml`, so the VPS must use a Hostinger Docker-capable VPS template.
 
 ---
 
