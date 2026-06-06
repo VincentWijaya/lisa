@@ -64,7 +64,7 @@ The app will be available at `http://localhost:3000`. Log in with any of the see
 
 ## Deployment
 
-Production deploys run through GitHub Actions with Hostinger when changes are pushed to `main` or `production`.
+Production deploys run through GitHub Actions with Hostinger from the manual `Deploy to Hostinger` workflow.
 
 Add these repository secrets in GitHub:
 
@@ -72,9 +72,18 @@ Add these repository secrets in GitHub:
 |---|---|
 | `HOSTINGER_API_KEY` | Hostinger API key generated from hPanel |
 | `PERSONAL_ACCESS_TOKEN` | GitHub token for private repository access |
+| `SSH_HOST` | Existing VPS hostname or IP secret |
+| `SSH_PORT` | Existing SSH port secret |
+| `SSH_USERNAME` | Existing SSH username secret |
+| `SSH_PRIVATE_KEY` | Existing SSH private key secret |
+| `SSH_KNOWN_HOSTS` | Existing SSH known hosts secret |
 | `RAILS_MASTER_KEY` | Rails credentials master key |
-| `DATABASE_URL` | Production PostgreSQL connection URL |
-| `LISA_DATABASE_PASSWORD` | Production PostgreSQL password used by Rails database config |
+| `DB_HOST` | PostgreSQL host |
+| `DB_PORT` | PostgreSQL port |
+| `DB_USERNAME` | PostgreSQL username |
+| `DB_PASSWORD` | PostgreSQL password |
+| `DB_NAME_DEVELOPMENT` | Development database name |
+| `DB_NAME_TEST` | Test database name |
 
 Add this repository variable in GitHub:
 
