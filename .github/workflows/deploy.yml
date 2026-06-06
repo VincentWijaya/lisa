@@ -18,7 +18,7 @@ jobs:
       DB_PORT: ${{ secrets.DB_PORT }}
       DB_USERNAME: ${{ secrets.DB_USERNAME }}
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-      DB_NAME_DEVELOPMENT: ${{ secrets.DB_NAME_DEVELOPMENT }}
+      DB_NAME_PRODUCTION: ${{ secrets.DB_NAME_PRODUCTION }}
       DB_NAME_TEST: ${{ secrets.DB_NAME_TEST }}
     steps:
       - uses: actions/checkout@v5
@@ -38,6 +38,6 @@ jobs:
             DB_PORT=${{ env.DB_PORT }}
             DB_USERNAME=${{ env.DB_USERNAME }}
             DB_PASSWORD=${{ env.DB_PASSWORD }}
-            DB_NAME_DEVELOPMENT=${{ env.DB_NAME_DEVELOPMENT }}
+            DB_NAME_PRODUCTION=${{ env.DB_NAME_PRODUCTION }}
             DB_NAME_TEST=${{ env.DB_NAME_TEST }}
             SOLID_QUEUE_IN_PUMA=true

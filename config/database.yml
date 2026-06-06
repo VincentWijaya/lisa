@@ -58,7 +58,7 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    database: lisa_production
+    database: <%= ENV.fetch("DB_NAME_PRODUCTION", "lisa_production") %>
     username: <%= ENV.fetch("DB_USERNAME", "lisa") %>
     password: <%= ENV["DB_PASSWORD"] || ENV["LISA_DATABASE_PASSWORD"] %>
   cache:
