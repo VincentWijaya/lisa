@@ -1,85 +1,26 @@
-name: Deploy
+name: Deploy to Hostinger
 
 on:
   push:
-    branches: [ master ]
-  workflow_dispatch:
-    inputs:
-      run_setup:
-        description: Run Kamal setup for the first deployment
-        required: false
-        default: false
-        type: boolean
-
-concurrency:
-  group: deploy-production
-  cancel-in-progress: false
+    branches: [ main, production ]
 
 jobs:
-  production:
-    name: Deploy to production
+  deploy:
     runs-on: ubuntu-latest
-    environment: production
-    permissions:
-      contents: read
-    env:
-      SSH_HOST: ${{ secrets.SSH_HOST }}
-      SSH_PORT: ${{ secrets.SSH_PORT }}
-      SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
-      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-      SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
-      RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-      LISA_DATABASE_PASSWORD: ${{ secrets.LISA_DATABASE_PASSWORD }}
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v5
 
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+      - name: Deploy to Hostinger
+        uses: hostinger/deploy-action@v1
         with:
-          bundler-cache: true
-
-      - name: Validate deployment secrets
-        run: |
-          missing=0
-          for name in SSH_HOST SSH_PORT SSH_USERNAME SSH_PRIVATE_KEY RAILS_MASTER_KEY LISA_DATABASE_PASSWORD; do
-            if [ -z "${!name}" ]; then
-              echo "::error::Missing required GitHub secret: ${name}"
-              missing=1
-            fi
-          done
-          exit "${missing}"
-
-      - name: Configure SSH
-        run: |
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
-          printf '%s\n' "${SSH_PRIVATE_KEY}" > ~/.ssh/lisa_deploy_key
-          chmod 600 ~/.ssh/lisa_deploy_key
-
-          if [ -n "${SSH_KNOWN_HOSTS}" ]; then
-            printf '%s\n' "${SSH_KNOWN_HOSTS}" > ~/.ssh/known_hosts
-          else
-            ssh-keyscan -p "${SSH_PORT}" -H "${SSH_HOST}" >> ~/.ssh/known_hosts
-          fi
-          chmod 600 ~/.ssh/known_hosts
-
-      - name: Prepare Kamal secrets
-        run: |
-          mkdir -p .kamal
-          cat > .kamal/secrets.production <<'SECRETS'
-          RAILS_MASTER_KEY=$RAILS_MASTER_KEY
-          LISA_DATABASE_PASSWORD=$LISA_DATABASE_PASSWORD
-          SECRETS
-          chmod 600 .kamal/secrets.production
-
-      - name: Deploy with Kamal
-        env:
-          RUN_SETUP: ${{ github.event.inputs.run_setup || 'false' }}
-        run: |
-          if [ "${RUN_SETUP}" = "true" ]; then
-            bin/kamal setup -d production
-          else
-            bin/kamal deploy -d production
-          fi
+          api-key: ${{ secrets.HOSTINGER_API_KEY }}
+          virtual-machine: ${{ vars.HOSTINGER_VM_ID }}
+          project-name: lisa
+          personal-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          docker-compose-path: docker/docker-compose.yml
+          environment-variables: |
+            RAILS_ENV=production
+            RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }}
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
+            LISA_DATABASE_PASSWORD=${{ secrets.LISA_DATABASE_PASSWORD }}
+            SOLID_QUEUE_IN_PUMA=true
