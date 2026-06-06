@@ -1,0 +1,14 @@
+# GitHub Actions production overlay. Base deployment settings live in
+# config/deploy.yml; this file keeps VPS connection details in GitHub Secrets.
+
+servers:
+  web:
+    - <%= ENV.fetch("SSH_HOST") %>
+
+ssh:
+  user: <%= ENV.fetch("SSH_USERNAME") %>
+  port: <%= ENV.fetch("SSH_PORT", "22") %>
+  keys:
+    - ~/.ssh/lisa_deploy_key
+  keys_only: true
+
