@@ -1,12 +1,30 @@
 name: Deploy to Hostinger
 
 on:
-  push:
-    branches: [ main, production ]
+  workflow_dispatch:
+    inputs:
+      run:
+        description: 'Run deployment'
+        required: true
+        type: boolean
+        default: false
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_PORT: ${{ secrets.SSH_PORT }}
+      SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+      RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_NAME_DEVELOPMENT: ${{ secrets.DB_NAME_DEVELOPMENT }}
+      DB_NAME_TEST: ${{ secrets.DB_NAME_TEST }}
     steps:
       - uses: actions/checkout@v5
 
@@ -20,7 +38,11 @@ jobs:
           docker-compose-path: docker/docker-compose.yml
           environment-variables: |
             RAILS_ENV=production
-            RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }}
-            DATABASE_URL=${{ secrets.DATABASE_URL }}
-            LISA_DATABASE_PASSWORD=${{ secrets.LISA_DATABASE_PASSWORD }}
+            RAILS_MASTER_KEY=${{ env.RAILS_MASTER_KEY }}
+            DB_HOST=${{ env.DB_HOST }}
+            DB_PORT=${{ env.DB_PORT }}
+            DB_USERNAME=${{ env.DB_USERNAME }}
+            DB_PASSWORD=${{ env.DB_PASSWORD }}
+            DB_NAME_DEVELOPMENT=${{ env.DB_NAME_DEVELOPMENT }}
+            DB_NAME_TEST=${{ env.DB_NAME_TEST }}
             SOLID_QUEUE_IN_PUMA=true
