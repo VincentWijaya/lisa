@@ -82,7 +82,7 @@ Add these repository secrets in GitHub:
 | `DB_PORT` | PostgreSQL port |
 | `DB_USERNAME` | PostgreSQL username |
 | `DB_PASSWORD` | PostgreSQL password |
-| `DB_NAME_DEVELOPMENT` | Development database name |
+| `DB_NAME_PRODUCTION` | Production database name |
 | `DB_NAME_TEST` | Test database name |
 
 Add this repository variable in GitHub:
