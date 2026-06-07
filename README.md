@@ -91,7 +91,7 @@ Add this repository variable in GitHub:
 |---|---|
 | `HOSTINGER_VM_ID` | Hostinger VPS virtual machine ID |
 
-The deployment workflow uses `docker/docker-compose.yml`, so the VPS must use a Hostinger Docker-capable VPS template.
+The deployment workflow uses `docker-compose.yml`, so the VPS must use a Hostinger Docker-capable VPS template.
 
 ---
 
