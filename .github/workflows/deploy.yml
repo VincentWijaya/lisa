@@ -30,7 +30,7 @@ jobs:
           virtual-machine: ${{ vars.HOSTINGER_VM_ID }}
           project-name: lis_project
           personal-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          docker-compose-path: docker/docker-compose.yml
+          docker-compose-path: docker-compose.yml
           environment-variables: |
             RAILS_ENV=production
             RAILS_MASTER_KEY=${{ env.RAILS_MASTER_KEY }}

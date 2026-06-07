@@ -1,12 +1,12 @@
 services:
   web:
     build:
-      context: ..
+      context: .
       dockerfile: Dockerfile
     ports:
-      - "8082:8082"
+      - "8082:3000"
     environment:
-      PORT: 8082
+      PORT: 3000
       RAILS_ENV: production
       RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
       DB_HOST: ${DB_HOST}
