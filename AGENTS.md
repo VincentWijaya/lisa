@@ -120,11 +120,7 @@ Rails treats "specimen" as uncountable. Without this fix, `Specimen.table_name` 
 ## Git Conventions
 
 - Commit after each logical step
-- Always include the Co-authored-by trailer:
-  ```
-  Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
-  ```
-- Commit message format: `Step N: short description\n\nDetailed bullet points`
+- Commit message format: `short description\n\nDetailed bullet points`
 
 ## Testing Conventions
 
