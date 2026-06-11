@@ -75,6 +75,18 @@ module WorksHelper
     "rounded-lg border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
   end
 
+  def work_table_action_buttons(work)
+    safe_join(
+      [
+        action_icon_link(t("works.actions.view"), work_path(work), icon: :eye),
+        action_icon_link(t("works.actions.print_barcode"), barcode_label_work_path(work), icon: :barcode, target: "_blank", rel: "noopener"),
+        action_icon_button(t("works.actions.validate"), validate_work_work_path(work), icon: :check, method: :patch, disabled: !work.pending?),
+        action_icon_button(t("works.actions.verify"), verify_work_work_path(work), icon: :badge_check, method: :patch, tone: :success, disabled: !work.validated?)
+      ],
+      " "
+    )
+  end
+
   private
 
   def interpretation_classes(interpretation)

@@ -6,7 +6,7 @@ class SpecimensController < ApplicationController
     scope = Specimen.with_works
                     .filter_by_status(params[:status])
                     .filter_by_patient_name(params[:patient_name])
-                    .filter_by_patient_id(params[:patient_id])
+                    .filter_by_medical_record_id(params[:medical_record_id])
                     .filter_by_order_number(params[:order_number])
                     .order(created_at: :desc)
     @pagy, @specimens = pagy(:countless, scope, limit: 10)

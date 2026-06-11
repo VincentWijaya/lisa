@@ -21,6 +21,7 @@ class Specimen < ApplicationRecord
   scope :filter_by_status, ->(value) { value.present? ? where(status: value) : all }
   scope :filter_by_patient_name, ->(value) { value.present? ? where("patient_name ILIKE ?", "%#{sanitize_sql_like(value.strip)}%") : all }
   scope :filter_by_patient_id, ->(value) { value.present? ? where("patient_id ILIKE ?", "%#{sanitize_sql_like(value.strip)}%") : all }
+  scope :filter_by_medical_record_id, ->(value) { value.present? ? where("medical_record_id ILIKE ?", "%#{sanitize_sql_like(value.strip)}%") : all }
   scope :filter_by_order_number, ->(value) { value.present? ? where("order_number ILIKE ?", "%#{sanitize_sql_like(value.strip)}%") : all }
 
   after_commit :expire_dashboard_cache

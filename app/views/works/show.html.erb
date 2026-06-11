@@ -8,20 +8,13 @@
       <p class="mt-2 text-sm text-slate-600"><%= work_display_name(@work) %></p>
     </div>
     <div class="flex flex-wrap gap-2">
-      <% if @work.pending? %>
-        <button type="button"
-                data-action="click->barcode-scanner#open"
-                class="<%= primary_action_button_classes %>">
-          <%= t("works.actions.scan_validate") %>
-        </button>
-      <% end %>
-      <% if @work.validated? %>
-        <%= button_to t("works.actions.verify"), verify_work_work_path(@work), method: :patch, class: primary_action_button_classes("bg-emerald-600 hover:bg-emerald-500") %>
-      <% end %>
+      <%= link_to t("works.show.back"), works_path, class: secondary_action_button_classes %>
+      <%= link_to t("works.actions.print_barcode"), barcode_label_work_path(@work), class: secondary_action_button_classes, target: "_blank", rel: "noopener" %>
+      <%= button_to t("works.actions.validate"), validate_work_work_path(@work), method: :patch, disabled: !@work.pending?, class: (@work.pending? ? primary_action_button_classes : "rounded-lg bg-slate-200 px-3 py-2 text-xs font-semibold text-slate-400 cursor-not-allowed") %>
+      <%= button_to t("works.actions.verify"), verify_work_work_path(@work), method: :patch, disabled: !@work.validated?, class: (@work.validated? ? primary_action_button_classes("bg-emerald-600 hover:bg-emerald-500") : "rounded-lg bg-slate-200 px-3 py-2 text-xs font-semibold text-slate-400 cursor-not-allowed") %>
       <% unless @work.verified? || @work.cancelled? %>
         <%= button_to t("works.actions.cancel"), cancel_work_work_path(@work), method: :patch, class: primary_action_button_classes("bg-rose-600 hover:bg-rose-500") %>
       <% end %>
-      <%= link_to t("works.actions.print_barcode"), barcode_label_work_path(@work), class: secondary_action_button_classes, target: "_blank", rel: "noopener" %>
     </div>
   </div>
 
@@ -56,7 +49,6 @@
   <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
     <div class="mb-4 flex items-center justify-between">
       <h2 class="text-lg font-semibold text-slate-900"><%= t("works.show.results_section") %></h2>
-      <%= link_to t("works.show.back"), works_path, class: "text-sm font-medium text-sky-700 hover:text-sky-600" %>
     </div>
 
     <%# Add result form — visible for pending and validated works %>
