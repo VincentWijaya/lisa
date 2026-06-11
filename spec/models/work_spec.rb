@@ -20,13 +20,13 @@ RSpec.describe Work, type: :model do
     it "allows pending to validated" do
       persisted_work = create(:work, status: "pending")
 
-      expect(persisted_work.update(status: "validated", validated_at: Time.current)).to be(true)
+      expect(persisted_work.update(status: "validated", verified_at: Time.current)).to be(true)
     end
 
     it "prevents pending to verified" do
       persisted_work = create(:work, status: "pending")
 
-      expect(persisted_work.update(status: "verified", verified_at: Time.current)).to be(false)
+      expect(persisted_work.update(status: "verified", validated_at: Time.current)).to be(false)
       expect(persisted_work.errors[:status]).to include("cannot transition from 'pending' to 'verified'")
     end
   end

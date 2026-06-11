@@ -24,11 +24,13 @@ RSpec.describe "Api::V1::Works", type: :request do
   end
 
   describe "PATCH /api/v1/works/:id/validate" do
-    it "validates the work" do
+    it "moves the work into the first transition and stores the verification timestamp" do
       patch "/api/v1/works/#{work.id}/validate", as: :json
 
       expect(response).to have_http_status(:ok)
       expect(work.reload.status).to eq("validated")
+      expect(work.verified_at).to be_present
+      expect(work.validated_at).to be_nil
     end
   end
 
@@ -42,14 +44,15 @@ RSpec.describe "Api::V1::Works", type: :request do
   end
 
   describe "PATCH /api/v1/works/:id/verify" do
-    it "verifies the work and auto-completes the specimen when remaining works are cancelled" do
-      work.update!(status: "validated", validated_at: Time.current)
+    it "moves the work into the final transition, stores the validation timestamp, and auto-completes the specimen" do
+      work.update!(status: "validated", verified_at: Time.current)
       secondary_work.update!(status: "cancelled", cancelled_at: Time.current)
 
       patch "/api/v1/works/#{work.id}/verify", as: :json
 
       expect(response).to have_http_status(:ok)
       expect(work.reload.status).to eq("verified")
+      expect(work.validated_at).to be_present
       expect(specimen.reload.status).to eq("complete")
       expect(specimen.completion_datetime).to be_present
     end

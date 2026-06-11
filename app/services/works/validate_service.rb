@@ -9,7 +9,7 @@ module Works
     end
 
     def call
-      return ServiceResult.failure(errors: work.errors.full_messages.presence || ["Work could not be validated"]) unless work.update(status: Work.statuses[:validated], validated_at: Time.current)
+      return ServiceResult.failure(errors: work.errors.full_messages.presence || ["Work could not be verified"]) unless work.update(status: Work.statuses[:validated], verified_at: Time.current)
 
       ServiceResult.success(work: work)
     end

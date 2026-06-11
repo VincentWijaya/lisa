@@ -43,8 +43,8 @@
         <div class="flex justify-between gap-4"><dt class="font-medium"><%= t("works.show.fields.specimen_type") %></dt><dd><%= @work.specimen_type %></dd></div>
         <div class="flex justify-between gap-4"><dt class="font-medium"><%= t("works.show.fields.result") %></dt><dd><%= work_result_value(@work) %></dd></div>
         <div class="flex justify-between gap-4"><dt class="font-medium"><%= t("works.show.fields.interpretation") %></dt><dd><%= work_interpretation_label(@work) %></dd></div>
-        <div class="flex justify-between gap-4"><dt class="font-medium"><%= t("works.show.fields.validated_at") %></dt><dd><%= @work.validated_at ? l(@work.validated_at, format: :short) : "-" %></dd></div>
         <div class="flex justify-between gap-4"><dt class="font-medium"><%= t("works.show.fields.verified_at") %></dt><dd><%= @work.verified_at ? l(@work.verified_at, format: :short) : "-" %></dd></div>
+        <div class="flex justify-between gap-4"><dt class="font-medium"><%= t("works.show.fields.validated_at") %></dt><dd><%= @work.validated_at ? l(@work.validated_at, format: :short) : "-" %></dd></div>
       </dl>
     </section>
   </div>

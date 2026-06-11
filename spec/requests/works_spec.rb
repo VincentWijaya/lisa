@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe "Works", type: :request do
   let!(:user) { create(:user, email: "user@lisa.local", password: "Password@123", active: true) }
   let(:examination) { create(:examination, default_unit: "mg/dL") }
-  let(:work) { create(:work, examination: examination, status: "validated", test_codes_text: "#{examination.code};") }
+  let(:work) { create(:work, examination: examination, status: "validated", verified_at: Time.current, test_codes_text: "#{examination.code};") }
   let!(:reference_rule) { create(:reference_rule, examination: examination, name: "Glucose", unit: "mg/dL") }
 
   before do
@@ -22,7 +22,7 @@ RSpec.describe "Works", type: :request do
       expect(response.body).to include(existing_result.result_value)
       expect(response.body).not_to include("Edit")
       expect(response.body).not_to include("Hapus")
-      expect(response.body).to include("Verifikasi")
+      expect(response.body).to include("Validasi")
     end
   end
 

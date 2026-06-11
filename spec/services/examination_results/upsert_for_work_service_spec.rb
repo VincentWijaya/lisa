@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe ExaminationResults::UpsertForWorkService, type: :service do
   let(:examination) { create(:examination, default_unit: "mg/dL") }
-  let(:work) { create(:work, examination: examination, status: "validated", test_codes_text: "#{examination.code};") }
+  let(:work) { create(:work, examination: examination, status: "validated", verified_at: Time.current, test_codes_text: "#{examination.code};") }
   let(:rule) { create(:reference_rule, examination: examination, unit: "mg/dL", numeric_low_value: 4.0, numeric_high_value: 6.0) }
   let(:other_rule) { create(:reference_rule, examination: examination, unit: "mmol/L") }
 

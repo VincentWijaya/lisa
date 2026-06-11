@@ -125,7 +125,7 @@ id:
         result_unit: "Satuan"
         interpretation: "Interpretasi"
         source: "Sumber"
-        verified_at: "Waktu Verifikasi"
+        verified_at: "Waktu Validasi"
       reference_rule:
         name: "Nama"
         result_type: "Tipe Hasil"
@@ -207,8 +207,8 @@ id:
     cards:
       specimens: "Spesimen"
       pending_works: "Pekerjaan Menunggu"
-      validated_works: "Pekerjaan Tervalidasi"
-      verified_works: "Pekerjaan Terverifikasi"
+      validated_works: "Pekerjaan Terverifikasi"
+      verified_works: "Pekerjaan Tervalidasi"
     recent_works:
       title: "Pekerjaan Terbaru"
       view_all: "Lihat semua"
@@ -220,7 +220,7 @@ id:
   works:
     index:
       title: "Pekerjaan"
-      subtitle: "Kelola item pekerjaan barcode — validasi, verifikasi, atau batalkan sesuai kebutuhan."
+      subtitle: "Kelola item pekerjaan barcode — verifikasi, validasi, atau batalkan sesuai kebutuhan."
       back: "Kembali ke dasbor"
       filters:
         status: "Status"
@@ -268,7 +268,7 @@ id:
         reference_rule: "Aturan Referensi"
         reference_range: "Rentang Referensi"
         source: "Sumber"
-        verified_at: "Waktu Verifikasi"
+        verified_at: "Waktu Validasi"
         actions: "Aksi"
       results_empty: "Belum ada hasil pemeriksaan."
       bulk_results:
@@ -282,32 +282,32 @@ id:
         submit: "Simpan Hasil"
     actions:
       view: "Lihat"
-      validate: "Validasi"
-      scan_validate: "Scan untuk Validasi"
-      verify: "Verifikasi"
+      validate: "Verifikasi"
+      scan_validate: "Scan untuk Verifikasi"
+      verify: "Validasi"
       cancel: "Batalkan"
       print_barcode: "Cetak Barcode"
     status:
       pending: "Menunggu"
-      validated: "Tervalidasi"
-      verified: "Terverifikasi"
+      validated: "Terverifikasi"
+      verified: "Tervalidasi"
       cancelled: "Dibatalkan"
     flash:
-      validated: "Pekerjaan berhasil divalidasi."
-      verified: "Pekerjaan berhasil diverifikasi."
+      validated: "Pekerjaan berhasil diverifikasi."
+      verified: "Pekerjaan berhasil divalidasi."
       cancelled: "Pekerjaan berhasil dibatalkan."
       result_added: "Hasil berhasil ditambahkan."
       results_saved: "Hasil pemeriksaan berhasil disimpan."
       result_updated: "Hasil berhasil diperbarui."
       result_deleted: "Hasil berhasil dihapus."
-      result_verified: "Hasil berhasil diverifikasi."
+      result_verified: "Hasil berhasil divalidasi."
       barcode_mismatch: "Barcode yang dipindai '%{scanned}' tidak cocok dengan pekerjaan ini (%{expected})."
-      work_not_pending: "Pekerjaan ini tidak dapat divalidasi — status saat ini adalah '%{status}'."
+      work_not_pending: "Pekerjaan ini tidak dapat diverifikasi — status saat ini adalah '%{status}'."
     scan_modal:
-      title: "Scan Barcode untuk Validasi"
+      title: "Scan Barcode untuk Verifikasi"
       instruction: "Arahkan kamera ke label barcode, atau ketik ID barcode di bawah ini."
       manual_label: "ID Barcode"
-      submit: "Validasi"
+      submit: "Verifikasi"
       cancel: "Batal"
     edit_result_modal:
       title: "Edit Hasil"
@@ -316,7 +316,7 @@ id:
     result_actions:
       edit: "Edit"
       delete: "Hapus"
-      verify: "Verifikasi"
+      verify: "Validasi"
       delete_confirm: "Hapus hasil ini?"
 
   # ── Specimens ─────────────────────────────────────────────────────────────────

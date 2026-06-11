@@ -10,13 +10,13 @@ module Works
 
     def call
       ActiveRecord::Base.transaction do
-        work.update!(status: Work.statuses[:verified], verified_at: Time.current)
+        work.update!(status: Work.statuses[:verified], validated_at: Time.current)
         complete_specimen_if_needed!
       end
 
       ServiceResult.success(work: work)
     rescue ActiveRecord::RecordInvalid => e
-      ServiceResult.failure(errors: e.record.errors.full_messages.presence || ["Work could not be verified"])
+      ServiceResult.failure(errors: e.record.errors.full_messages.presence || ["Work could not be validated"])
     end
 
     private
