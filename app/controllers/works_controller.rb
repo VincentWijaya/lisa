@@ -1,6 +1,6 @@
 class WorksController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_work, only: %i[show validate_work verify_work cancel_work barcode_label add_result scan_validate]
+  before_action :set_work, only: %i[show validate_work verify_work cancel_work barcode_label add_result upsert_results scan_validate]
 
   def index
     scope = Work.with_details
@@ -14,7 +14,8 @@ class WorksController < ApplicationController
 
   def show
     @results = @work.examination_results.includes(:reference_rule).order(created_at: :desc)
-    @reference_rules = ReferenceRule.active.where(examination_id: eligible_examination_ids_for(@work))
+    @reference_rules = ReferenceRule.active.where(examination_id: eligible_examination_ids_for(@work)).includes(:examination).order(:id)
+    @results_by_reference_rule = @results.group_by(&:reference_rule_id).transform_values(&:first)
   end
 
   def validate_work
@@ -66,6 +67,20 @@ class WorksController < ApplicationController
     end
   end
 
+  def upsert_results
+    result = ExaminationResults::UpsertForWorkService.call(
+      work: @work,
+      params: upsert_results_params,
+      entered_by: current_user.id
+    )
+
+    if result.success?
+      redirect_to work_path(@work), notice: t("works.flash.results_saved")
+    else
+      redirect_to work_path(@work), alert: result.errors.to_sentence
+    end
+  end
+
   private
 
   def set_work
@@ -74,6 +89,10 @@ class WorksController < ApplicationController
 
   def result_params
     params.require(:examination_result).permit(:result_value, :result_unit, :reference_rule_id)
+  end
+
+  def upsert_results_params
+    params[:examination_results]&.permit(results: {}) || {}
   end
 
   def eligible_examination_ids_for(work)

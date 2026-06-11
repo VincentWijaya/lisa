@@ -52,11 +52,17 @@ module WorksHelper
     rule = result.reference_rule
     return "-" unless rule
 
+    reference_rule_range_display(rule, result.result_unit)
+  end
+
+  def reference_rule_range_display(rule, fallback_unit = nil)
+    return "-" unless rule
+
     if rule.numeric? && (rule.numeric_low_value.present? || rule.numeric_high_value.present?)
       low  = rule.numeric_low_value&.to_s&.delete_suffix(".0000").presence || rule.numeric_low_value&.to_f&.to_s
       high = rule.numeric_high_value&.to_s&.delete_suffix(".0000").presence || rule.numeric_high_value&.to_f&.to_s
       range = [low, high].compact.join(" – ")
-      unit  = rule.unit.presence || result.result_unit.presence
+      unit  = rule.unit.presence || fallback_unit.presence
       [range, unit].compact.join(" ")
     elsif rule.reference_value.present?
       rule.reference_value
@@ -65,6 +71,10 @@ module WorksHelper
     else
       "-"
     end
+  end
+
+  def result_form_unit(result, reference_rule, work)
+    result&.result_unit.presence || reference_rule.unit.presence || work.examination.default_unit
   end
 
   def primary_action_button_classes(tone = "bg-slate-900 hover:bg-slate-700")

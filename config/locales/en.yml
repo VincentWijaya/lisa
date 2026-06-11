@@ -122,6 +122,8 @@ en:
         verified_at: "Verified At"
         actions: "Actions"
       results_empty: "No examination results recorded yet."
+      bulk_results:
+        submit: "Save Results"
       add_result:
         title: "Add Result"
         result_value: "Result Value"
@@ -135,7 +137,7 @@ en:
       scan_validate: "Scan to Validate"
       verify: "Verify"
       cancel: "Cancel"
-      print_barcode: ""
+      print_barcode: "Print Barcode"
     status:
       pending: "Pending"
       validated: "Validated"
@@ -146,6 +148,7 @@ en:
       verified: "Work verified successfully."
       cancelled: "Work cancelled successfully."
       result_added: "Result added successfully."
+      results_saved: "Results saved successfully."
       result_updated: "Result updated successfully."
       result_deleted: "Result deleted successfully."
       result_verified: "Result verified successfully."
