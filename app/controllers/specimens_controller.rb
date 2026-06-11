@@ -26,7 +26,9 @@ class SpecimensController < ApplicationController
     @works = @specimen.works
                       .includes(:examination, examination_results: :reference_rule)
                       .order(:label_sequence)
+                      .to_a
     @grouped_works    = @works.group_by { |w| w.examination.category.presence || "UMUM" }
+    @results_by_work_id = @works.index_with { |work| work.examination_results.sort_by(&:id) }
     @collection_times = collection_times_by_type(@works)
     @validator        = find_validator(@works)
     render layout: "lab_report"

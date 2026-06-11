@@ -27,6 +27,8 @@ module Specimens
       ServiceResult.success(specimen: specimen)
     rescue ActiveRecord::RecordInvalid => e
       ServiceResult.failure(errors: e.record.errors.full_messages)
+    rescue Specimens::OrderNumberGenerator::DailySequenceExhausted => e
+      ServiceResult.failure(errors: [ e.message ])
     end
 
     private
@@ -47,8 +49,6 @@ module Specimens
     end
 
     def create_specimen!
-      Specimen.connection.execute("LOCK TABLE specimens IN SHARE ROW EXCLUSIVE MODE")
-
       Specimen.create!(
         patient_id: params[:patient_id],
         patient_name: params[:patient_name],
@@ -72,7 +72,7 @@ module Specimens
     end
 
     def next_order_number
-      "#{Time.current.strftime('%y%m%d')}#{format('%04d', Specimen.today.count + 1)}"
+      Specimens::OrderNumberGenerator.call
     end
 
     def examination_ids

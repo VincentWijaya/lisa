@@ -3,7 +3,7 @@ module Api
     class WorksController < BaseController
       def index
         scope = Work.order(created_at: :desc)
-        last_modified = scope.maximum(:updated_at) || Time.at(0)
+        last_modified = Work.collection_last_modified
         return unless stale?(last_modified: last_modified, public: false)
 
         pagy, works = pagy(:countless, scope, limit: pagination_limit)

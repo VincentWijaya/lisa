@@ -10,10 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_27_035817) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_11_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
+
+  create_table "daily_sequences", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "last_value", default: 0, null: false
+    t.date "sequence_date", null: false
+    t.datetime "updated_at", null: false
+    t.index ["sequence_date"], name: "index_daily_sequences_on_sequence_date", unique: true
+  end
 
   create_table "examination_results", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -29,6 +37,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_27_035817) do
     t.bigint "work_id", null: false
     t.index ["reference_rule_id"], name: "index_examination_results_on_reference_rule_id"
     t.index ["work_id", "created_at"], name: "index_examination_results_on_work_id_created_at"
+    t.index ["work_id", "reference_rule_id", "created_at"], name: "index_examination_results_on_work_ref_rule_created_at"
     t.index ["work_id"], name: "index_examination_results_on_work_id"
   end
 
@@ -68,8 +77,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_27_035817) do
     t.string "unit"
     t.datetime "updated_at", null: false
     t.index ["active"], name: "index_reference_rules_on_active"
+    t.index ["examination_id", "active", "id"], name: "index_reference_rules_on_examination_active_id"
     t.index ["examination_id"], name: "index_reference_rules_on_examination_id"
+    t.index ["local_code"], name: "index_reference_rules_on_active_local_code", where: "((active = true) AND (local_code IS NOT NULL))"
     t.index ["local_code"], name: "index_reference_rules_on_local_code"
+    t.index ["loinc_code"], name: "index_reference_rules_on_active_loinc_code", where: "((active = true) AND (loinc_code IS NOT NULL))"
     t.index ["loinc_code"], name: "index_reference_rules_on_loinc_code"
   end
 
@@ -105,12 +117,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_27_035817) do
     t.index ["created_at"], name: "index_specimens_on_created_at"
     t.index ["lab_id"], name: "index_specimens_on_lab_id"
     t.index ["medical_record_id"], name: "index_specimens_on_medical_record_id"
+    t.index ["medical_record_id"], name: "index_specimens_on_medical_record_id_trgm", opclass: :gin_trgm_ops, using: :gin
     t.index ["order_number"], name: "index_specimens_on_order_number", unique: true
+    t.index ["order_number"], name: "index_specimens_on_order_number_trgm", opclass: :gin_trgm_ops, using: :gin
+    t.index ["patient_id", "created_at"], name: "index_specimens_on_patient_id_and_created_at"
     t.index ["patient_id"], name: "index_specimens_on_patient_id"
     t.index ["patient_id"], name: "index_specimens_on_patient_id_trgm", opclass: :gin_trgm_ops, using: :gin
     t.index ["patient_name"], name: "index_specimens_on_patient_name_trgm", opclass: :gin_trgm_ops, using: :gin
     t.index ["status", "created_at"], name: "index_specimens_on_status_and_created_at"
     t.index ["status"], name: "index_specimens_on_status"
+    t.index ["updated_at"], name: "index_specimens_on_updated_at"
   end
 
   create_table "users", force: :cascade do |t|
@@ -152,10 +168,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_27_035817) do
     t.index ["barcode_id"], name: "index_works_on_barcode_id_trgm", opclass: :gin_trgm_ops, using: :gin
     t.index ["created_at"], name: "index_works_on_created_at"
     t.index ["examination_id"], name: "index_works_on_examination_id"
+    t.index ["specimen_id", "examination_id", "status"], name: "index_works_on_specimen_id_examination_id_status"
     t.index ["specimen_id", "label_sequence"], name: "index_works_on_specimen_id_and_label_sequence"
+    t.index ["specimen_id", "status"], name: "index_works_on_specimen_id_and_status"
     t.index ["specimen_id"], name: "index_works_on_specimen_id"
     t.index ["status", "created_at"], name: "index_works_on_status_and_created_at"
     t.index ["status"], name: "index_works_on_status"
+    t.index ["updated_at"], name: "index_works_on_updated_at"
   end
 
   add_foreign_key "examination_results", "reference_rules"

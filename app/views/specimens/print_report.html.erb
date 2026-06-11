@@ -98,7 +98,7 @@
           <td colspan="5"><%= category %></td>
         </tr>
         <% works.each do |work| %>
-          <% results = work.examination_results.includes(:reference_rule).order(:id) %>
+          <% results = @results_by_work_id.fetch(work.id, []) %>
           <%# Sub-header for the examination name when it has multiple results %>
           <% if results.many? %>
             <tr>

@@ -1,4 +1,7 @@
 class Work < ApplicationRecord
+  COLLECTION_LAST_MODIFIED_CACHE_KEY = "api/works/collection_last_modified"
+  DASHBOARD_CACHE_KEY = "dashboard/stats"
+
   belongs_to :specimen
   belongs_to :examination
   has_many :examination_results, dependent: :destroy
@@ -44,7 +47,17 @@ class Work < ApplicationRecord
     end
   }
 
-  after_commit :expire_dashboard_cache
+  after_commit :expire_caches
+
+  def self.collection_last_modified
+    Rails.cache.fetch(COLLECTION_LAST_MODIFIED_CACHE_KEY) do
+      maximum(:updated_at) || Time.at(0)
+    end
+  end
+
+  def self.expire_collection_cache
+    Rails.cache.delete(COLLECTION_LAST_MODIFIED_CACHE_KEY)
+  end
 
   def latest_result
     if association(:examination_results).loaded?
@@ -56,8 +69,10 @@ class Work < ApplicationRecord
 
   private
 
-  def expire_dashboard_cache
-    Rails.cache.delete("dashboard/stats")
+  def expire_caches
+    Rails.cache.delete(DASHBOARD_CACHE_KEY)
+    self.class.expire_collection_cache
+    Specimen.expire_collection_cache
   end
 
   def status_transition_valid

@@ -14,7 +14,17 @@ class SpecimenSerializer < ApplicationSerializer
       affiliation: object.affiliation,
       patientAddress: object.patient_address,
       responsibleDoctor: object.responsible_doctor,
-      works: WorkSerializer.serialize_collection(object.works.order(:label_sequence))
+      works: WorkSerializer.serialize_collection(ordered_works)
     }
+  end
+
+  private
+
+  def ordered_works
+    if object.association(:works).loaded?
+      object.works.sort_by { |work| [ work.label_sequence, work.id ] }
+    else
+      object.works.order(:label_sequence)
+    end
   end
 end

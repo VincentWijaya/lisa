@@ -1,4 +1,7 @@
 class Specimen < ApplicationRecord
+  COLLECTION_LAST_MODIFIED_CACHE_KEY = "api/specimens/collection_last_modified"
+  DASHBOARD_CACHE_KEY = "dashboard/stats"
+
   has_many :works, dependent: :restrict_with_error
 
   enum :status, {
@@ -24,7 +27,17 @@ class Specimen < ApplicationRecord
   scope :filter_by_medical_record_id, ->(value) { value.present? ? where("medical_record_id ILIKE ?", "%#{sanitize_sql_like(value.strip)}%") : all }
   scope :filter_by_order_number, ->(value) { value.present? ? where("order_number ILIKE ?", "%#{sanitize_sql_like(value.strip)}%") : all }
 
-  after_commit :expire_dashboard_cache
+  after_commit :expire_caches
+
+  def self.collection_last_modified
+    Rails.cache.fetch(COLLECTION_LAST_MODIFIED_CACHE_KEY) do
+      [ maximum(:updated_at), Work.maximum(:updated_at) ].compact.max || Time.at(0)
+    end
+  end
+
+  def self.expire_collection_cache
+    Rails.cache.delete(COLLECTION_LAST_MODIFIED_CACHE_KEY)
+  end
 
   def age_in_years
     return nil unless birth_date
@@ -37,7 +50,8 @@ class Specimen < ApplicationRecord
 
   private
 
-  def expire_dashboard_cache
-    Rails.cache.delete("dashboard/stats")
+  def expire_caches
+    Rails.cache.delete(DASHBOARD_CACHE_KEY)
+    self.class.expire_collection_cache
   end
 end
