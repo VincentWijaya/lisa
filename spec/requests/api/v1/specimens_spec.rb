@@ -33,7 +33,7 @@ RSpec.describe "Api::V1::Specimens", type: :request do
         examination_ids: [99_999]
       }, as: :json
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(response.parsed_body["errors"]).to include("Examination 99999 not found or inactive")
     end
   end

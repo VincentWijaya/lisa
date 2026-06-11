@@ -27,7 +27,7 @@ module Api
         if result.success?
           render json: SpecimenSerializer.serialize(result.specimen), status: :created
         else
-          render json: { errors: result.errors }, status: :unprocessable_entity
+          render json: { errors: result.errors }, status: :unprocessable_content
         end
       end
 

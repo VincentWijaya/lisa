@@ -10,7 +10,7 @@ class SessionsController < ApplicationController
       redirect_to root_path, notice: t("sessions.flash.welcome", name: result.user.name)
     else
       flash.now[:alert] = result.errors.first
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 

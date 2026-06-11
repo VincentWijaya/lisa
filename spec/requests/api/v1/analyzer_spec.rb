@@ -60,7 +60,7 @@ RSpec.describe "POST /api/v1/analyzer/results" do
 
     it "returns 422" do
       post_results
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
 
     it "returns error messages" do
@@ -74,7 +74,7 @@ RSpec.describe "POST /api/v1/analyzer/results" do
 
     it "returns 422" do
       post_results
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
 
     it "returns descriptive error" do

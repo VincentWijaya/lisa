@@ -42,7 +42,7 @@ module Api
         if result.success?
           render json: ExaminationResultSerializer.serialize(result.examination_result), status: :created
         else
-          render json: { errors: result.errors }, status: :unprocessable_entity
+          render json: { errors: result.errors }, status: :unprocessable_content
         end
       end
 
@@ -64,7 +64,7 @@ module Api
         if result.success?
           render json: WorkSerializer.serialize(result.work)
         else
-          render json: { errors: result.errors }, status: :unprocessable_entity
+          render json: { errors: result.errors }, status: :unprocessable_content
         end
       end
     end

@@ -9,7 +9,7 @@ module Admin
         )
       else
         render :new, locals: { page: Administrate::Page::Form.new(dashboard, resource) },
-               status: :unprocessable_entity
+               status: :unprocessable_content
       end
     end
 
@@ -26,7 +26,7 @@ module Admin
         )
       else
         render :edit, locals: { page: Administrate::Page::Form.new(dashboard, resource) },
-               status: :unprocessable_entity
+               status: :unprocessable_content
       end
     end
 

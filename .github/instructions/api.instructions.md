@@ -16,12 +16,12 @@ def create
   if result.success?
     render json: SpecimenSerializer.new(result.specimen).as_json, status: :created
   else
-    render json: { errors: result.errors }, status: :unprocessable_entity
+    render json: { errors: result.errors }, status: :unprocessable_content
   end
 end
 ```
 
-- Return codes: `201 :created`, `200 :ok`, `422 :unprocessable_entity`, `404 :not_found`
+- Return codes: `201 :created`, `200 :ok`, `422 :unprocessable_content`, `404 :not_found`
 - Never rescue exceptions in controllers — let `BaseController` handle common ones
 
 ### Custom member actions (validate, verify, cancel)
@@ -32,7 +32,7 @@ def validate
   if result.success?
     render json: WorkSerializer.new(result.work).as_json
   else
-    render json: { errors: result.errors }, status: :unprocessable_entity
+    render json: { errors: result.errors }, status: :unprocessable_content
   end
 end
 ```

@@ -27,7 +27,7 @@ RSpec.describe "Sessions", type: :request do
     context "with invalid credentials" do
       it "re-renders the login form with 422" do
         post session_path, params: { email: user.email, password: "wrong" }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
 
@@ -36,7 +36,7 @@ RSpec.describe "Sessions", type: :request do
 
       it "re-renders the login form" do
         post session_path, params: { email: inactive_user.email, password: "Password@123" }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end

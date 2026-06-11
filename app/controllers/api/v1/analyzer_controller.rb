@@ -12,7 +12,7 @@ module Api
             results: result.created.map { |r| ExaminationResultSerializer.serialize(r) }
           }, status: :created
         else
-          render json: { errors: result.errors }, status: :unprocessable_entity
+          render json: { errors: result.errors }, status: :unprocessable_content
         end
       end
 
