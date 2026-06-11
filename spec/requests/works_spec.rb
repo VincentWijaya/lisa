@@ -34,7 +34,8 @@ RSpec.describe "Works", type: :request do
             reference_rule.id.to_s => {
               reference_rule_id: reference_rule.id,
               result_value: "5.2",
-              result_unit: ""
+              result_unit: "",
+              source: "instrument"
             }
           }
         }
@@ -44,6 +45,7 @@ RSpec.describe "Works", type: :request do
       result = work.examination_results.find_by!(reference_rule: reference_rule)
       expect(result.result_value).to eq("5.2")
       expect(result.result_unit).to eq("mg/dL")
+      expect(result.source).to eq("instrument")
     end
   end
 end

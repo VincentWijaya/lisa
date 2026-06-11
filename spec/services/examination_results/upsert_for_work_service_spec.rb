@@ -13,7 +13,7 @@ RSpec.describe ExaminationResults::UpsertForWorkService, type: :service do
       params: {
         results: {
           rule.id.to_s => { reference_rule_id: rule.id, result_value: "5.2", result_unit: "" },
-          other_rule.id.to_s => { reference_rule_id: other_rule.id, result_value: "", result_unit: "mmol/L" }
+          other_rule.id.to_s => { reference_rule_id: other_rule.id, result_value: "", result_unit: "mmol/L", source: "instrument" }
         }
       }
     )
@@ -30,14 +30,14 @@ RSpec.describe ExaminationResults::UpsertForWorkService, type: :service do
   end
 
   it "updates an existing result for the same reference rule" do
-    existing = create(:examination_result, work: work, reference_rule: rule, result_value: "7.1", result_unit: "mg/dL", interpretation: "abnormal")
+    existing = create(:examination_result, work: work, reference_rule: rule, result_value: "7.1", result_unit: "mg/dL", source: "manual", interpretation: "abnormal")
 
     result = described_class.call(
       work: work,
       entered_by: 42,
       params: {
         results: {
-          rule.id.to_s => { reference_rule_id: rule.id, result_value: "5.4", result_unit: "mg/dL" }
+          rule.id.to_s => { reference_rule_id: rule.id, result_value: "5.4", result_unit: "mmol/L", source: "instrument" }
         }
       }
     )
@@ -45,7 +45,25 @@ RSpec.describe ExaminationResults::UpsertForWorkService, type: :service do
     expect(result).to be_success
     expect(work.examination_results.count).to eq(1)
     expect(existing.reload.result_value).to eq("5.4")
+    expect(existing.result_unit).to eq("mmol/L")
+    expect(existing.source).to eq("instrument")
     expect(existing.interpretation).to eq("normal")
+  end
+
+  it "rejects invalid sources" do
+    result = described_class.call(
+      work: work,
+      entered_by: 42,
+      params: {
+        results: {
+          rule.id.to_s => { reference_rule_id: rule.id, result_value: "5.4", result_unit: "mg/dL", source: "unknown" }
+        }
+      }
+    )
+
+    expect(result).to be_failure
+    expect(result.errors).to include("Source unknown is not valid")
+    expect(work.examination_results.count).to eq(0)
   end
 
   it "rejects reference rules outside the work examinations" do

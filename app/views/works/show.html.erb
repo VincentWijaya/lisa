@@ -96,7 +96,15 @@
                 </td>
                 <td class="px-4 py-3 text-slate-700"><%= result&.interpretation.present? ? result.interpretation.humanize : "-" %></td>
                 <td class="px-4 py-3 text-xs text-slate-500"><%= reference_rule_range_display(reference_rule, result&.result_unit) %></td>
-                <td class="px-4 py-3 text-slate-700"><%= result&.source.present? ? result.source.humanize : "-" %></td>
+                <td class="px-4 py-3">
+                  <% if editable_results %>
+                    <%= select_tag "examination_results[results][#{reference_rule.id}][source]",
+                        options_for_select(result_source_options, result_form_source(result)),
+                        class: "block w-32 rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" %>
+                  <% else %>
+                    <span class="text-slate-700"><%= result&.source.present? ? result.source.humanize : "-" %></span>
+                  <% end %>
+                </td>
                 <td class="px-4 py-3 text-slate-700"><%= result&.verified_at ? l(result.verified_at, format: :short) : "-" %></td>
                 <td class="px-4 py-3">
                   <% if result.present? && result.verified_at.blank? %>

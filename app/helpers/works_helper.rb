@@ -77,6 +77,14 @@ module WorksHelper
     result&.result_unit.presence || reference_rule.unit.presence || work.examination.default_unit
   end
 
+  def result_form_source(result)
+    result&.source.presence || ExaminationResult.sources[:manual]
+  end
+
+  def result_source_options
+    ExaminationResult.sources.keys.map { |source| [source.humanize, source] }
+  end
+
   def primary_action_button_classes(tone = "bg-slate-900 hover:bg-slate-700")
     "rounded-lg #{tone} px-3 py-2 text-xs font-semibold text-white"
   end
