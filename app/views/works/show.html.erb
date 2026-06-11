@@ -9,7 +9,11 @@
     </div>
     <div class="flex flex-wrap gap-2">
       <%= link_to t("works.actions.print_barcode"), barcode_label_work_path(@work), class: secondary_action_button_classes, target: "_blank", rel: "noopener" %>
-      <%= button_to t("works.actions.validate"), validate_work_work_path(@work), method: :patch, disabled: !@work.pending?, class: (@work.pending? ? primary_action_button_classes : "rounded-lg bg-slate-200 px-3 py-2 text-xs font-semibold text-slate-400 cursor-not-allowed") %>
+      <%= button_tag t("works.actions.validate"),
+          type: "button",
+          disabled: !@work.pending?,
+          data: (@work.pending? ? { action: "click->barcode-scanner#open" } : {}),
+          class: (@work.pending? ? primary_action_button_classes : "rounded-lg bg-slate-200 px-3 py-2 text-xs font-semibold text-slate-400 cursor-not-allowed") %>
       <%= button_to t("works.actions.verify"), verify_work_work_path(@work), method: :patch, disabled: !@work.validated?, class: (@work.validated? ? primary_action_button_classes("bg-emerald-600 hover:bg-emerald-500") : "rounded-lg bg-slate-200 px-3 py-2 text-xs font-semibold text-slate-400 cursor-not-allowed") %>
       <% unless @work.verified? || @work.cancelled? %>
         <%= button_to t("works.actions.cancel"), cancel_work_work_path(@work), method: :patch, class: primary_action_button_classes("bg-rose-600 hover:bg-rose-500") %>
@@ -145,45 +149,7 @@
   </section>
 
   <%# ── Barcode scanner modal ───────────────────────────────────────────── %>
-  <% if @work.pending? %>
-    <div data-barcode-scanner-target="modal"
-         class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 p-4">
-      <div class="w-full max-w-md rounded-2xl bg-white shadow-xl">
-        <div class="flex items-center justify-between border-b border-slate-200 px-6 py-4">
-          <h2 class="text-lg font-semibold text-slate-900"><%= t("works.scan_modal.title") %></h2>
-          <button type="button" data-action="click->barcode-scanner#close"
-                  class="text-slate-400 hover:text-slate-600 text-xl leading-none">&times;</button>
-        </div>
-        <div class="p-6 space-y-4">
-          <p class="text-sm text-slate-600"><%= t("works.scan_modal.instruction") %></p>
-          <div class="relative overflow-hidden rounded-xl bg-slate-900 aspect-video">
-            <video data-barcode-scanner-target="video"
-                   class="w-full h-full object-cover"
-                   playsinline muted autoplay></video>
-          </div>
-          <p class="text-xs text-slate-500 text-center" data-barcode-scanner-target="status"></p>
-          <%= form_with url: scan_validate_work_path(@work), method: :post, data: { "barcode-scanner-target": "scanForm" } do |f| %>
-            <div>
-              <%= f.label :barcode_id, t("works.scan_modal.manual_label"), class: "block text-xs font-medium text-slate-700 mb-1" %>
-              <%= f.text_field :barcode_id, data: { "barcode-scanner-target": "input" },
-                  class: "block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500",
-                  placeholder: @work.barcode_id, autocomplete: "off" %>
-            </div>
-            <div class="mt-4 flex gap-3 justify-end">
-              <button type="button" data-action="click->barcode-scanner#close"
-                      class="<%= secondary_action_button_classes %>">
-                <%= t("works.scan_modal.cancel") %>
-              </button>
-              <button type="button" data-action="click->barcode-scanner#submitManual"
-                      class="<%= primary_action_button_classes %>">
-                <%= t("works.scan_modal.submit") %>
-              </button>
-            </div>
-          <% end %>
-        </div>
-      </div>
-    </div>
-  <% end %>
+  <%= work_scan_validation_modal(@work) %>
 
   <%# ── Edit result modal ───────────────────────────────────────────────── %>
   <% if @work.pending? || @work.validated? %>

@@ -75,16 +75,28 @@ module WorksHelper
     "rounded-lg border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
   end
 
+  def work_table_actions(work)
+    content_tag(:div, class: "flex items-center gap-2", data: { controller: "barcode-scanner" }) do
+      safe_join([work_table_action_buttons(work), work_scan_validation_modal(work)].compact)
+    end
+  end
+
   def work_table_action_buttons(work)
     safe_join(
       [
         action_icon_link(t("works.actions.view"), work_path(work), icon: :eye),
         action_icon_link(t("works.actions.print_barcode"), barcode_label_work_path(work), icon: :barcode, target: "_blank", rel: "noopener"),
-        action_icon_button(t("works.actions.validate"), validate_work_work_path(work), icon: :check, method: :patch, disabled: !work.pending?),
+        action_icon_trigger(t("works.actions.validate"), icon: :check, disabled: !work.pending?, data: (work.pending? ? { action: "click->barcode-scanner#open" } : {})),
         action_icon_button(t("works.actions.verify"), verify_work_work_path(work), icon: :badge_check, method: :patch, tone: :success, disabled: !work.validated?)
       ],
       " "
     )
+  end
+
+  def work_scan_validation_modal(work)
+    return unless work.pending?
+
+    render "works/scan_validation_modal", work: work
   end
 
   private

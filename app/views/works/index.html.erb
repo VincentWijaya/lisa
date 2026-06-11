@@ -52,9 +52,7 @@
               <td class="px-4 py-4"><span class="rounded-full px-3 py-1 text-xs font-semibold <%= work_status_classes(work.status) %>"><%= t("works.status.#{work.status}") %></span></td>
               <td class="px-4 py-4 text-slate-500"><%= l(work.created_at, format: :short) %></td>
               <td class="px-4 py-4">
-                <div class="flex items-center gap-2">
-                  <%= work_table_action_buttons(work) %>
-                </div>
+                <%= work_table_actions(work) %>
               </td>
             </tr>
           <% end %>

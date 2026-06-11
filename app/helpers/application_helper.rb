@@ -21,6 +21,18 @@ module ApplicationHelper
     end
   end
 
+  def action_icon_trigger(label, icon:, tone: :primary, disabled: false, **html_options)
+    html_options[:class] = [action_icon_button_classes(tone, disabled: disabled), html_options[:class]].compact.join(" ")
+    html_options[:title] = label
+    html_options[:disabled] = disabled
+    html_options[:type] = "button"
+    html_options[:aria] = { label: label, disabled: disabled }.merge(html_options[:aria] || {})
+
+    button_tag(**html_options) do
+      safe_join([action_icon(icon), content_tag(:span, label, class: "sr-only")])
+    end
+  end
+
   def action_icon_button_classes(tone = :secondary, disabled: false)
     base = "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-sm transition"
     return "#{base} cursor-not-allowed border border-slate-200 bg-slate-100 text-slate-400" if disabled
