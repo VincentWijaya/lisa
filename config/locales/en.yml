@@ -37,8 +37,28 @@ en:
     dashboard: "Dashboard"
     works: "Works"
     specimens: "Specimens"
+    bank_darah: "Blood Bank"
+    mikrobiologi: "Microbiology"
+    patologi_anatomi: "Anatomical Pathology"
+    inventori: "Inventory"
+    monitor_qc: "QC Monitor"
+    laporan: "Reports"
     admin: "Admin"
     sign_out: "Sign out"
+
+  menus:
+    bank_darah:
+      title: "Blood Bank"
+    mikrobiologi:
+      title: "Microbiology"
+    patologi_anatomi:
+      title: "Anatomical Pathology"
+    inventori:
+      title: "Inventory"
+    monitor_qc:
+      title: "QC Monitor"
+    laporan:
+      title: "Reports"
 
   sessions:
     new:

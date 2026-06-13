@@ -182,8 +182,28 @@ id:
     dashboard: "Dasboard"
     works: "Pekerjaan"
     specimens: "Spesimen"
+    bank_darah: "Bank Darah"
+    mikrobiologi: "Mikrobiologi"
+    patologi_anatomi: "Patologi Anatomi"
+    inventori: "Inventori"
+    monitor_qc: "Monitor QC"
+    laporan: "Laporan"
     admin: "Admin"
     sign_out: "Keluar"
+
+  menus:
+    bank_darah:
+      title: "Bank Darah"
+    mikrobiologi:
+      title: "Mikrobiologi"
+    patologi_anatomi:
+      title: "Patologi Anatomi"
+    inventori:
+      title: "Inventori"
+    monitor_qc:
+      title: "Monitor QC"
+    laporan:
+      title: "Laporan"
 
   # ── Auth / Sessions ───────────────────────────────────────────────────────────
   sessions:

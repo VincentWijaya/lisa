@@ -57,5 +57,12 @@ Rails.application.routes.draw do
     end
   end
 
+  get "bank-darah", to: "menus#show", defaults: { menu_key: "bank_darah" }, as: :bank_darah
+  get "mikrobiologi", to: "menus#show", defaults: { menu_key: "mikrobiologi" }, as: :mikrobiologi
+  get "patologi-anatomi", to: "menus#show", defaults: { menu_key: "patologi_anatomi" }, as: :patologi_anatomi
+  get "inventori", to: "menus#show", defaults: { menu_key: "inventori" }, as: :inventori
+  get "monitor-qc", to: "menus#show", defaults: { menu_key: "monitor_qc" }, as: :monitor_qc
+  get "laporan", to: "menus#show", defaults: { menu_key: "laporan" }, as: :laporan
+
   root to: "dashboard#index"
 end
