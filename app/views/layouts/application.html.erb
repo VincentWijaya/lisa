@@ -25,33 +25,36 @@
 
   <body class="min-h-screen bg-slate-50 text-slate-900">
     <% if logged_in? %>
-      <nav class="border-b border-slate-200 bg-white px-4 py-3 sm:px-6 lg:px-8">
+      <nav class="lisa-navbar">
         <% nav_items = [
-          [t("nav.dashboard"), root_path],
-          [t("nav.specimens"), specimens_path],
-          [t("nav.works"), works_path],
-          [t("nav.bank_darah"), bank_darah_path],
-          [t("nav.mikrobiologi"), mikrobiologi_path],
-          [t("nav.patologi_anatomi"), patologi_anatomi_path],
-          [t("nav.inventori"), inventori_path],
-          [t("nav.monitor_qc"), monitor_qc_path],
-          [t("nav.laporan"), laporan_path]
+          { label: t("nav.dashboard"), path: root_path, active: request.path == root_path },
+          { label: t("nav.specimens"), path: specimens_path, active: request.path.start_with?(specimens_path) },
+          { label: t("nav.works"), path: works_path, active: request.path.start_with?(works_path) },
+          { label: t("nav.bank_darah"), path: bank_darah_path, active: request.path == bank_darah_path },
+          { label: t("nav.mikrobiologi"), path: mikrobiologi_path, active: request.path == mikrobiologi_path },
+          { label: t("nav.patologi_anatomi"), path: patologi_anatomi_path, active: request.path == patologi_anatomi_path },
+          { label: t("nav.inventori"), path: inventori_path, active: request.path == inventori_path },
+          { label: t("nav.monitor_qc"), path: monitor_qc_path, active: request.path == monitor_qc_path },
+          { label: t("nav.laporan"), path: laporan_path, active: request.path == laporan_path }
         ] %>
-        <div class="mx-auto flex max-w-7xl flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-          <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:gap-6">
-            <%= link_to "LISA", root_path, class: "text-lg font-bold text-slate-900" %>
-            <div class="flex flex-wrap gap-x-4 gap-y-2">
-              <% nav_items.each do |label, path| %>
-                <%= link_to label, path, class: "text-sm font-medium text-slate-600 hover:text-slate-900" %>
-              <% end %>
-              <% if current_user&.admin? %>
-                <%= link_to t("nav.admin"), admin_root_path, class: "text-sm font-medium text-sky-600 hover:text-sky-800" %>
-              <% end %>
-            </div>
+        <div class="lisa-navbar__inner">
+          <%= link_to "LISA", root_path, class: "lisa-navbar__brand" %>
+
+          <div class="lisa-navbar__links" aria-label="Primary navigation">
+            <% nav_items.each do |item| %>
+              <%= link_to item[:label], item[:path], class: class_names("lisa-navbar__link", "lisa-navbar__link--active": item[:active]) %>
+            <% end %>
+            <% if current_user&.admin? %>
+              <%= link_to t("nav.admin"), admin_root_path, class: class_names("lisa-navbar__link lisa-navbar__link--admin", "lisa-navbar__link--active": request.path.start_with?(admin_root_path)) %>
+            <% end %>
           </div>
-          <div class="flex items-center gap-4">
-            <span class="text-sm text-slate-500"><%= current_user.name %> <span class="text-xs text-slate-400">(<%= current_user.display_roles %>)</span></span>
-            <%= button_to t("nav.sign_out"), session_path, method: :delete, class: "rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-50 cursor-pointer" %>
+
+          <div class="lisa-navbar__user">
+            <div class="lisa-navbar__user-name">
+              <%= current_user.name %>
+              <span class="lisa-navbar__roles">(<%= current_user.display_roles %>)</span>
+            </div>
+            <%= button_to t("nav.sign_out"), session_path, method: :delete, class: "lisa-navbar__sign-out", form_class: "lisa-navbar__sign-out-form" %>
           </div>
         </div>
       </nav>

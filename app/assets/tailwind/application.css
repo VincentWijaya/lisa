@@ -1,1 +1,156 @@
 @import "tailwindcss";
+
+@layer components {
+  .lisa-navbar {
+    border-bottom: 1px solid var(--color-slate-200);
+    background: var(--color-white);
+    padding: 0.75rem 1rem;
+  }
+
+  .lisa-navbar__inner {
+    align-items: center;
+    display: flex;
+    gap: 0.75rem;
+    margin-inline: auto;
+    max-width: var(--container-7xl);
+    min-height: 3rem;
+  }
+
+  .lisa-navbar__brand {
+    color: var(--color-slate-900);
+    flex: 0 0 auto;
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .lisa-navbar__links {
+    align-items: center;
+    display: flex;
+    flex: 1 1 auto;
+    gap: 0.125rem;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    white-space: nowrap;
+  }
+
+  .lisa-navbar__links::-webkit-scrollbar {
+    display: none;
+  }
+
+  .lisa-navbar__link {
+    border-radius: 0.5rem;
+    color: var(--color-slate-600);
+    flex: 0 0 auto;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.25;
+    padding: 0.4375rem 0.5rem;
+    transition: background-color 150ms ease, color 150ms ease;
+  }
+
+  .lisa-navbar__link:hover {
+    background: var(--color-slate-100);
+    color: var(--color-slate-900);
+  }
+
+  .lisa-navbar__link--active {
+    background: var(--color-sky-100);
+    color: var(--color-sky-800);
+  }
+
+  .lisa-navbar__link--admin {
+    color: var(--color-sky-700);
+  }
+
+  .lisa-navbar__user {
+    align-items: center;
+    display: flex;
+    flex: 0 0 auto;
+    gap: 0.625rem;
+    justify-content: flex-end;
+    min-width: max-content;
+  }
+
+  .lisa-navbar__user-name {
+    color: var(--color-slate-500);
+    font-size: 0.875rem;
+    max-width: 11rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .lisa-navbar__roles {
+    color: var(--color-slate-400);
+    font-size: 0.75rem;
+  }
+
+  .lisa-navbar__sign-out-form {
+    flex: 0 0 auto;
+  }
+
+  .lisa-navbar__sign-out {
+    border: 1px solid var(--color-slate-300);
+    border-radius: 0.5rem;
+    color: var(--color-slate-600);
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.25;
+    padding: 0.4375rem 0.75rem;
+    transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+  }
+
+  .lisa-navbar__sign-out:hover {
+    background: var(--color-slate-50);
+    border-color: var(--color-slate-400);
+    color: var(--color-slate-900);
+  }
+
+  @media (min-width: 40rem) {
+    .lisa-navbar {
+      padding-inline: 1.5rem;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .lisa-navbar {
+      padding-inline: 2rem;
+    }
+  }
+
+  @media (max-width: 63.9375rem) {
+    .lisa-navbar__inner {
+      flex-wrap: wrap;
+    }
+
+    .lisa-navbar__links {
+      order: 3;
+      width: 100%;
+    }
+
+    .lisa-navbar__user {
+      margin-left: auto;
+    }
+  }
+
+  @media (max-width: 39.9375rem) {
+    .lisa-navbar__inner {
+      align-items: flex-start;
+    }
+
+    .lisa-navbar__user {
+      align-items: flex-start;
+      flex-basis: 100%;
+      justify-content: space-between;
+      margin-left: 0;
+      width: 100%;
+    }
+
+    .lisa-navbar__user-name {
+      max-width: calc(100vw - 9rem);
+    }
+  }
+}
