@@ -7,9 +7,9 @@ module Api
         if result.success?
           render json: {
             processed: result.processed,
-            created: result.created.length,
-            skipped: result.skipped_count,
-            results: result.created.map { |r| ExaminationResultSerializer.serialize(r) }
+            results_count: result.results.length,
+            skipped_count: result.skipped_count,
+            results: result.results.map { |r| ExaminationResultSerializer.serialize(r) }
           }, status: :created
         else
           render json: { errors: result.errors }, status: :unprocessable_content
@@ -19,7 +19,9 @@ module Api
       private
 
       def ingest_params
-        params.permit(
+        source = params[:analyzer].presence || params
+
+        source.permit(
           :patient_id, :gender, :message_datetime, :message_control_id,
           results: [:loinc, :local_code, :test_name, :value, :unit, :reference_range, :flag]
         )

@@ -5,10 +5,11 @@ module Analyzer
     end
 
     def initialize(params)
-      @params = params.to_h.deep_symbolize_keys
+      @params = params.to_h.symbolize_keys
       @errors = []
-      @created = []
+      @created_count = 0
       @skipped_count = 0
+      @processed_records = []
     end
 
     def call
@@ -18,14 +19,19 @@ module Analyzer
       @specimen = find_specimen
       return ServiceResult.failure(errors: @errors) if @errors.any?
 
+      preload_context
+      reference_rules_by_loinc
+      reference_rules_by_local_code
+
       ActiveRecord::Base.transaction do
         result_items.each { |item| process_result(item) }
       end
 
       ServiceResult.success(
-        created: @created,
+        created: @created_count,
         skipped_count: @skipped_count,
-        processed: result_items.length
+        processed: result_items.length,
+        results: @processed_records
       )
     rescue ActiveRecord::RecordInvalid => e
       ServiceResult.failure(errors: e.record.errors.full_messages)
@@ -42,7 +48,7 @@ module Analyzer
 
     def find_specimen
       specimens = Specimen.where(patient_id: params[:patient_id])
-                          .where.not(status: Specimen.statuses[:cancelled])
+                          .where.not(status: "cancelled")
                           .order(created_at: :desc)
                           .limit(2)
                           .to_a
@@ -60,63 +66,84 @@ module Analyzer
       specimens.first
     end
 
+    def preload_context
+      works = @specimen.works.where.not(status: "cancelled").order(id: :desc).to_a
+      work_ids = works.map(&:id)
+
+      @works_by_code = {}
+      works.each do |work|
+        next if work.test_codes_text.blank?
+
+        codes = work.test_codes_text.split(";").map { |c| c.strip.downcase }.reject(&:empty?)
+        codes.each do |code|
+          @works_by_code[code] ||= work
+        end
+      end
+
+      existing_results = ExaminationResult.where(work_id: work_ids).to_a
+      @results_cache = existing_results.each_with_object({}) do |res, hash|
+        hash[[ res.work_id, res.reference_rule_id ]] = res
+      end
+    end
+
     def process_result(item)
       reference_rule = reference_rule_for(item)
       return @skipped_count += 1 unless reference_rule
 
-      work = work_for(reference_rule)
+      exam_code = reference_rule.examination.code&.downcase
+      return @skipped_count += 1 if exam_code.nil?
+
+      work = @works_by_code[exam_code]
       return @skipped_count += 1 unless work
 
-      result = work.examination_results.create!(
-        result_value: item[:value].to_s,
-        result_unit:  item[:unit].presence,
-        reference_rule: reference_rule,
+      result = @results_cache[[ work.id, reference_rule.id ]] || ExaminationResult.new(
+        work_id: work.id, 
+        reference_rule_id: reference_rule.id
+      )
+
+      result.assign_attributes(
+        result_value: item["value"].to_s,
+        result_unit:  item["unit"].presence,
         source: "instrument"
       )
-      @created << result
+
+      result.interpretation = reference_rule.interpretation_for(result.result_value)
+
+      @created_count += 1 if result.new_record?
+
+      result.save!
+      @processed_records << result
     end
 
     def reference_rule_for(item)
-      loinc = item[:loinc].presence
-      local = item[:local_code].presence
+      loinc = item["loinc"].presence
+      local = item["local_code"].presence
       return nil if loinc.nil? && local.nil?
 
       (loinc && reference_rules_by_loinc[loinc]) ||
         (local && reference_rules_by_local_code[local])
     end
 
-    def work_for(reference_rule)
-      works_by_examination_id[reference_rule.examination_id]
-    end
-
     def reference_rules_by_loinc
       @reference_rules_by_loinc ||= index_first_by(
-        ReferenceRule.active.where(loinc_code: result_items.filter_map { |item| item[:loinc].presence }.uniq).order(:id),
+        ReferenceRule.where(active: [ true, 1 ]).includes(:examination).where(loinc_code: loinc_ids).order(:id),
         :loinc_code
       )
     end
 
     def reference_rules_by_local_code
       @reference_rules_by_local_code ||= index_first_by(
-        ReferenceRule.active.where(local_code: result_items.filter_map { |item| item[:local_code].presence }.uniq).order(:id),
+        ReferenceRule.where(active: [ true, 1 ]).includes(:examination).where(local_code: local_ids).order(:id),
         :local_code
       )
     end
 
-    def works_by_examination_id
-      @works_by_examination_id ||= begin
-        examination_ids = (reference_rules_by_loinc.values + reference_rules_by_local_code.values).map(&:examination_id).uniq
-        if examination_ids.empty?
-          {}
-        else
-          index_first_by(
-            @specimen.works.where(examination_id: examination_ids)
-                     .where.not(status: Work.statuses[:cancelled])
-                     .order(:id),
-            :examination_id
-          )
-        end
-      end
+    def loinc_ids
+      @loinc_ids ||= result_items.filter_map { |item| item["loinc"].presence }.uniq
+    end
+
+    def local_ids
+      @local_ids ||= result_items.filter_map { |item| item["local_code"].presence }.uniq
     end
 
     def index_first_by(records, attribute)
@@ -126,7 +153,7 @@ module Analyzer
     end
 
     def result_items
-      @result_items ||= Array(params[:results])
+      @result_items ||= Array(params[:results]).map(&:with_indifferent_access)
     end
   end
 end
