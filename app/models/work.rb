@@ -35,17 +35,8 @@ class Work < ApplicationRecord
   scope :with_details, -> { includes(:specimen, :examination, :examination_results) }
   scope :filter_by_status, ->(value) { value.present? ? where(status: value) : all }
   scope :filter_by_lab_id, ->(value) { value.present? ? joins(:specimen).where(specimens: { lab_id: value.strip }) : all }
-  scope :search_term, lambda { |value|
-    if value.present?
-      term = "%#{sanitize_sql_like(value.strip)}%"
-      joins(:specimen).where(
-        "works.barcode_id ILIKE :term OR specimens.patient_id ILIKE :term OR specimens.medical_record_id ILIKE :term OR specimens.patient_name ILIKE :term",
-        term: term
-      )
-    else
-      all
-    end
-  }
+  scope :filter_by_medical_record_id, ->(value) { value.present? ? joins(:specimen).where(specimens: { medical_record_id: value.strip }) : all }
+  scope :filter_by_barcode_id, ->(value) { value.present? ? where(barcode_id: value.strip) : all }
 
   after_commit :expire_caches
 
