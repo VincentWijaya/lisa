@@ -56,25 +56,30 @@
     </div>
 
     <% editable_results = @work.pending? || @work.validated? %>
-    <%= form_with url: upsert_results_work_path(@work), method: :post, scope: :examination_results, class: "space-y-4" do %>
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-slate-200 text-sm">
-          <thead class="bg-slate-50">
+    
+    <%= form_with url: upsert_results_work_path(@work), method: :post, scope: :examination_results, class: "block h-full space-y-4" do %>
+      <div style="height: 450px !important; overflow-y: auto !important; overflow-x: auto !important;" class="border border-slate-200 rounded-xl">
+        
+        <table class="min-w-full w-full border-separate border-spacing-0 text-sm isolate m-0 p-0">
+          <thead class="sticky top-0 z-30 bg-slate-50 style='position: sticky; top: 0;'">
             <tr>
               <% %w[reference_rule value unit interpretation reference_range source verified_at actions].each do |col| %>
-                <th class="px-4 py-3 text-left font-semibold text-slate-700"><%= t("works.show.results_table.#{col}") %></th>
+                <th class="sticky top-0 z-30 bg-slate-50 border-b border-slate-200 px-4 py-3 text-left font-semibold text-slate-700" style="position: sticky; top: 0; background-color: #f8fafc !important;">
+                  <%= t("works.show.results_table.#{col}") %>
+                </th>
               <% end %>
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-100">
+          
+          <tbody class="divide-y divide-slate-100 bg-white">
             <% @reference_rules.each do |reference_rule| %>
               <% result = @results_by_reference_rule[reference_rule.id] %>
-              <tr>
-                <td class="px-4 py-3 text-slate-700">
+              <tr class="bg-white">
+                <td class="px-4 py-3 text-slate-700 bg-white">
                   <%= reference_rule.name %>
                   <%= hidden_field_tag "examination_results[results][#{reference_rule.id}][reference_rule_id]", reference_rule.id %>
                 </td>
-                <td class="px-4 py-3">
+                <td class="px-4 py-3 bg-white">
                   <% if editable_results %>
                     <%= text_field_tag "examination_results[results][#{reference_rule.id}][result_value]",
                         result&.result_value,
@@ -84,7 +89,7 @@
                     <span class="font-medium text-slate-900"><%= result&.result_value.presence || "-" %></span>
                   <% end %>
                 </td>
-                <td class="px-4 py-3">
+                <td class="px-4 py-3 bg-white">
                   <% if editable_results %>
                     <%= text_field_tag "examination_results[results][#{reference_rule.id}][result_unit]",
                         result_form_unit(result, reference_rule, @work),
@@ -94,9 +99,9 @@
                     <span class="text-slate-700"><%= result&.result_unit.presence || "-" %></span>
                   <% end %>
                 </td>
-                <td class="px-4 py-3 text-slate-700"><%= result&.interpretation.present? ? result.interpretation.humanize : "-" %></td>
-                <td class="px-4 py-3 text-xs text-slate-500"><%= reference_rule_range_display(reference_rule, result&.result_unit) %></td>
-                <td class="px-4 py-3">
+                <td class="px-4 py-3 text-slate-700 bg-white"><%= result&.interpretation.present? ? result.interpretation.humanize : "-" %></td>
+                <td class="px-4 py-3 text-xs text-slate-500 bg-white"><%= reference_rule_range_display(reference_rule, result&.result_unit) %></td>
+                <td class="px-4 py-3 bg-white">
                   <% if editable_results %>
                     <%= select_tag "examination_results[results][#{reference_rule.id}][source]",
                         options_for_select(result_source_options, result_form_source(result)),
@@ -105,8 +110,8 @@
                     <span class="text-slate-700"><%= result&.source.present? ? result.source.humanize : "-" %></span>
                   <% end %>
                 </td>
-                <td class="px-4 py-3 text-slate-700"><%= result&.verified_at ? l(result.verified_at, format: :short) : "-" %></td>
-                <td class="px-4 py-3">
+                <td class="px-4 py-3 text-slate-700 bg-white"><%= result&.verified_at ? l(result.verified_at, format: :short) : "-" %></td>
+                <td class="px-4 py-3 bg-white">
                   <% if result.present? && result.verified_at.blank? %>
                     <%= link_to t("works.result_actions.verify"),
                         verify_work_examination_result_path(@work, result),
@@ -118,16 +123,12 @@
                 </td>
               </tr>
             <% end %>
-            <% if @reference_rules.empty? %>
-              <tr>
-                <td colspan="8" class="px-4 py-8 text-center text-sm text-slate-500"><%= t("works.show.results_empty") %></td>
-              </tr>
-            <% end %>
           </tbody>
         </table>
       </div>
+
       <% if editable_results && @reference_rules.any? %>
-        <div class="flex justify-end">
+        <div class="flex justify-end pt-2">
           <%= submit_tag t("works.show.bulk_results.submit"), class: "rounded-lg bg-sky-600 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-500 cursor-pointer" %>
         </div>
       <% end %>
