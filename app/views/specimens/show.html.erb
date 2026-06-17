@@ -35,6 +35,7 @@
         <div class="flex justify-between gap-4"><dt class="font-medium"><%= t("specimens.show.fields.lab_id") %></dt><dd><%= @specimen.lab_id %></dd></div>
         <div class="flex justify-between gap-4"><dt class="font-medium"><%= t("specimens.show.fields.department") %></dt><dd><%= @specimen.department %></dd></div>
         <div class="flex justify-between gap-4"><dt class="font-medium"><%= t("specimens.show.fields.collected_at") %></dt><dd><%= @specimen.collection_datetime ? l(@specimen.collection_datetime, format: :short) : "-" %></dd></div>
+        <div class="flex justify-between gap-4"><dt class="font-medium"><%= t("specimens.show.fields.dianognes") %></dt><dd><%= @specimen.dianognes.presence || "-" %></dd></div>
         <div class="flex justify-between gap-4"><dt class="font-medium"><%= t("specimens.show.fields.status") %></dt><dd><span class="rounded-full px-3 py-1 text-xs font-semibold <%= specimen_status_classes(@specimen.status) %>"><%= t("specimens.status.#{@specimen.status}") %></span></dd></div>
       </dl>
     </section>

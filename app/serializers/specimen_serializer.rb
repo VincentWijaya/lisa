@@ -10,6 +10,7 @@ class SpecimenSerializer < ApplicationSerializer
       labId: object.lab_id,
       orderNumber: object.order_number,
       status: object.status,
+      dianognes: object.dianognes,
       referringDoctor: object.referring_doctor,
       affiliation: object.affiliation,
       patientAddress: object.patient_address,

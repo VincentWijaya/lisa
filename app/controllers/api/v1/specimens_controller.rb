@@ -47,6 +47,7 @@ module Api
           :lab_id,
           :department,
           :collection_datetime,
+          :dianognes,
           examination_ids: []
         )
       end

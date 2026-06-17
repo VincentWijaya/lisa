@@ -383,6 +383,7 @@ id:
         lab_id: "ID Lab"
         department: "Departemen"
         collected_at: "Waktu Pengambilan"
+        dianognes: "Diagnosa Dokter"
         status: "Status"
       works_table:
         barcode_id: "ID Barcode"
