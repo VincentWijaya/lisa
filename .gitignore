@@ -87,3 +87,5 @@
 
 # VS Code
 /.vscode/
+
+.claude/plans/*
