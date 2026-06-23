@@ -251,7 +251,7 @@ upsert_ref_rule "URINE-L", name: "Darah",              result_type: "qualitative
 upsert_ref_rule "URINE-L", name: "Nitrit",             result_type: "qualitative",
   allowed: %w[Negatif Positif], normal: %w[Negatif], abnormal: %w[Positif]
 upsert_ref_rule "URINE-L", name: "Urobilinogen",       result_type: "qualitative",
-  allowed: %w[<1 Normal Positif], normal: %w[<1 Normal], reference_value: "< 1 mg/dL"
+  allowed: %w[<1 Normal Positif], normal: %w[<1 Normal], reference_value: "< 1 mg/dL, Normal atau Positif"
 upsert_ref_rule "URINE-L", name: "Esterase Lekosit",  result_type: "qualitative",
   allowed: %w[Negatif Positif +1 +2 +3], normal: %w[Negatif], abnormal: %w[Positif +1 +2 +3]
 

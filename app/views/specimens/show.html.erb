@@ -47,7 +47,7 @@
       <table class="min-w-full divide-y divide-slate-200 text-sm">
         <thead class="bg-slate-50">
           <tr>
-            <% %w[barcode_id patient examination result interpretation status created_at actions].each do |col| %>
+            <% %w[barcode_id patient examination status created_at actions].each do |col| %>
               <th class="px-4 py-3 text-left font-semibold text-slate-700"><%= t("specimens.show.works_table.#{col}") %></th>
             <% end %>
           </tr>
@@ -61,8 +61,6 @@
                 <div class="text-xs text-slate-500"><%= work.specimen.patient_id %> • <%= work.specimen.medical_record_id %></div>
               </td>
               <td class="px-4 py-4 text-slate-700"><%= work.examination.category %></td>
-              <td class="px-4 py-4 text-slate-700"><%= work_result_value(work) %></td>
-              <td class="px-4 py-4"><%= work_interpretation_badge(work) %></td>
               <td class="px-4 py-4"><span class="rounded-full px-3 py-1 text-xs font-semibold <%= work_status_classes(work.status) %>"><%= t("works.status.#{work.status}") %></span></td>
               <td class="px-4 py-4 text-slate-500"><%= l(work.created_at, format: :short) %></td>
               <td class="px-4 py-3">
