@@ -32,10 +32,15 @@ Rails.application.configure do
   config.active_storage.service = :local
 
   # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true
+
+  # Silence ActionMailer delivery logs (MIME parts, headers).
+  config.action_mailer.logger = nil
 
   # Make template changes take effect immediately.
   config.action_mailer.perform_caching = false
+
+  config.action_mailer.perform_deliveries = true
 
   # Use Solid Queue for async jobs in development.
   config.active_job.queue_adapter = :async
