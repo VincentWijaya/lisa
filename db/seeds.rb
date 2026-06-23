@@ -415,6 +415,118 @@ if ExaminationResult.count < 5
   end
 end
 
+# ─── Padding Examinations for Multi-Page ─────────────────────────────────────
+# Creates extra examinations to guarantee report overflows to 2+ A4 pages.
+
+puts "📄 Adding padding examinations for multi-page report..."
+
+padding_count = Examination.where(category: "PADDING").count
+if padding_count < 40
+  (1..40).each do |i|
+    exam = Examination.find_or_initialize_by(code: "PAD-#{format('%02d', i)}")
+    exam.assign_attributes(
+      name:                "Pemeriksaan Tambahan #{i}",
+      category:            "PADDING",
+      label_group:         nil,
+      specimen_type:       "Darah EDTA",
+      default_result_type: "numeric",
+      default_unit:        "mg/dL",
+      status:              "active"
+    )
+    exam.save!
+
+    rule = ReferenceRule.find_or_initialize_by(examination_id: exam.id, name: exam.name)
+    rule.assign_attributes(
+      result_type:        "numeric",
+      numeric_low_value:  5.0,
+      numeric_high_value: 15.0,
+      unit:               "mg/dL",
+      normal_values:      [],
+      abnormal_values:    [],
+      critical_values:    [],
+      allowed_values:     [],
+      reference_value:    "5.0 - 15.0",
+      gender:             nil,
+      active:             true
+    )
+    rule.save!
+  end
+  puts "  ✅ Created padding examinations"
+end
+
+# ─── Multi-Page Report Specimen ───────────────────────────────────────────────
+# Creates one specimen with ALL examinations + ALL reference rules populated,
+# guaranteeing enough results to overflow multiple A4 pages in print report.
+
+puts "📄 Creating multi-page report specimen..."
+
+multi_patient_id = "MP-00001"
+unless Specimen.exists?(patient_id: multi_patient_id)
+  tech = User.find_by!(email: "tech1@lisa.local")
+  validator = User.find_by!(email: "supervisor@lisa.local")
+
+  all_exam_ids = Examination.active.pluck(:id)
+
+  result = Specimens::CreateService.call(
+    patient_id:          multi_patient_id,
+    patient_name:        "Multi Page Test Patient — Full Panel",
+    birth_date:          "1980-01-15",
+    gender:              "Laki-laki",
+    medical_record_id:   "RM-MULTI-001",
+    lab_id:              "LAB-01",
+    department:          "Umum",
+    referring_doctor:    "dr. Test Doctor, Sp.PD",
+    responsible_doctor:  "dr. Penanggung Jawab",
+    collection_datetime: Time.current,
+    examination_ids:     all_exam_ids
+  )
+
+  if result.success?
+    specimen = result.specimen
+
+    # For each work, create results for all matching (gender + active) ref rules.
+    specimen.works.includes(examination: :reference_rules).each do |work|
+      ref_rules = work.examination.reference_rules
+                       .active
+                       .select { |rule| rule.gender.nil? || rule.gender == "male" }
+
+      ref_rules.each do |rule|
+        value = case rule.result_type
+                when "numeric"
+                  if rule.numeric_low_value.present? && rule.numeric_high_value.present?
+                    midpoint = (rule.numeric_low_value + rule.numeric_high_value) / 2.0
+                    format("%g", midpoint)
+                  elsif rule.numeric_low_value.present?
+                    format("%g", rule.numeric_low_value + 1.0)
+                  elsif rule.numeric_high_value.present?
+                    format("%g", rule.numeric_high_value - 1.0)
+                  else
+                    "10.0"
+                  end
+                when "qualitative"
+                  rule.normal_values.first || rule.allowed_values.first || "Normal"
+                else
+                  "Normal"
+                end
+
+        ExaminationResult.find_or_create_by!(work: work, reference_rule: rule) do |er|
+          er.result_value = value
+          er.result_unit  = rule.unit
+          er.source       = "manual"
+          er.entered_by   = tech.id
+        end
+      end
+
+      # Validate works so they show realistic status.
+      work.update!(status: :validated) if work.status == "pending"
+    end
+
+    puts "  ✅ #{specimen.works.count} works, #{specimen.works.sum { |w| w.examination_results.count }} results"
+  else
+    puts "  ⚠️  Multi-page seed failed: #{result.errors.join(', ')}"
+  end
+end
+
 puts "  ✅ #{ExaminationResult.count} examination results seeded"
 puts ""
 puts "✅ Seeding selesai!"

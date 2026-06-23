@@ -60,7 +60,7 @@
                 <div class="font-medium text-slate-900"><%= work.specimen.patient_name %></div>
                 <div class="text-xs text-slate-500"><%= work.specimen.patient_id %> • <%= work.specimen.medical_record_id %></div>
               </td>
-              <td class="px-4 py-4 text-slate-700"><%= work.examination.category %></td>
+              <td class="px-4 py-4 text-slate-700"><%= work.examination.category %> • <%= work.examination.name %></td>
               <td class="px-4 py-4"><span class="rounded-full px-3 py-1 text-xs font-semibold <%= work_status_classes(work.status) %>"><%= t("works.status.#{work.status}") %></span></td>
               <td class="px-4 py-4 text-slate-500"><%= l(work.created_at, format: :short) %></td>
               <td class="px-4 py-3">

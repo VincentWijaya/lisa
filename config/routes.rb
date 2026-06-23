@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       post 'analyzer/results', to: 'analyzer#ingest'
+      resources :examinations, only: [:index]
       resources :specimens, only: [:create, :show, :index]
       resources :works, only: [:show, :index] do
         member do
