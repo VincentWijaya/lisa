@@ -13,5 +13,6 @@ FactoryBot.define do
     critical_values { [] }
     loinc_code { nil }
     local_code { nil }
+    gender { nil }
   end
 end

@@ -15,7 +15,11 @@ class WorksController < ApplicationController
 
   def show
     @results = @work.examination_results.includes(:reference_rule).order(created_at: :desc)
-    @reference_rules = ReferenceRule.active.where(examination_id: eligible_examination_ids_for(@work)).includes(:examination).order(:id)
+    @reference_rules = ReferenceRule.active
+                                    .where(examination_id: eligible_examination_ids_for(@work))
+                                    .for_specimen_gender(@work.specimen.gender)
+                                    .includes(:examination)
+                                    .order(:id)
     @results_by_reference_rule = @results.group_by(&:reference_rule_id).transform_values(&:first)
   end
 

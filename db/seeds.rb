@@ -113,7 +113,7 @@ puts "📏 Creating reference rules..."
 
 def upsert_ref_rule(exam_code, name:, result_type:, low: nil, high: nil, unit: nil,
                     normal: [], abnormal: [], critical: [], allowed: [],
-                    reference_value: nil, loinc: nil, previous_names: [])
+                    reference_value: nil, loinc: nil, previous_names: [], gender: nil)
   exam = Examination.find_by!(code: exam_code)
   rule = ReferenceRule.find_by(examination_id: exam.id, name: name)
   rule ||= ReferenceRule.where(examination_id: exam.id, name: previous_names).order(:id).first if previous_names.any?
@@ -130,6 +130,7 @@ def upsert_ref_rule(exam_code, name:, result_type:, low: nil, high: nil, unit: n
     allowed_values:     allowed,
     reference_value:    reference_value,
     loinc_code:         loinc,
+    gender:             gender,
     active:             true
   )
   rule.save!
@@ -147,18 +148,18 @@ upsert_ref_rule "BASO",   name: "Basofil",               result_type: "numeric",
 upsert_ref_rule "MCHC",   name: "MCHC",                  result_type: "numeric", low: 32,   high: 36,   unit: "g/dL",    reference_value: "32 - 36",      loinc: "786-4"
 upsert_ref_rule "MCH",    name: "MCH",                   result_type: "numeric", low: 26,   high: 34,   unit: "pg",      reference_value: "26 - 34",      loinc: "785-6"
 upsert_ref_rule "MCV",    name: "MCV",                   result_type: "numeric", low: 80,   high: 100,  unit: "fL",      reference_value: "80 - 100",     loinc: "787-2"
-upsert_ref_rule "RBC",    name: "ERITROSIT (Pria)",      result_type: "numeric", low: 4.20, high: 6.00, unit: "10⁶/µL", reference_value: "4.20 - 6.00",  loinc: "789-8",  previous_names: ["Eritrosit (Pria)"]
-upsert_ref_rule "RBC",    name: "ERITROSIT (Wanita)",    result_type: "numeric", low: 3.80, high: 5.40, unit: "10⁶/µL", reference_value: "3.80 - 5.40",  loinc: "789-8",  previous_names: ["Eritrosit (Wanita)"]
+upsert_ref_rule "RBC",    name: "ERITROSIT (Pria)",      result_type: "numeric", low: 4.20, high: 6.00, unit: "10⁶/µL", reference_value: "4.20 - 6.00",  loinc: "789-8",  previous_names: ["Eritrosit (Pria)"],   gender: "male"
+upsert_ref_rule "RBC",    name: "ERITROSIT (Wanita)",    result_type: "numeric", low: 3.80, high: 5.40, unit: "10⁶/µL", reference_value: "3.80 - 5.40",  loinc: "789-8",  previous_names: ["Eritrosit (Wanita)"], gender: "female"
 upsert_ref_rule "PLT",    name: "Trombosit",             result_type: "numeric", low: 150,  high: 450,  unit: "10³/µL", reference_value: "150 - 450",    loinc: "777-3"
-upsert_ref_rule "HCT",    name: "Hematokrit (Pria)",     result_type: "numeric", low: 40,   high: 54,   unit: "%",       reference_value: "40 - 54",      loinc: "20570-8"
-upsert_ref_rule "HCT",    name: "Hematokrit (Wanita)",   result_type: "numeric", low: 38,   high: 47,   unit: "%",       reference_value: "38 - 47",      loinc: "20570-8"
+upsert_ref_rule "HCT",    name: "Hematokrit (Pria)",     result_type: "numeric", low: 40,   high: 54,   unit: "%",       reference_value: "40 - 54",      loinc: "20570-8", gender: "male"
+upsert_ref_rule "HCT",    name: "Hematokrit (Wanita)",   result_type: "numeric", low: 38,   high: 47,   unit: "%",       reference_value: "38 - 47",      loinc: "20570-8", gender: "female"
 upsert_ref_rule "WBC",    name: "Lekosit",               result_type: "numeric", low: 3.6,  high: 10.6, unit: "10³/µL", reference_value: "3.6 - 10.6",   loinc: "6690-2",  previous_names: ["Leukosit"]
-upsert_ref_rule "HGB",    name: "Hemoglobin (Pria)",     result_type: "numeric", low: 13.5, high: 18.0, unit: "g/dL",    reference_value: "13.5 - 18.0", loinc: "718-7",  previous_names: ["Hemoglobin Male"]
-upsert_ref_rule "HGB",    name: "Hemoglobin (Wanita)",   result_type: "numeric", low: 12.0, high: 16.0, unit: "g/dL",    reference_value: "12.0 - 16.0", loinc: "718-7",  previous_names: ["Hemoglobin Female"]
+upsert_ref_rule "HGB",    name: "Hemoglobin (Pria)",     result_type: "numeric", low: 13.5, high: 18.0, unit: "g/dL",    reference_value: "13.5 - 18.0", loinc: "718-7",  previous_names: ["Hemoglobin Male"],   gender: "male"
+upsert_ref_rule "HGB",    name: "Hemoglobin (Wanita)",   result_type: "numeric", low: 12.0, high: 16.0, unit: "g/dL",    reference_value: "12.0 - 16.0", loinc: "718-7",  previous_names: ["Hemoglobin Female"], gender: "female"
 
 # ── LED ──
-upsert_ref_rule "LED", name: "LED (Pria)",   result_type: "numeric", low: 0, high: 15, unit: "mm/jam", reference_value: "0 - 15",  loinc: "4537-7"
-upsert_ref_rule "LED", name: "LED (Wanita)", result_type: "numeric", low: 0, high: 20, unit: "mm/jam", reference_value: "0 - 20",  loinc: "4537-7"
+upsert_ref_rule "LED", name: "LED (Pria)",   result_type: "numeric", low: 0, high: 15, unit: "mm/jam", reference_value: "0 - 15",  loinc: "4537-7", gender: "male"
+upsert_ref_rule "LED", name: "LED (Wanita)", result_type: "numeric", low: 0, high: 20, unit: "mm/jam", reference_value: "0 - 20",  loinc: "4537-7", gender: "female"
 
 # ── Golongan Darah ──
 upsert_ref_rule "GOLDAR", name: "Golongan Darah", result_type: "qualitative",
@@ -207,8 +208,8 @@ upsert_ref_rule "FUNGSI-H", name: "Albumin",                result_type: "numeri
 upsert_ref_rule "FUNGSI-H", name: "Gamma GT",               result_type: "numeric", low: 8,  high: 61,  unit: "U/L",   reference_value: "8 - 61",   loinc: "2324-2"
 
 # ── Fungsi Ginjal ──
-upsert_ref_rule "CRE", name: "CREATININE (Pria)",   result_type: "numeric", low: 0.7, high: 1.2, unit: "mg/dL", reference_value: "0.7 - 1.2", loinc: "2160-0", previous_names: ["Kreatinin (Pria)", "Adult Male Creatinine"]
-upsert_ref_rule "CRE", name: "CREATININE (Wanita)", result_type: "numeric", low: 0.5, high: 1.0, unit: "mg/dL", reference_value: "0.5 - 1.0", loinc: "2160-0", previous_names: ["Kreatinin (Wanita)", "Adult Female Creatinine"]
+upsert_ref_rule "CRE", name: "CREATININE (Pria)",   result_type: "numeric", low: 0.7, high: 1.2, unit: "mg/dL", reference_value: "0.7 - 1.2", loinc: "2160-0", previous_names: ["Kreatinin (Pria)", "Adult Male Creatinine"],   gender: "male"
+upsert_ref_rule "CRE", name: "CREATININE (Wanita)", result_type: "numeric", low: 0.5, high: 1.0, unit: "mg/dL", reference_value: "0.5 - 1.0", loinc: "2160-0", previous_names: ["Kreatinin (Wanita)", "Adult Female Creatinine"], gender: "female"
 upsert_ref_rule "UR",  name: "UREUM",               result_type: "numeric", low: 15,  high: 45,  unit: "mg/dL", reference_value: "15 - 45",   loinc: "3094-0", previous_names: ["Ureum", "BUN Adult"]
 
 # ── Anti HIV ──

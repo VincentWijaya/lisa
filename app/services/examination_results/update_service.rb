@@ -35,7 +35,9 @@ module ExaminationResults
     attr_reader :examination_result, :work, :params
 
     def find_reference_rule
-      ReferenceRule.active.find_by(id: params[:reference_rule_id]).tap do |rule|
+      scope = ReferenceRule.active
+                           .for_specimen_gender(work.specimen.gender)
+      scope.find_by(id: params[:reference_rule_id]).tap do |rule|
         @errors << "Reference rule not found" if rule.nil?
       end
     end

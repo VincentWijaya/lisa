@@ -120,22 +120,30 @@ module Analyzer
       local = item["local_code"].presence
       return nil if loinc.nil? && local.nil?
 
-      (loinc && reference_rules_by_loinc[loinc]) ||
-        (local && reference_rules_by_local_code[local])
+      candidates = []
+      candidates.concat(reference_rules_by_loinc[loinc]   || []) if loinc
+      candidates.concat(reference_rules_by_local_code[local] || []) if local
+      return nil if candidates.empty?
+
+      ReferenceRule.best_for_specimen(candidates.uniq, @specimen.gender)
     end
 
     def reference_rules_by_loinc
-      @reference_rules_by_loinc ||= index_first_by(
-        ReferenceRule.where(active: [ true, 1 ]).includes(:examination).where(loinc_code: loinc_ids).order(:id),
-        :loinc_code
-      )
+      @reference_rules_by_loinc ||= ReferenceRule
+                                   .where(active: [ true, 1 ])
+                                   .includes(:examination)
+                                   .where(loinc_code: loinc_ids)
+                                   .order(:id)
+                                   .group_by(&:loinc_code)
     end
 
     def reference_rules_by_local_code
-      @reference_rules_by_local_code ||= index_first_by(
-        ReferenceRule.where(active: [ true, 1 ]).includes(:examination).where(local_code: local_ids).order(:id),
-        :local_code
-      )
+      @reference_rules_by_local_code ||= ReferenceRule
+                                        .where(active: [ true, 1 ])
+                                        .includes(:examination)
+                                        .where(local_code: local_ids)
+                                        .order(:id)
+                                        .group_by(&:local_code)
     end
 
     def loinc_ids
@@ -144,12 +152,6 @@ module Analyzer
 
     def local_ids
       @local_ids ||= result_items.filter_map { |item| item["local_code"].presence }.uniq
-    end
-
-    def index_first_by(records, attribute)
-      records.each_with_object({}) do |record, index|
-        index[record.public_send(attribute)] ||= record
-      end
     end
 
     def result_items

@@ -146,6 +146,7 @@ module ExaminationResults
     def reference_rules_by_id
       @reference_rules_by_id ||= ReferenceRule.active
                                              .where(examination_id: eligible_examination_ids)
+                                             .for_specimen_gender(work.specimen.gender)
                                              .index_by(&:id)
     end
 

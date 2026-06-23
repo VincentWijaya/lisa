@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_15_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_23_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -66,6 +66,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_15_000000) do
     t.jsonb "critical_values", default: [], null: false
     t.text "description"
     t.bigint "examination_id", null: false
+    t.string "gender"
     t.string "local_code"
     t.string "loinc_code"
     t.string "name", null: false
@@ -79,6 +80,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_15_000000) do
     t.index ["active"], name: "index_reference_rules_on_active"
     t.index ["examination_id", "active", "id"], name: "index_reference_rules_on_examination_active_id"
     t.index ["examination_id"], name: "index_reference_rules_on_examination_id"
+    t.index ["gender"], name: "index_reference_rules_on_gender"
     t.index ["local_code"], name: "index_reference_rules_on_active_local_code", where: "((active = true) AND (local_code IS NOT NULL))"
     t.index ["local_code"], name: "index_reference_rules_on_local_code"
     t.index ["loinc_code"], name: "index_reference_rules_on_active_loinc_code", where: "((active = true) AND (loinc_code IS NOT NULL))"

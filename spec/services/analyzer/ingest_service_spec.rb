@@ -165,4 +165,53 @@ RSpec.describe Analyzer::IngestService do
       end
     end
   end
+
+  describe "gender-specific reference rules" do
+    let!(:male_rule) do
+      create(:reference_rule,
+             examination: examination,
+             loinc_code: "6690-2",
+             name: "WBC (Pria)",
+             result_type: "numeric",
+             numeric_low_value: 4.0,
+             numeric_high_value: 10.0,
+             gender: "male",
+             active: true)
+    end
+    let!(:female_rule) do
+      create(:reference_rule,
+             examination: examination,
+             loinc_code: "6690-2",
+             name: "WBC (Wanita)",
+             result_type: "numeric",
+             numeric_low_value: 4.0,
+             numeric_high_value: 10.0,
+             gender: "female",
+             active: true)
+    end
+
+    context "when specimen is male" do
+      let(:specimen) { create(:specimen, patient_id: "1234", gender: "Laki-laki", status: "pending") }
+
+      it "writes the result to the male rule" do
+        trigger_service
+        result = work.examination_results.find_by(reference_rule: male_rule)
+        expect(result).to be_present
+        expect(result.result_value).to eq("7.59")
+        expect(work.examination_results.find_by(reference_rule: female_rule)).to be_nil
+      end
+    end
+
+    context "when specimen is female" do
+      let(:specimen) { create(:specimen, patient_id: "1234", gender: "Perempuan", status: "pending") }
+
+      it "writes the result to the female rule" do
+        trigger_service
+        result = work.examination_results.find_by(reference_rule: female_rule)
+        expect(result).to be_present
+        expect(result.result_value).to eq("7.59")
+        expect(work.examination_results.find_by(reference_rule: male_rule)).to be_nil
+      end
+    end
+  end
 end

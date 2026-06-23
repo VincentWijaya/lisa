@@ -10,6 +10,13 @@ class ReferenceRule < ApplicationRecord
     text:        "text"
   }, validate: true
 
+  GENDERS = %w[male female].freeze
+
+  enum :gender, {
+    male:   "male",
+    female: "female"
+  }
+
   validates :name,        presence: true
   validates :result_type, presence: true
   validates :active,      inclusion: { in: [true, false] }
@@ -27,6 +34,32 @@ class ReferenceRule < ApplicationRecord
   validate :numeric_range_order, if: -> { result_type == "numeric" && numeric_low_value.present? && numeric_high_value.present? }
 
   scope :active, -> { where(active: true) }
+
+  # Map free-form specimen gender values to our enum.
+  # Returns nil when no match (caller decides: keep all rules, or skip).
+  def self.specimen_gender_to_enum(specimen_gender)
+    case specimen_gender.to_s.downcase.strip
+    when "male", "laki-laki", "laki", "m", "pria" then "male"
+    when "female", "perempuan", "wanita", "f", "p", "w" then "female"
+    end
+  end
+
+  # Rules that apply to the given specimen gender.
+  # nil specimen gender → unisex rules only (gender NULL).
+  # male/female → matching rules + unisex rules.
+  scope :for_specimen_gender, ->(specimen_gender) {
+    enum_value = specimen_gender_to_enum(specimen_gender)
+    enum_value ? where(gender: [ nil, enum_value ]) : where(gender: nil)
+  }
+
+  # Pick the best-matching rule for a specimen from a pre-narrowed candidate set.
+  # Prefers a rule whose gender matches the specimen; falls back to the first by id.
+  def self.best_for_specimen(rules, specimen_gender)
+    enum_value = specimen_gender_to_enum(specimen_gender)
+    return rules.min_by(&:id) if enum_value.nil? || rules.empty?
+
+    rules.find { |rule| rule.gender == enum_value } || rules.min_by(&:id)
+  end
 
   def interprets?(value)
     return false if value.blank?

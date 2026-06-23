@@ -52,7 +52,9 @@ module ExaminationResults
     end
 
     def reference_rule_scope
-      ReferenceRule.active.where(examination_id: eligible_examination_ids)
+      ReferenceRule.active
+                  .where(examination_id: eligible_examination_ids)
+                  .for_specimen_gender(work.specimen.gender)
     end
 
     def eligible_examination_ids
