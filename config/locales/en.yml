@@ -247,6 +247,10 @@ en:
       print_labels: "Print Labels"
       print_report: "Print Report"
       print_barcode: ""
+      send_report: "Send Report"
+    flash:
+      report_sent: "Report will be sent to %{email}"
+      invalid_email: "Email address is not valid"
     status:
       pending: "Pending"
       in_progress: "In Progress"

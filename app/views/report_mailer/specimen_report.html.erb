@@ -1,0 +1,13 @@
+<h1>Hasil Laboratorium</h1>
+
+<p>Yth. Pengguna,</p>
+
+<p>Terlampir hasil laboratorium untuk:</p>
+
+<table>
+  <tr><td><strong>No. Lab</strong></td><td><%= @specimen.order_number %></td></tr>
+  <tr><td><strong>Nama Pasien</strong></td><td><%= @specimen.patient_name %></td></tr>
+  <tr><td><strong>Tanggal Cetak</strong></td><td><%= l(Time.current, format: :default) %></td></tr>
+</table>
+
+<p>Salam,<br><%= @lab_name %></p>

@@ -55,6 +55,8 @@ Rails.application.routes.draw do
     member do
       get :barcode_labels
       get :print_report
+      get :send_report_form
+      post :send_report
     end
   end
 

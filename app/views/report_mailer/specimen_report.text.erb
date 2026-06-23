@@ -1,0 +1,13 @@
+Hasil Laboratorium
+==================
+
+Yth. Pengguna,
+
+Terlampir hasil laboratorium untuk:
+
+  No. Lab: <%= @specimen.order_number %>
+  Nama Pasien: <%= @specimen.patient_name %>
+  Tanggal Cetak: <%= l(Time.current, format: :default) %>
+
+Salam,
+<%= @lab_name %>

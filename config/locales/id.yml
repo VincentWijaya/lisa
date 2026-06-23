@@ -398,6 +398,10 @@ id:
       print_labels: "Cetak Label"
       print_report: "Cetak Laporan"
       print_barcode: "Cetak Barcode"
+      send_report: "Kirim Laporan"
+    flash:
+      report_sent: "Laporan akan dikirim ke %{email}"
+      invalid_email: "Alamat email tidak valid"
     status:
       pending: "Menunggu"
       in_progress: "Sedang Diproses"

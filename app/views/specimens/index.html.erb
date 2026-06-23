@@ -73,6 +73,7 @@
                 <div class="flex items-center gap-2">
                   <%= action_icon_link(t("specimens.actions.view"), specimen_path(specimen), icon: :eye) %>
                   <%= action_icon_link(t("specimens.actions.print_labels"), barcode_labels_specimen_path(specimen), icon: :barcode, target: "_blank", rel: "noopener") %>
+                  <%= action_icon_link(t("specimens.actions.send_report"), send_report_form_specimen_path(specimen), icon: :email, data: { turbo_frame: "send-report-modal" }) %>
                 </div>
               </td>
             </tr>
@@ -88,3 +89,5 @@
     </div>
   </div>
 </div>
+
+<%= turbo_frame_tag "send-report-modal" %>

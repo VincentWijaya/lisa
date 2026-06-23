@@ -47,6 +47,31 @@
         align-items: center;
       }
 
+      .email-form {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+        margin-left: auto;
+      }
+      .email-input {
+        padding: 7px 10px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 13px;
+        width: 200px;
+      }
+      .btn-email {
+        padding: 8px 14px;
+        background: #047857;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        font-size: 13px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+      .btn-email:hover { background: #065f46; }
+
       /* ── Report page ── */
       .report-page {
         width: 100%;
@@ -176,6 +201,7 @@
     <div class="print-controls">
       <button class="btn-print" onclick="window.print()">🖨 Cetak Laporan</button>
       <%= link_to "← Kembali", :back, class: "btn-back" %>
+      <%= yield :print_actions %>
     </div>
     <%= yield %>
   </body>

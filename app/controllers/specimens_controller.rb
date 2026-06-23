@@ -1,6 +1,6 @@
 class SpecimensController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_specimen, only: %i[show barcode_labels print_report]
+  before_action :set_specimen, only: %i[show barcode_labels print_report send_report send_report_form]
 
   def index
     scope = Specimen.with_works
@@ -35,6 +35,21 @@ class SpecimensController < ApplicationController
     @collection_times   = collection_times_by_type(works_with_results)
     @validator          = find_validator(works_with_results)
     render layout: "lab_report"
+  end
+
+  def send_report_form
+    render layout: false
+  end
+
+  def send_report
+    email = params[:email]
+    if email.blank? || !email.match?(/\A[^@\s]+@[^@\s]+\z/)
+      redirect_to specimens_path, alert: t("specimens.flash.invalid_email")
+      return
+    end
+
+    SpecimenReportJob.perform_later(@specimen.id, email)
+    redirect_to specimens_path, notice: t("specimens.flash.report_sent", email: email)
   end
   private
 

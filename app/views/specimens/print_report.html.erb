@@ -5,6 +5,13 @@
   lab_email   = ENV.fetch("LAB_EMAIL",   "")
 %>
 
+<% content_for :print_actions do %>
+  <%= form_with url: send_report_specimen_path(@specimen), method: :post, local: true, class: "email-form" do |f| %>
+    <%= f.email_field :email, required: true, placeholder: "email@contoh.com", class: "email-input", "aria-label": "Email" %>
+    <%= f.submit "Kirim Email", class: "btn-email" %>
+  <% end %>
+<% end %>
+
 <div class="report-page">
   <%# ── Report Header ── %>
   <div class="report-header">
