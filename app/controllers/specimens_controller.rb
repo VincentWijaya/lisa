@@ -27,13 +27,29 @@ class SpecimensController < ApplicationController
                       .includes(:examination, examination_results: :reference_rule)
                       .order(:label_sequence)
                       .to_a
-    @grouped_works    = @works.group_by { |w| w.examination.category.presence || "UMUM" }
-    @results_by_work_id = @works.index_with { |work| work.examination_results.sort_by(&:id) }
-    @collection_times = collection_times_by_type(@works)
-    @validator        = find_validator(@works)
+    @results_by_work_id = @works.each_with_object({}) do |work, hash|
+      hash[work.id] = latest_results_for(work)
+    end
+    works_with_results  = @works.select { |work| (@results_by_work_id[work.id] || []).any? }
+    @grouped_works      = works_with_results.group_by { |w| w.examination.category.presence || "UMUM" }
+    @collection_times   = collection_times_by_type(works_with_results)
+    @validator          = find_validator(works_with_results)
     render layout: "lab_report"
   end
   private
+
+  # Keep only the latest result per reference rule (skip empty values),
+  # scoped to rules matching the specimen's gender.
+  def latest_results_for(work)
+    work.examination_results
+        .where.not(result_value: [ nil, "" ])
+        .where(reference_rule_id: ReferenceRule.for_specimen_gender(@specimen.gender).select(:id))
+        .order(created_at: :desc, id: :desc)
+        .group_by(&:reference_rule_id)
+        .transform_values(&:first)
+        .values
+        .sort_by { |r| r.reference_rule_id }
+  end
 
   def set_specimen
     @specimen = Specimen.find(params[:id])

@@ -107,28 +107,20 @@
               </td>
             </tr>
           <% end %>
-          <% if results.any? %>
-            <% results.each do |result| %>
-              <% ref_rule = result.reference_rule %>
-              <% flag = result_flag(result.interpretation) %>
-              <tr>
-                <td class="col-name" style="<%= 'padding-left:18px;' if results.many? %>">
-                  <%= ref_rule&.name || work.examination.name %>
-                </td>
-                <td class="col-value">
-                  <%= result.result_value %>
-                  <% if flag.present? %><span class="result-flag"><%= flag %></span><% end %>
-                </td>
-                <td class="col-ref"><%= format_reference_range(ref_rule) %></td>
-                <td class="col-unit"><%= result.result_unit.presence || ref_rule&.unit %></td>
-                <td class="col-note"></td>
-              </tr>
-            <% end %>
-          <% else %>
-            <%# Work with no results yet — show placeholder row %>
+          <% results.each do |result| %>
+            <% ref_rule = result.reference_rule %>
+            <% flag = result_flag(result.interpretation) %>
             <tr>
-              <td class="col-name"><%= work.examination.name %></td>
-              <td class="col-value" colspan="4" style="color:#999; font-style:italic;">Belum ada hasil</td>
+              <td class="col-name" style="<%= 'padding-left:18px;' if results.many? %>">
+                <%= ref_rule&.name || work.examination.name %>
+              </td>
+              <td class="col-value">
+                <%= result.result_value %>
+                <% if flag.present? %><span class="result-flag"><%= flag %></span><% end %>
+              </td>
+              <td class="col-ref"><%= format_reference_range(ref_rule) %></td>
+              <td class="col-unit"><%= result.result_unit.presence || ref_rule&.unit %></td>
+              <td class="col-note"></td>
             </tr>
           <% end %>
         <% end %>
