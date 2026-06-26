@@ -4,7 +4,7 @@
       <h2 class="mb-1 text-lg font-semibold text-slate-900">Kirim Laporan via Email</h2>
       <p class="mb-4 text-sm text-slate-500">Spesimen: <%= @specimen.order_number %> – <%= @specimen.patient_name %></p>
 
-      <%= form_with url: send_report_specimen_path(@specimen), method: :post, local: true, class: "space-y-4" do |f| %>
+      <%= form_with url: send_report_specimen_path(@specimen), method: :post, data: { turbo_frame: "_top" }, class: "space-y-4" do |f| %>
         <div>
           <%= f.label :email, "Alamat Email", class: "block text-sm font-medium text-slate-700 mb-1" %>
           <%= f.email_field :email, required: true, placeholder: "contoh@email.com",
