@@ -34,7 +34,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :works, only: [:index, :show] do
+  resources :works, only: [:index, :show, :update] do
     member do
       patch :validate_work
       patch :verify_work
@@ -51,7 +51,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :specimens, only: [:index, :show] do
+  resources :specimens, only: [:index, :show, :update] do
     member do
       get :barcode_labels
       get :print_report

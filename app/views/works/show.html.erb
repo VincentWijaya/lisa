@@ -22,6 +22,22 @@
     </div>
   </div>
 
+  <%# ── AI summary card ────────────────────────────────────────────────── %>
+  <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+    <h2 class="text-lg font-semibold text-slate-900"><%= t("works.show.ai_summary_section") %></h2>
+    <%= form_with model: @work, url: work_path(@work), method: :patch, class: "mt-4 space-y-3" do %>
+      <%= text_area_tag "work[ai_summary]",
+          @work.ai_summary,
+          rows: 5,
+          class: "block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500",
+          placeholder: t("works.show.ai_summary_placeholder") %>
+      <div class="flex justify-end">
+        <%= submit_tag t("works.show.ai_summary_save"),
+            class: "rounded-lg bg-sky-600 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-500 cursor-pointer" %>
+      </div>
+    <% end %>
+  </section>
+
   <%# ── Patient + status cards ─────────────────────────────────────────── %>
   <div class="grid gap-6 lg:grid-cols-2">
     <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">

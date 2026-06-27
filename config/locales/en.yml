@@ -119,6 +119,9 @@ en:
       patient_section: "Patient & Specimen"
       status_section: "Work Status"
       results_section: "Results"
+      ai_summary_section: "AI Summary"
+      ai_summary_placeholder: "Write or paste an AI-generated summary for this work…"
+      ai_summary_save: "Save summary"
       fields:
         patient: "Patient"
         patient_id: "Patient ID"
@@ -173,6 +176,7 @@ en:
       result_deleted: "Result deleted successfully."
       result_verified: "Result validated successfully."
       barcode_mismatch: "Scanned barcode '%{scanned}' does not match this work (%{expected})."
+      summary_saved: "AI summary saved."
       work_not_pending: "This work cannot be verified — current status is '%{status}'."
     scan_modal:
       title: "Scan Barcode to Verify"
@@ -221,6 +225,9 @@ en:
       patient_section: "Patient Details"
       collection_section: "Collection Details"
       works_section: "Associated Works"
+      ai_summary_section: "AI Summary"
+      ai_summary_placeholder: "Write or paste an AI-generated summary for this specimen…"
+      ai_summary_save: "Save summary"
       fields:
         patient_id: "Patient ID"
         medical_record: "Medical Record"
@@ -251,6 +258,7 @@ en:
     flash:
       report_sent: "Report will be sent to %{email}"
       invalid_email: "Email address is not valid"
+      summary_saved: "AI summary saved."
     status:
       pending: "Pending"
       in_progress: "In Progress"

@@ -2,4 +2,5 @@
 
 ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.irregular "specimen", "specimens"
+  inflect.irregular "work", "works"
 end

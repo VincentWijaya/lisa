@@ -1,6 +1,6 @@
 class WorksController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_work, only: %i[show validate_work verify_work cancel_work barcode_label add_result upsert_results scan_validate]
+  before_action :set_work, only: %i[show update validate_work verify_work cancel_work barcode_label add_result upsert_results scan_validate]
 
   def index
     scope = Work.with_details
@@ -21,6 +21,14 @@ class WorksController < ApplicationController
                                     .includes(:examination)
                                     .order(:id)
     @results_by_reference_rule = @results.group_by(&:reference_rule_id).transform_values(&:first)
+  end
+
+  def update
+    if @work.update(work_params)
+      redirect_to work_path(@work), notice: t("works.flash.summary_saved")
+    else
+      redirect_to work_path(@work), alert: @work.errors.full_messages.to_sentence
+    end
   end
 
   def validate_work
@@ -98,6 +106,10 @@ class WorksController < ApplicationController
 
   def upsert_results_params
     params[:examination_results]&.permit(results: {}) || {}
+  end
+
+  def work_params
+    params.require(:work).permit(:ai_summary)
   end
 
   def eligible_examination_ids_for(work)

@@ -268,6 +268,9 @@ id:
       patient_section: "Pasien & Spesimen"
       status_section: "Status Pekerjaan"
       results_section: "Hasil Pemeriksaan"
+      ai_summary_section: "Ringkasan AI"
+      ai_summary_placeholder: "Tulis atau tempel ringkasan hasil AI untuk pekerjaan ini…"
+      ai_summary_save: "Simpan ringkasan"
       fields:
         patient: "Pasien"
         patient_id: "ID Pasien"
@@ -321,6 +324,7 @@ id:
       result_updated: "Hasil berhasil diperbarui."
       result_deleted: "Hasil berhasil dihapus."
       result_verified: "Hasil berhasil divalidasi."
+      summary_saved: "Ringkasan AI berhasil disimpan."
       barcode_mismatch: "Barcode yang dipindai '%{scanned}' tidak cocok dengan pekerjaan ini (%{expected})."
       work_not_pending: "Pekerjaan ini tidak dapat diverifikasi — status saat ini adalah '%{status}'."
     scan_modal:
@@ -371,6 +375,9 @@ id:
       patient_section: "Data Pasien"
       collection_section: "Data Pengambilan"
       works_section: "Pekerjaan Terkait"
+      ai_summary_section: "Ringkasan AI"
+      ai_summary_placeholder: "Tulis atau tempel ringkasan hasil AI untuk spesimen ini…"
+      ai_summary_save: "Perbarui ringkasan"
       fields:
         patient_id: "ID Pasien"
         medical_record: "No. Rekam Medis"
@@ -402,6 +409,7 @@ id:
     flash:
       report_sent: "Laporan akan dikirim ke %{email}"
       invalid_email: "Alamat email tidak valid"
+      summary_saved: "Ringkasan AI berhasil disimpan."
     status:
       pending: "Menunggu"
       in_progress: "Sedang Diproses"

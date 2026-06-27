@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_23_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_27_000001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -100,6 +100,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_23_000000) do
 
   create_table "specimens", force: :cascade do |t|
     t.string "affiliation"
+    t.text "ai_summary"
     t.date "birth_date", null: false
     t.datetime "collection_datetime"
     t.datetime "completion_datetime"
@@ -153,6 +154,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_23_000000) do
   end
 
   create_table "works", force: :cascade do |t|
+    t.text "ai_summary"
     t.string "barcode_id", null: false
     t.datetime "cancelled_at"
     t.datetime "created_at", null: false

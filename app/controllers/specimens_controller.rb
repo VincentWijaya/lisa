@@ -1,6 +1,6 @@
 class SpecimensController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_specimen, only: %i[show barcode_labels print_report send_report send_report_form]
+  before_action :set_specimen, only: %i[show update barcode_labels print_report send_report send_report_form]
 
   def index
     scope = Specimen.with_works
@@ -14,6 +14,14 @@ class SpecimensController < ApplicationController
 
   def show
     @works = @specimen.works.includes(:examination, :examination_results).order(:label_sequence)
+  end
+
+  def update
+    if @specimen.update(specimen_params)
+      redirect_to specimen_path(@specimen), notice: t("specimens.flash.summary_saved")
+    else
+      redirect_to specimen_path(@specimen), alert: @specimen.errors.full_messages.to_sentence
+    end
   end
 
   def barcode_labels
@@ -68,6 +76,10 @@ class SpecimensController < ApplicationController
 
   def set_specimen
     @specimen = Specimen.find(params[:id])
+  end
+
+  def specimen_params
+    params.require(:specimen).permit(:ai_summary)
   end
 
   def collection_times_by_type(works)
