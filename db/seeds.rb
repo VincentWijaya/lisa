@@ -41,7 +41,7 @@ puts "🔬 Creating examinations..."
 # One examination per analyzer row/test.
 # label_group → examinations sharing one barcode label.
 # category    → report grouping (header in print report).
-darah_lengkap_codes = %w[RDW-CV RDW-SD MONO LYMPH SEG BAND EOS BASO MCHC MCH MCV RBC PLT HCT WBC HGB].freeze
+darah_lengkap_codes = %w[RDW-CV RDW-SD MONO LYMPH SEG BAND EOS BASO MCHC MCH MCV RBC PLT HCT WBC HGB BAS# NEU# EOS# MON# MPV PDW PCT PLCC PLCR].freeze
 elektrolit_codes = %w[CL K NA].freeze
 fungsi_ginjal_codes = %w[CRE UR].freeze
 
@@ -63,6 +63,15 @@ examinations_data = [
   { code: "HCT",        name: "Hematokrit",            category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "%"      },
   { code: "WBC",        name: "Lekosit",               category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "10³/µL" },
   { code: "HGB",        name: "Hemoglobin",            category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "g/dL"   },
+  { code: "BAS#",       name: "Basofil Absolut",       category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "10³/µL" },
+  { code: "NEU#",       name: "Neutrofil Absolut",     category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "10³/µL" },
+  { code: "EOS#",       name: "Eosinofil Absolut",     category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "10³/µL" },
+  { code: "MON#",       name: "Monosit Absolut",       category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "10³/µL" },
+  { code: "MPV",        name: "MPV",                   category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "fL"     },
+  { code: "PDW",        name: "PDW",                   category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: nil      },
+  { code: "PCT",        name: "PCT",                   category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "mL/L"   },
+  { code: "PLCC",       name: "PLCC",                  category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "10⁹/L"  },
+  { code: "PLCR",       name: "PLCR",                  category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "%"      },
   { code: "LED",        name: "LED",                   category: "HEMATOLOGI",    label_group: nil,               specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "mm/jam" },
   { code: "GOLDAR",     name: "Golongan Darah",        category: "HEMATOLOGI",    label_group: "Golongan Darah",  specimen_type: "Darah EDTA",  default_result_type: "qualitative", default_unit: nil      },
   # ── KIMIA KLINIK ──
@@ -144,15 +153,23 @@ upsert_ref_rule "LYMPH",  name: "Limfosit",              result_type: "numeric",
 upsert_ref_rule "SEG",    name: "Segmen",                result_type: "numeric", low: 50,   high: 70,   unit: "%",       reference_value: "50 - 70",      loinc: "770-8",  previous_names: ["Neutrofil"]
 upsert_ref_rule "BAND",   name: "Batang",                result_type: "numeric", low: 0,    high: 5,    unit: "%",       reference_value: "0 - 5",        loinc: "764-1"
 upsert_ref_rule "EOS",    name: "Eosinofil",             result_type: "numeric", low: 1,    high: 3,    unit: "%",       reference_value: "1 - 3",        loinc: "713-8"
-upsert_ref_rule "BASO",   name: "Basofil",               result_type: "numeric", low: 0,    high: 2,    unit: "%",       reference_value: "0 - 2",        loinc: "706-4"
+upsert_ref_rule "BASO",   name: "Basofil",               result_type: "numeric", low: 0,    high: 2,    unit: "%",       reference_value: "0 - 2",        loinc: "706-2"
 upsert_ref_rule "MCHC",   name: "MCHC",                  result_type: "numeric", low: 32,   high: 36,   unit: "g/dL",    reference_value: "32 - 36",      loinc: "786-4"
 upsert_ref_rule "MCH",    name: "MCH",                   result_type: "numeric", low: 26,   high: 34,   unit: "pg",      reference_value: "26 - 34",      loinc: "785-6"
 upsert_ref_rule "MCV",    name: "MCV",                   result_type: "numeric", low: 80,   high: 100,  unit: "fL",      reference_value: "80 - 100",     loinc: "787-2"
 upsert_ref_rule "RBC",    name: "ERITROSIT (Pria)",      result_type: "numeric", low: 4.20, high: 6.00, unit: "10⁶/µL", reference_value: "4.20 - 6.00",  loinc: "789-8",  previous_names: ["Eritrosit (Pria)"],   gender: "male"
 upsert_ref_rule "RBC",    name: "ERITROSIT (Wanita)",    result_type: "numeric", low: 3.80, high: 5.40, unit: "10⁶/µL", reference_value: "3.80 - 5.40",  loinc: "789-8",  previous_names: ["Eritrosit (Wanita)"], gender: "female"
-upsert_ref_rule "PLT",    name: "Trombosit",             result_type: "numeric", low: 150,  high: 450,  unit: "10³/µL", reference_value: "150 - 450",    loinc: "777-3"
-upsert_ref_rule "HCT",    name: "Hematokrit (Pria)",     result_type: "numeric", low: 40,   high: 54,   unit: "%",       reference_value: "40 - 54",      loinc: "20570-8", gender: "male"
-upsert_ref_rule "HCT",    name: "Hematokrit (Wanita)",   result_type: "numeric", low: 38,   high: 47,   unit: "%",       reference_value: "38 - 47",      loinc: "20570-8", gender: "female"
+upsert_ref_rule "PLT",    name: "Trombosit",             result_type: "numeric", low: 100,  high: 300,  unit: "10³/µL", reference_value: "100 - 300",    loinc: "777-3"
+upsert_ref_rule "BAS#",   name: "Basofil Absolut",       result_type: "numeric", low: 0.00, high: 0.10, unit: "10³/µL", reference_value: "0.00 - 0.10",  loinc: "704-7"
+upsert_ref_rule "NEU#",   name: "Neutrofil Absolut",     result_type: "numeric", low: 2.00, high: 7.00, unit: "10³/µL", reference_value: "2.00 - 7.00",  loinc: "751-8"
+upsert_ref_rule "EOS#",   name: "Eosinofil Absolut",     result_type: "numeric", low: 0.02, high: 0.50, unit: "10³/µL", reference_value: "0.02 - 0.50",  loinc: "711-2"
+upsert_ref_rule "MON#",   name: "Monosit Absolut",       result_type: "numeric", low: 0.12, high: 1.20, unit: "10³/µL", reference_value: "0.12 - 1.20",  loinc: "742-7"
+upsert_ref_rule "HCT",    name: "Hematokrit",            result_type: "numeric", low: 37.0, high: 54.0, unit: "%",       reference_value: "37.0 - 54.0",  loinc: "4544-3"
+upsert_ref_rule "MPV",    name: "MPV",                   result_type: "numeric", low: 7.0,  high: 11.0, unit: "fL",      reference_value: "7.0 - 11.0",   loinc: "32623-1"
+upsert_ref_rule "PDW",    name: "PDW",                   result_type: "numeric", low: 9.0,  high: 17.0, unit: nil,      reference_value: "9.0 - 17.0",   loinc: "32207-3"
+upsert_ref_rule "PCT",    name: "PCT",                   result_type: "numeric", low: 1.08, high: 2.82, unit: "mL/L",    reference_value: "1.08 - 2.82",  loinc: "10002"
+upsert_ref_rule "PLCC",   name: "PLCC",                  result_type: "numeric", low: 30,   high: 90,   unit: "10⁹/L",  reference_value: "30 - 90",      loinc: "10013"
+upsert_ref_rule "PLCR",   name: "PLCR",                  result_type: "numeric", low: 11.0, high: 45.0, unit: "%",       reference_value: "11.0 - 45.0",  loinc: "10014"
 upsert_ref_rule "WBC",    name: "Lekosit",               result_type: "numeric", low: 3.6,  high: 10.6, unit: "10³/µL", reference_value: "3.6 - 10.6",   loinc: "6690-2",  previous_names: ["Leukosit"]
 upsert_ref_rule "HGB",    name: "Hemoglobin (Pria)",     result_type: "numeric", low: 13.5, high: 18.0, unit: "g/dL",    reference_value: "13.5 - 18.0", loinc: "718-7",  previous_names: ["Hemoglobin Male"],   gender: "male"
 upsert_ref_rule "HGB",    name: "Hemoglobin (Wanita)",   result_type: "numeric", low: 12.0, high: 16.0, unit: "g/dL",    reference_value: "12.0 - 16.0", loinc: "718-7",  previous_names: ["Hemoglobin Female"], gender: "female"
@@ -361,7 +378,7 @@ if ExaminationResult.count < 5
       { exam: "MCV",    ref: "MCV",                 val: "82",   unit: "fL"      },
       { exam: "RBC",    ref: "ERITROSIT (Pria)",    val: "5.58", unit: "10⁶/µL" },
       { exam: "PLT",    ref: "Trombosit",           val: "333",  unit: "10³/µL" },
-      { exam: "HCT",    ref: "Hematokrit (Pria)",   val: "45.5", unit: "%"       },
+      { exam: "HCT",    ref: "Hematokrit",          val: "45.5", unit: "%"       },
       { exam: "WBC",    ref: "Lekosit",             val: "7.6",  unit: "10³/µL" },
       { exam: "HGB",    ref: "Hemoglobin (Pria)",   val: "15.3", unit: "g/dL"    },
     ],
