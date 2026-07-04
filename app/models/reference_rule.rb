@@ -2,6 +2,13 @@ class ReferenceRule < ApplicationRecord
   belongs_to :examination
   has_many :examination_results, dependent: :nullify
 
+  JSONB_VALUE_ATTRS = %i[allowed_values normal_values abnormal_values critical_values].freeze
+
+  attribute :allowed_values,   :jsonb, default: []
+  attribute :normal_values,    :jsonb, default: []
+  attribute :abnormal_values,  :jsonb, default: []
+  attribute :critical_values,  :jsonb, default: []
+
   RESULT_TYPES = %w[numeric qualitative text].freeze
 
   enum :result_type, {
@@ -20,6 +27,14 @@ class ReferenceRule < ApplicationRecord
   validates :name,        presence: true
   validates :result_type, presence: true
   validates :active,      inclusion: { in: [true, false] }
+
+  before_validation :normalize_jsonb_values
+
+  JSONB_VALUE_ATTRS.each do |attr|
+    define_method("#{attr}=") do |value|
+      super(normalize_value(value))
+    end
+  end
 
   validates :numeric_low_value,
             numericality: true,
@@ -89,6 +104,29 @@ class ReferenceRule < ApplicationRecord
   end
 
   private
+
+  def normalize_jsonb_values
+    JSONB_VALUE_ATTRS.each do |attr|
+      public_send("#{attr}=", public_send(attr))
+    end
+  end
+
+  def normalize_value(value)
+    return [] if value.nil?
+    return value if value.is_a?(Array)
+
+    case value
+    when String
+      stripped = value.strip
+      return [] if stripped.empty?
+      return JSON.parse(stripped) if stripped.start_with?("[", "{")
+      stripped.split(",").map(&:strip).reject(&:empty?)
+    when Hash
+      value
+    else
+      value.to_s
+    end
+  end
 
   def numeric_range_order
     return unless numeric_low_value > numeric_high_value
