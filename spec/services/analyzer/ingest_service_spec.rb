@@ -14,6 +14,8 @@ RSpec.describe Analyzer::IngestService do
            specimen: specimen,
            examination: examination,
            status: "pending",
+           barcode_id: "2605250054-01",
+           label_sequence: 1,
            test_codes_text: "WBC;")
   end
 
@@ -30,7 +32,7 @@ RSpec.describe Analyzer::IngestService do
 
   let(:params) do
     {
-      patient_id: "1234",
+      barcode_id: "2605250054-01",
       gender: "Female",
       message_datetime: "20260316150051",
       message_control_id: "3",
@@ -62,7 +64,7 @@ RSpec.describe Analyzer::IngestService do
   describe "skipping unmatched results" do
     let(:params) do
       {
-        patient_id: "1234",
+        barcode_id: "2605250054-01",
         gender: "Female",
         message_datetime: "20260316150051",
         message_control_id: "3",
@@ -87,6 +89,8 @@ RSpec.describe Analyzer::IngestService do
              specimen: specimen,
              examination: local_examination,
              status: "pending",
+             barcode_id: "2605250054-02",
+             label_sequence: 2,
              test_codes_text: "TAKEMODE;")
     end
 
@@ -103,7 +107,7 @@ RSpec.describe Analyzer::IngestService do
 
     let(:params) do
       {
-        patient_id: "1234",
+        barcode_id: "2605250054-02",
         gender: "Female",
         message_datetime: "20260316150051",
         message_control_id: "3",
@@ -119,28 +123,18 @@ RSpec.describe Analyzer::IngestService do
   end
 
   describe "error cases" do
-    context "when specimen is not found" do
-      let(:params) { super().merge(patient_id: "UNKNOWN") }
+    context "when work is not found" do
+      let(:params) { super().merge(barcode_id: "UNKNOWN") }
 
       it "returns a failure and a descriptive error" do
         res = trigger_service
         expect(res).to be_failure
-        expect(res.errors.first).to match(/No active specimen found/)
+        expect(res.errors.first).to match(/No active work found/)
       end
     end
 
-    context "when multiple active specimens exist for patient_id" do
-      before { create(:specimen, patient_id: "1234", status: "pending") }
-
-      it "returns a failure and a descriptive error" do
-        res = trigger_service
-        expect(res).to be_failure
-        expect(res.errors.first).to match(/Multiple active specimens found/)
-      end
-    end
-
-    context "when patient_id is blank" do
-      let(:params) { super().merge(patient_id: "") }
+    context "when barcode_id is blank" do
+      let(:params) { super().merge(barcode_id: "") }
 
       it "returns failure status" do
         expect(trigger_service).to be_failure
@@ -156,9 +150,19 @@ RSpec.describe Analyzer::IngestService do
     end
 
     context "when the matching work is cancelled" do
-      before { work.update!(status: "cancelled") }
+      before do
+        work.update!(status: "cancelled")
+        create(:work,
+               specimen: specimen,
+               examination: examination,
+               status: "pending",
+               barcode_id: "2605250054-99",
+               label_sequence: 99,
+               test_codes_text: "OTHER;")
+      end
+      let(:params) { super().merge(barcode_id: "2605250054-99") }
 
-      it "skips the result" do
+      it "skips the result because the matched work is not in the result's test code map" do
         res = nil
         expect { res = trigger_service }.not_to change(ExaminationResult, :count)
         expect(res.skipped_count).to eq(1)

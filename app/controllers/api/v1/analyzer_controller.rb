@@ -22,7 +22,7 @@ module Api
         source = params[:analyzer].presence || params
 
         source.permit(
-          :patient_id, :gender, :message_datetime, :message_control_id,
+          :barcode_id, :gender, :message_datetime, :message_control_id,
           results: [:loinc, :local_code, :test_name, :value, :unit, :reference_range, :flag]
         )
       end

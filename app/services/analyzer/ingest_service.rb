@@ -42,28 +42,30 @@ module Analyzer
     attr_reader :params
 
     def validate_inputs
-      @errors << "patient_id is required" if params[:patient_id].blank?
+      @errors << "barcode_id is required" if params[:barcode_id].blank?
       @errors << "results must be an array" unless params[:results].is_a?(Array)
     end
 
     def find_specimen
-      specimens = Specimen.where(patient_id: params[:patient_id])
-                          .where.not(status: "cancelled")
-                          .order(created_at: :desc)
-                          .limit(2)
-                          .to_a
+      work = Work.where(barcode_id: params[:barcode_id].to_s.strip)
+                 .where.not(status: "cancelled")
+                 .order(id: :desc)
+                 .limit(2)
+                 .includes(:specimen)
+                 .to_a
 
-      if specimens.empty?
-        @errors << "No active specimen found for patient_id: #{params[:patient_id]}"
+      if work.empty?
+        @errors << "No active work found for barcode_id: #{params[:barcode_id]}"
         return nil
       end
 
-      if specimens.length > 1
-        @errors << "Multiple active specimens found for patient_id: #{params[:patient_id]}"
+      if work.length > 1
+        @errors << "Multiple active works found for barcode_id: #{params[:barcode_id]}"
         return nil
       end
 
-      specimens.first
+      @work = work.first
+      @work.specimen
     end
 
     def preload_context
