@@ -6,6 +6,8 @@
   <div class="barcode-text label-line"><%= label_data[:barcodeId] %></div>
   <div class="patient-name label-line"><%= label_data[:patientName] %></div>
   <div class="label-line"><%= label_data[:medicalRecordId] %> / <%= label_data[:ageYears] %> Thn / <%= label_data[:gender] %> / <%= label_data[:birthDate] %></div>
-  <div class="label-line"><%= label_data[:testCodesText] %></div>
+  <% if label_data[:testCodesText].present? %>
+    <div class="label-line"><%= label_data[:testCodesText] %></div>
+  <% end %>
   <div><%= label_data[:department] %></div>
 </div>

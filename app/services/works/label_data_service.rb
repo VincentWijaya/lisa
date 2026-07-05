@@ -20,7 +20,7 @@ module Works
         ageYears: specimen.age_in_years,
         gender: specimen.gender,
         birthDate: formatted_birth_date,
-        testCodesText: work.test_codes_text,
+        testCodesText: work.examination&.category,
         department: specimen.department
       }
     end
