@@ -145,6 +145,14 @@
     </div>
   <% end %>
 
+  <%# ── AI Summary ── %>
+  <% if @specimen.ai_summary.present? %>
+    <div class="ai-summary-section">
+      <p><strong><%= t("specimens.show.ai_summary_section") %></strong></p>
+      <p><%= simple_format(@specimen.ai_summary) %></p>
+    </div>
+  <% end %>
+
   <%# ── Footer ── %>
   <div class="report-footer">
     <div>
