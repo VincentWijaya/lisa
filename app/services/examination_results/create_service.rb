@@ -26,6 +26,8 @@ module ExaminationResults
         verified_at: params[:verified_at]
       )
 
+      ComputedResultRecomputer.call(specimen: work.specimen, entered_by: params[:entered_by])
+
       ServiceResult.success(examination_result: examination_result)
     rescue ActiveRecord::RecordInvalid => e
       ServiceResult.failure(errors: e.record.errors.full_messages)

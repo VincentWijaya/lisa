@@ -27,6 +27,7 @@ module ExaminationResults
 
       return ServiceResult.failure(errors: errors) if errors.any?
 
+      recompute_formulas
       ServiceResult.success(upserted_count: upserted_count)
     end
 
@@ -34,6 +35,10 @@ module ExaminationResults
 
     attr_reader :work, :params, :entered_by, :errors
     attr_accessor :upserted_count
+
+    def recompute_formulas
+      ComputedResultRecomputer.call(specimen: work.specimen, entered_by: entered_by)
+    end
 
     def result_rows
       Array(params.fetch(:results, {}).values).map { |row| row.to_h.deep_symbolize_keys }

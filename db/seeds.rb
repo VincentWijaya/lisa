@@ -93,6 +93,23 @@ examinations_data = [
   # ── URINALISIS ──
   { code: "URINE-L",    name: "Urine Lengkap",         category: "URINALISIS",    label_group: "Urine Lengkap",   specimen_type: "Urine Rutin", default_result_type: "qualitative", default_unit: nil      },
   { code: "URINE-S",    name: "Sedimen Urine",         category: "URINALISIS",    label_group: "Sedimen Urine",   specimen_type: "Urine Rutin", default_result_type: "qualitative", default_unit: nil      },
+
+  # ── Computed source examinations (referenced by formula rules below) ──
+  { code: "LYM#",       name: "Limfosit Absolut",      category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "10^3/µL" },
+  { code: "CHOL",       name: "Cholesterol Total",     category: "KIMIA KLINIK",  label_group: "Profil Lemak",    specimen_type: "Darah Beku",  default_result_type: "numeric",     default_unit: "mg/dL"  },
+  { code: "TG",         name: "Trigliserida",          category: "KIMIA KLINIK",  label_group: "Profil Lemak",    specimen_type: "Darah Beku",  default_result_type: "numeric",     default_unit: "mg/dL"  },
+  { code: "HDL",        name: "HDL Cholesterol",       category: "KIMIA KLINIK",  label_group: "Profil Lemak",    specimen_type: "Darah Beku",  default_result_type: "numeric",     default_unit: "mg/dL"  },
+  { code: "TOT_BIL",    name: "Bilirubin Total",       category: "KIMIA KLINIK",  label_group: "Fungsi Hati",     specimen_type: "Darah Beku",  default_result_type: "numeric",     default_unit: "mg/dL"  },
+  { code: "DIREK_BIL",  name: "Bilirubin Direk",       category: "KIMIA KLINIK",  label_group: "Fungsi Hati",     specimen_type: "Darah Beku",  default_result_type: "numeric",     default_unit: "mg/dL"  },
+  { code: "TP",         name: "Total Protein",         category: "KIMIA KLINIK",  label_group: "Fungsi Hati",     specimen_type: "Darah Beku",  default_result_type: "numeric",     default_unit: "g/dL"   },
+  { code: "ALB",        name: "Albumin",               category: "KIMIA KLINIK",  label_group: "Fungsi Hati",     specimen_type: "Darah Beku",  default_result_type: "numeric",     default_unit: "g/dL"   },
+
+  # ── Computed examinations (values produced by formula rules) ──
+  { code: "NLR",        name: "Neutrophil-Lymphocyte Ratio",  category: "HEMATOLOGI",    label_group: nil, specimen_type: "Darah EDTA", default_result_type: "numeric", default_unit: nil   },
+  { code: "LDL-CALC",   name: "LDL Cholesterol (Calculated)", category: "KIMIA KLINIK",  label_group: nil, specimen_type: "Darah Beku",  default_result_type: "numeric", default_unit: "mg/dL" },
+  { code: "CHOL-RATIO", name: "Cholesterol Ratio",            category: "KIMIA KLINIK",  label_group: nil, specimen_type: "Darah Beku",  default_result_type: "numeric", default_unit: nil   },
+  { code: "INDIREK",    name: "Bilirubin Indirek",            category: "KIMIA KLINIK",  label_group: nil, specimen_type: "Darah Beku",  default_result_type: "numeric", default_unit: "mg/dL" },
+  { code: "GLOB",       name: "Globulin",                     category: "KIMIA KLINIK",  label_group: nil, specimen_type: "Darah Beku",  default_result_type: "numeric", default_unit: "g/dL"  },
 ]
 
 examinations_data.each do |attrs|
@@ -122,7 +139,8 @@ puts "📏 Creating reference rules..."
 
 def upsert_ref_rule(exam_code, name:, result_type:, low: nil, high: nil, unit: nil,
                     normal: [], abnormal: [], critical: [], allowed: [],
-                    reference_value: nil, loinc: nil, previous_names: [], gender: nil)
+                    reference_value: nil, loinc: nil, previous_names: [], gender: nil,
+                    formula_expression: nil, formula_inputs: nil)
   exam = Examination.find_by!(code: exam_code)
   rule = ReferenceRule.find_by(examination_id: exam.id, name: name)
   rule ||= ReferenceRule.where(examination_id: exam.id, name: previous_names).order(:id).first if previous_names.any?
@@ -140,6 +158,8 @@ def upsert_ref_rule(exam_code, name:, result_type:, low: nil, high: nil, unit: n
     reference_value:    reference_value,
     loinc_code:         loinc,
     gender:             gender,
+    formula_expression: formula_expression,
+    formula_inputs:     formula_inputs || [],
     active:             true
   )
   rule.save!
@@ -280,6 +300,28 @@ upsert_ref_rule "URINE-S", name: "Silinder", result_type: "qualitative", allowed
 upsert_ref_rule "URINE-S", name: "Kristal",  result_type: "qualitative", allowed: %w[Negatif Positif], normal: %w[Negatif], abnormal: %w[Positif]
 upsert_ref_rule "URINE-S", name: "Jamur",    result_type: "qualitative", allowed: %w[Negatif Positif], normal: %w[Negatif], abnormal: %w[Positif]
 upsert_ref_rule "URINE-S", name: "Bakteri",  result_type: "qualitative", allowed: %w[Negatif Positif], normal: %w[Negatif], abnormal: %w[Positif]
+
+# ── Source reference rules for computed values (must exist before formula can fire) ──
+upsert_ref_rule "LYM#",      name: "Limfosit Absolut", result_type: "numeric", low: 1.0, high: 4.0,  unit: "10^3/µL", reference_value: "1.0 - 4.0"
+upsert_ref_rule "CHOL",      name: "Cholesterol",      result_type: "numeric", low: 0,   high: 200,  unit: "mg/dL",   reference_value: "< 200"
+upsert_ref_rule "TG",        name: "Trigliserida",     result_type: "numeric", low: 0,   high: 150,  unit: "mg/dL",   reference_value: "< 150"
+upsert_ref_rule "HDL",       name: "HDL",              result_type: "numeric", low: 40,  high: 999,  unit: "mg/dL",   reference_value: "> 40"
+upsert_ref_rule "TOT_BIL",   name: "Bilirubin Total",  result_type: "numeric", low: 0.0, high: 1.2,  unit: "mg/dL",   reference_value: "0.0 - 1.2"
+upsert_ref_rule "DIREK_BIL", name: "Bilirubin Direk",  result_type: "numeric", low: 0.0, high: 0.3,  unit: "mg/dL",   reference_value: "0.0 - 0.3"
+upsert_ref_rule "TP",        name: "Total Protein",    result_type: "numeric", low: 6.0, high: 8.3,  unit: "g/dL",    reference_value: "6.0 - 8.3"
+upsert_ref_rule "ALB",       name: "Albumin",          result_type: "numeric", low: 3.5, high: 5.0,  unit: "g/dL",    reference_value: "3.5 - 5.0"
+
+# ── Computed reference rules (auto-fill from sibling results) ──
+upsert_ref_rule "NLR",        name: "NLR",                result_type: "numeric", low: 1.0,  high: 3.0,  reference_value: "1.0 - 3.0",
+                             formula_expression: "NEU# / LYM#",            formula_inputs: [{ "code" => "NEU#" }, { "code" => "LYM#" }]
+upsert_ref_rule "LDL-CALC",   name: "LDL Cholesterol",    result_type: "numeric", low: 0,    high: 100,  unit: "mg/dL", reference_value: "< 100",
+                             formula_expression: "CHOL - (TG / 5) - HDL",   formula_inputs: [{ "code" => "CHOL" }, { "code" => "TG" }, { "code" => "HDL" }]
+upsert_ref_rule "CHOL-RATIO", name: "Cholesterol Ratio",  result_type: "numeric", low: 0,    high: 5,    reference_value: "< 5",
+                             formula_expression: "CHOL / HDL",              formula_inputs: [{ "code" => "CHOL" }, { "code" => "HDL" }]
+upsert_ref_rule "INDIREK",    name: "Bilirubin Indirek",  result_type: "numeric", low: 0.0,  high: 1.1,  unit: "mg/dL", reference_value: "0.0 - 1.1",
+                             formula_expression: "TOT_BIL - DIREK_BIL",     formula_inputs: [{ "code" => "TOT_BIL" }, { "code" => "DIREK_BIL" }]
+upsert_ref_rule "GLOB",       name: "Globulin",           result_type: "numeric", low: 2.0,  high: 3.5,  unit: "g/dL", reference_value: "2.0 - 3.5",
+                             formula_expression: "TP - ALB",                formula_inputs: [{ "code" => "TP" }, { "code" => "ALB" }]
 
 puts "  ✅ #{ReferenceRule.count} reference rules seeded"
 

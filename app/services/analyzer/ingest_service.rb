@@ -27,6 +27,8 @@ module Analyzer
         result_items.each { |item| process_result(item) }
       end
 
+      ExaminationResults::ComputedResultRecomputer.call(specimen: @specimen)
+
       ServiceResult.success(
         created: @created_count,
         skipped_count: @skipped_count,

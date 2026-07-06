@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_27_000001) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_05_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -66,6 +66,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_27_000001) do
     t.jsonb "critical_values", default: [], null: false
     t.text "description"
     t.bigint "examination_id", null: false
+    t.text "formula_expression"
+    t.jsonb "formula_inputs", default: [], null: false
     t.string "gender"
     t.string "local_code"
     t.string "loinc_code"
