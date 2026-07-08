@@ -7,63 +7,110 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="min-h-screen bg-slate-100">
-    <main class="min-h-screen grid grid-cols-1 lg:grid-cols-2">
-      <section class="hidden lg:flex flex-col justify-center px-20 bg-slate-900 text-white">
-        <h1 class="text-5xl font-bold tracking-tight"><%= t("app_name") %></h1>
-        <p class="mt-4 text-xl text-slate-300"><%= t("app_tagline") %></p>
+  <body class="min-h-screen font-sans antialiased">
+    <main class="relative min-h-screen overflow-hidden flex items-center justify-center px-4 py-8 sm:py-12"
+          style="background-color: #4880FF;">
 
-        <div class="mt-12 space-y-4 text-slate-300">
-          <p>Kelola spesimen, worklist, hasil pemeriksaan, dan barcode laboratorium dalam satu sistem.</p>
-          <p class="text-sm text-slate-400">Laboratory Information System Application</p>
+      <%# Decorative oval shapes (mix-blend soft blobs) %>
+      <div aria-hidden="true" class="pointer-events-none absolute inset-0 overflow-hidden">
+        <div class="absolute rounded-full"
+             style="left: -12.15%; right: 50%; top: 45.33%; bottom: -28.97%;
+                    background: #568AFF; opacity: 0.7;"></div>
+
+        <div class="absolute rounded-full"
+             style="left: 53.75%; right: -26.11%; top: -67.48%; bottom: 70.09%;
+                    background: #568AFF; opacity: 0.54; transform: rotate(100deg);"></div>
+
+        <div class="absolute rounded-full"
+             style="left: -13.96%; right: 51.81%; top: -36.17%; bottom: 52.52%;
+                    background: #568AFF; opacity: 0.6; transform: rotate(160deg);"></div>
+
+        <div class="absolute rounded-full"
+             style="left: 53.75%; right: -33.61%; top: 24.86%; bottom: -32.34%;
+                    background: #568AFF; opacity: 0.7; transform: rotate(-80deg);"></div>
+      </div>
+
+      <%# Card %>
+      <section class="relative z-10 w-full max-w-[440px] mx-auto bg-white shadow-xl px-6 py-8 sm:px-10 sm:py-10"
+               style="border: 0.3px solid #B9B9B9; border-radius: 24px;">
+
+        <div class="flex justify-center mb-6">
+          <%= image_tag "nexlab-logo.png", alt: "Nexlab", class: "h-[52px] w-auto" %>
         </div>
-      </section>
 
-      <section class="flex items-center justify-center px-6 py-12">
-        <div class="w-full max-w-md">
-          <div class="lg:hidden text-center mb-8">
-            <h1 class="text-3xl font-bold text-slate-900"><%= t("app_name") %></h1>
-            <p class="text-slate-500 mt-1"><%= t("app_tagline") %></p>
+        <h1 class="text-center font-bold text-[#202224] mb-8 text-[28px] sm:text-[32px]"
+            style="font-family: 'Nunito Sans', 'Poppins', system-ui, sans-serif;
+                   line-height: 36px; letter-spacing: -0.1143px;">
+          <%= t("sessions.new.title") %>
+        </h1>
+
+        <% if alert.present? %>
+          <div class="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            <%= alert %>
+          </div>
+        <% end %>
+
+        <%= form_with url: session_path, method: :post, class: "space-y-6" do |f| %>
+          <div>
+            <%= f.label :email, t("sessions.new.email"),
+                class: "block font-semibold text-[#202224] mb-2 text-[16px]",
+                style: "opacity: 0.8; font-family: 'Poppins', system-ui, sans-serif;" %>
+            <%= f.email_field :email,
+                autocomplete: "email",
+                autofocus: true,
+                required: true,
+                placeholder: t("sessions.new.email_placeholder"),
+                class: "block w-full text-[#202224] placeholder-[#A6A6A6] text-[16px] focus:outline-none focus:ring-2 focus:ring-[#0556CF]/30 focus:border-[#0556CF]",
+                style: "background: #F1F4F9; border: 1px solid #D8D8D8; border-radius: 8px;
+                        padding: 12px 14px; font-weight: 300;
+                        font-family: 'Poppins', system-ui, sans-serif;" %>
           </div>
 
-          <div class="bg-white rounded-2xl shadow-lg border border-slate-200 p-8">
-            <h2 class="text-xl font-semibold text-slate-800 mb-6">
-              <%= t("sessions.new.title") %>
-            </h2>
-
-            <% if alert.present? %>
-              <div class="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-                <%= alert %>
-              </div>
-            <% end %>
-
-            <%= form_with url: session_path, method: :post, class: "space-y-5" do |f| %>
-              <div>
-                <%= f.label :email, t("sessions.new.email"), class: "block text-sm font-medium text-slate-700 mb-1" %>
-                <%= f.email_field :email,
-                    autocomplete: "email",
-                    autofocus: true,
-                    required: true,
-                    class: "block w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm shadow-sm placeholder-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" %>
-              </div>
-
-              <div>
-                <%= f.label :password, t("sessions.new.password"), class: "block text-sm font-medium text-slate-700 mb-1" %>
-                <%= f.password_field :password,
-                    autocomplete: "current-password",
-                    required: true,
-                    class: "block w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm shadow-sm placeholder-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" %>
-              </div>
-
-              <%= f.submit t("sessions.new.submit"),
-                  class: "w-full rounded-lg bg-sky-600 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 cursor-pointer transition-colors" %>
-            <% end %>
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <%= f.label :password, t("sessions.new.password"),
+                  class: "block font-semibold text-[#202224] text-[16px]",
+                  style: "opacity: 0.8; font-family: 'Poppins', system-ui, sans-serif;" %>
+              <a href="#" class="font-semibold text-[#202224] hover:text-[#0556CF] transition-colors text-[14px]"
+                 style="opacity: 0.6; font-family: 'Poppins', system-ui, sans-serif;">
+                <%= t("sessions.new.forgot") %>
+              </a>
+            </div>
+            <%= f.password_field :password,
+                autocomplete: "current-password",
+                required: true,
+                placeholder: t("sessions.new.password_placeholder"),
+                class: "block w-full text-[#202224] placeholder-[#A6A6A6] text-[16px] focus:outline-none focus:ring-2 focus:ring-[#0556CF]/30 focus:border-[#0556CF]",
+                style: "background: #F1F4F9; border: 1px solid #D8D8D8; border-radius: 8px;
+                        padding: 12px 14px; font-weight: 300;
+                        font-family: 'Poppins', system-ui, sans-serif;" %>
           </div>
-        </div>
+
+          <div class="flex items-center pt-2">
+            <input id="remember_me" name="remember_me" type="checkbox" value="1"
+                   class="h-4 w-4 rounded border-[#A3A3A3] text-[#0556CF] focus:ring-[#0556CF] cursor-pointer"
+                   style="border-width: 0.6px; border-radius: 6px;">
+            <label for="remember_me" class="ml-2.5 cursor-pointer font-semibold text-[#202224] select-none text-[14px]"
+                   style="opacity: 0.6; font-family: 'Poppins', system-ui, sans-serif;">
+              <%= t("sessions.new.remember") %>
+            </label>
+          </div>
+
+          <div class="pt-4">
+            <%= f.submit t("sessions.new.submit"),
+                class: "block w-full text-white font-bold cursor-pointer transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0556CF] text-[16px]",
+                style: "background: #0556CF; opacity: 0.9; border-radius: 8px;
+                        padding: 14px 14px; letter-spacing: -0.0714px;
+                        font-family: 'Poppins', system-ui, sans-serif;" %>
+          </div>
+        <% end %>
       </section>
     </main>
   </body>

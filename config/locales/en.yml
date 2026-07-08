@@ -64,8 +64,12 @@ en:
   sessions:
     new:
       title: "Sign in to your account"
-      email: "Email address"
+      email: "Email"
+      email_placeholder: "Enter your email"
       password: "Password"
+      password_placeholder: "Enter your password"
+      forgot: "Forgot password?"
+      remember: "Remember me"
       submit: "Sign in"
     flash:
       welcome: "Welcome back, %{name}!"

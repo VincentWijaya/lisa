@@ -209,9 +209,13 @@ id:
   # ── Auth / Sessions ───────────────────────────────────────────────────────────
   sessions:
     new:
-      title: "Masuk ke akun Anda"
-      email: "Alamat email"
-      password: "Kata sandi"
+      title: "Masuk ke Akunmu"
+      email: "Email"
+      email_placeholder: "Masukkan email"
+      password: "Password"
+      password_placeholder: "Masukkan password"
+      forgot: "Lupa password?"
+      remember: "Ingat saya"
       submit: "Masuk"
     flash:
       welcome: "Selamat datang kembali, %{name}!"
