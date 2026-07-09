@@ -14,7 +14,7 @@
                playsinline muted autoplay></video>
       </div>
       <p class="text-xs text-slate-500 text-center" data-barcode-scanner-target="status"></p>
-      <%= form_with url: scan_validate_work_path(work), method: :post, data: { "barcode-scanner-target": "scanForm" } do |f| %>
+      <%= form_with url: scan_validate_work_path(work), method: :post, data: { "barcode-scanner-target": "scanForm", turbo_frame: "_top" } do |f| %>
         <div>
           <%= f.label :barcode_id, t("works.scan_modal.manual_label"), class: "block text-xs font-medium text-slate-700 mb-1" %>
           <%= f.text_field :barcode_id, data: { "barcode-scanner-target": "input" },

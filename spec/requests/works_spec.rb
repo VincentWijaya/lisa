@@ -48,4 +48,41 @@ RSpec.describe "Works", type: :request do
       expect(result.source).to eq("instrument")
     end
   end
+
+  describe "GET /works (index)" do
+    let!(:specimen_a) { create(:specimen, patient_name: "Marjolaine Landing", patient_id: "P-10005", medical_record_id: "RM-2004-005", order_number: "2606090095") }
+    let!(:specimen_b) { create(:specimen, patient_name: "Budi Santoso",       patient_id: "P-20007", medical_record_id: "RM-2004-099", order_number: "2606090099") }
+    let!(:work_a)     { create(:work, specimen: specimen_a, barcode_id: "2606090095-01", status: "pending") }
+    let!(:work_b)     { create(:work, specimen: specimen_b, barcode_id: "2606090099-01", status: "validated") }
+
+    it "renders the Figma-style page chrome" do
+      get works_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(I18n.t("works.index.title"))
+      expect(response.body).to include('id="works_list"')
+      expect(response.body).to include('change-&gt;auto-submit#change')
+    end
+
+    it "filters by exact q (no LIKE)" do
+      get works_path, params: { q: "2606090095-01" }
+
+      expect(response.body).to include("2606090095-01")
+      expect(response.body).not_to include("2606090099-01")
+    end
+
+    it "filters by status exactly without LIKE" do
+      get works_path, params: { status: "validated" }
+
+      expect(response.body).to include("2606090099-01")
+      expect(response.body).not_to include("2606090095-01")
+    end
+
+    it "ignores partial queries (no substring matching)" do
+      get works_path, params: { q: "2606" }
+
+      expect(response.body).not_to include("2606090095-01")
+      expect(response.body).not_to include("2606090099-01")
+    end
+  end
 end

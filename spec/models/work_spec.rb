@@ -30,4 +30,43 @@ RSpec.describe Work, type: :model do
       expect(persisted_work.errors[:status]).to include("cannot transition from 'pending' to 'verified'")
     end
   end
+
+  describe ".search" do
+    let!(:specimen_a) { create(:specimen, patient_name: "Marjolaine Landing", patient_id: "P-10005", medical_record_id: "RM-2004-005", order_number: "2606090095") }
+    let!(:specimen_b) { create(:specimen, patient_name: "Budi Santoso",       patient_id: "P-20007", medical_record_id: "RM-2004-099", order_number: "2606090099") }
+    let!(:work_a)     { create(:work, specimen: specimen_a, barcode_id: "2606090095-01") }
+    let!(:work_b)     { create(:work, specimen: specimen_b, barcode_id: "2606090099-01") }
+
+    it "returns all works when query is blank" do
+      expect(Work.search(nil)).to include(work_a, work_b)
+      expect(Work.search("")).to include(work_a, work_b)
+    end
+
+    it "matches by exact barcode_id" do
+      expect(Work.search("2606090095-01")).to include(work_a)
+      expect(Work.search("2606090095-01")).not_to include(work_b)
+    end
+
+    it "matches by exact patient name" do
+      expect(Work.search("Marjolaine Landing")).to include(work_a)
+      expect(Work.search("Marjolaine Landing")).not_to include(work_b)
+    end
+
+    it "matches by exact medical record id" do
+      expect(Work.search("RM-2004-005")).to include(work_a)
+      expect(Work.search("RM-2004-005")).not_to include(work_b)
+    end
+
+    it "matches by exact order number" do
+      expect(Work.search("2606090095")).to include(work_a)
+      expect(Work.search("2606090095")).not_to include(work_b)
+    end
+
+    it "uses exact equality, never LIKE" do
+      sql = Work.search("2606%").to_sql
+      expect(sql).not_to include("LIKE")
+      expect(sql).not_to include("like")
+      expect(Work.search("2606%")).to be_empty
+    end
+  end
 end
