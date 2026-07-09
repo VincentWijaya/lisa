@@ -265,8 +265,13 @@ id:
         actions: "Aksi"
       empty: "Tidak ada pekerjaan yang sesuai dengan filter saat ini."
     show:
+      title: "Detail Pekerjaan"
+      back: "Kembali"
+      breadcrumb:
+        works: "Pekerjaan"
+        current: "Detail Pekerjaan"
+      header: "Detail Pekerjaan"
       label: "Detail Pekerjaan"
-      back: "Kembali ke pekerjaan"
       patient_section: "Pasien & Spesimen"
       status_section: "Status Pekerjaan"
       results_section: "Hasil Pemeriksaan"
@@ -277,10 +282,10 @@ id:
       fields:
         patient: "Pasien"
         patient_id: "ID Pasien"
-        medical_record: "No. Rekam Medis"
+        medical_record: "No Rekam Medis"
         lab_id: "ID Lab"
         department: "Departemen"
-        order_number: "Nomor Order"
+        order_number: "No Order"
         status: "Status"
         specimen_type: "Jenis Spesimen"
         result: "Hasil"

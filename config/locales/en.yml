@@ -115,8 +115,13 @@ en:
         actions: "Actions"
       empty: "No work records matched the current filters."
     show:
+      title: "Work Detail"
+      back: "Back"
+      breadcrumb:
+        works: "Works"
+        current: "Work Detail"
+      header: "Work Detail"
       label: "Work Detail"
-      back: "Back to works"
       patient_section: "Patient & Specimen"
       status_section: "Work Status"
       results_section: "Results"
