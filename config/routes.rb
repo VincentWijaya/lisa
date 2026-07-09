@@ -59,6 +59,7 @@ Rails.application.routes.draw do
       get :send_report_form
       post :send_report
       post :generate_ai_summary
+      get :send_whatsapp
     end
   end
 

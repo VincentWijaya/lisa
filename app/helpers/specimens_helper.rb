@@ -1,15 +1,26 @@
 module SpecimensHelper
   def specimen_status_classes(status)
     case status
-    when "complete" then "bg-emerald-100 text-emerald-800"
+    when "complete" then "bg-[#cefde3] text-[#2f6740]"
     when "cancelled" then "bg-rose-100 text-rose-800"
     when "in_progress" then "bg-sky-100 text-sky-800"
-    else "bg-amber-100 text-amber-800"
+    else "bg-[#fceeb3] text-[#b28c2f]"
     end
   end
 
   def specimen_summary(specimen)
     [specimen.medical_record_id, specimen.age_in_years&.then { |age| "#{age} years" }, specimen.gender].compact.join(" • ")
+  end
+
+  # Comma-separated, de-duplicated list of work category names
+  # (e.g. "Hematologi, Kimia"). Falls back to "-" when no works.
+  def specimen_work_list(specimen)
+    names = specimen.works
+                   .includes(:examination)
+                   .map { |w| w.examination&.category.to_s.titleize }
+                   .reject { |c| c.blank? || c == "-" }
+                   .uniq
+    names.any? ? names.join(", ") : "-"
   end
 
   # Returns the formatted reference range string for display in the report.

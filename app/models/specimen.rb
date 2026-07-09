@@ -22,10 +22,15 @@ class Specimen < ApplicationRecord
   scope :today, -> { where(created_at: Time.current.all_day) }
   scope :with_works, -> { includes(works: :examination) }
   scope :filter_by_status, ->(value) { value.present? ? where(status: value) : all }
-  scope :filter_by_patient_name, ->(value) { value.present? ? where("patient_name ILIKE ?", "%#{sanitize_sql_like(value.strip)}%") : all }
-  scope :filter_by_patient_id, ->(value) { value.present? ? where("patient_id ILIKE ?", "%#{sanitize_sql_like(value.strip)}%") : all }
-  scope :filter_by_medical_record_id, ->(value) { value.present? ? where("medical_record_id ILIKE ?", "%#{sanitize_sql_like(value.strip)}%") : all }
-  scope :filter_by_order_number, ->(value) { value.present? ? where("order_number ILIKE ?", "%#{sanitize_sql_like(value.strip)}%") : all }
+  scope :filter_by_patient_name, ->(value) { value.present? ? where(patient_name: value.to_s.strip) : all }
+  scope :filter_by_patient_id, ->(value) { value.present? ? where(patient_id: value.to_s.strip) : all }
+  scope :filter_by_medical_record_id, ->(value) { value.present? ? where(medical_record_id: value.to_s.strip) : all }
+  scope :filter_by_order_number, ->(value) { value.present? ? where(order_number: value.to_s.strip) : all }
+  scope :search, ->(query) {
+    next all if query.blank?
+    q = query.to_s.strip
+    where(patient_name: q).or(where(medical_record_id: q)).or(where(order_number: q))
+  }
 
   after_commit :expire_caches
 

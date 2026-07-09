@@ -4,7 +4,7 @@
 %>
 <% if pagy.previous || pagy.next %>
   <nav class="flex items-center justify-between px-4 py-3 sm:px-6" aria-label="<%= t('pagination.aria_label', default: 'Pagination') %>">
-    <div class="flex gap-1">
+    <div class="ml-auto flex gap-1">
       <%# Previous %>
       <% if pagy.previous %>
         <%= link_to pagy.page_url(pagy.previous),
