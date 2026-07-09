@@ -138,9 +138,9 @@
   <section class="space-y-4">
     <h2 class="text-lg font-semibold text-slate-900"><%= t("specimens.show.works_section") %></h2>
     <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-      <div class="overflow-x-auto">
+      <div class="max-h-[28rem] overflow-x-auto overflow-y-auto">
         <table class="min-w-full divide-y divide-slate-200 text-sm">
-          <thead class="bg-slate-100">
+          <thead class="sticky top-0 z-10 bg-slate-100 shadow-[inset_0_-1px_0_#e2e8f0]">
             <tr>
               <% %w[barcode_id patient examination status created_at actions].each do |col| %>
                 <th class="px-4 py-4 text-left text-sm font-bold text-slate-900"><%= t("specimens.show.works_table.#{col}") %></th>
