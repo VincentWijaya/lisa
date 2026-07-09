@@ -1,0 +1,25 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="24" height="24" fill="#1E1E1E"/>
+<g id="Dashboard" clip-path="url(#clip0_2_2)">
+<rect width="1440" height="1841" transform="translate(-23 -375)" fill="white"/>
+<g id="Sidebar">
+<rect width="249" height="1024" transform="translate(-24 -375)" fill="white"/>
+<g id="Menu">
+<g id="list menu">
+<g id="Menu_2">
+<g id="Content">
+<g id="si:inventory-line">
+<path id="Vector" d="M20.2727 7.77778V18.7333C20.2727 19.9894 19.3486 21 18.2 21H6.8C5.65136 21 4.72727 19.9894 4.72727 18.7333V7.77778M9.04545 11.5556H15.9545M4.38182 4H20.6182C20.9847 4 21.3361 4.15921 21.5953 4.44259C21.8544 4.72598 22 5.11034 22 5.51111V6.26667C22 6.46511 21.9643 6.66161 21.8948 6.84494C21.8254 7.02828 21.7236 7.19486 21.5953 7.33518C21.467 7.4755 21.3146 7.58681 21.147 7.66275C20.9793 7.73869 20.7996 7.77778 20.6182 7.77778H4.38182C4.01534 7.77778 3.66387 7.61857 3.40473 7.33518C3.14558 7.05179 3 6.66744 3 6.26667V5.51111C3 5.31267 3.03574 5.11617 3.10518 4.93283C3.17463 4.7495 3.27641 4.58291 3.40473 4.44259C3.66387 4.15921 4.01534 4 4.38182 4Z" stroke="#606060" stroke-width="1.2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_2_2">
+<rect width="1440" height="1841" fill="white" transform="translate(-23 -375)"/>
+</clipPath>
+</defs>
+</svg>

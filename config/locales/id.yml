@@ -8,6 +8,7 @@ id:
       default: "%d/%m/%Y"
       short: "%d %b %Y"
       long: "%d %B %Y"
+      sidebar: "%A, %-d %B %Y"
     month_names:
       - ~
       - Januari

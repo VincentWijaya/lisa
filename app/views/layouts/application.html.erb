@@ -11,68 +11,151 @@
 
     <%= yield :head %>
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="min-h-screen bg-slate-50 text-slate-900">
+  <body class="flex min-h-screen bg-slate-50 text-slate-900" style="font-family: 'Poppins', system-ui, sans-serif;">
     <% if logged_in? %>
-      <nav class="lisa-navbar">
-        <% nav_items = [
-          { label: t("nav.dashboard"), path: root_path, active: request.path == root_path },
-          { label: t("nav.specimens"), path: specimens_path, active: request.path.start_with?(specimens_path) },
-          { label: t("nav.works"), path: works_path, active: request.path.start_with?(works_path) },
-          { label: t("nav.bank_darah"), path: bank_darah_path, active: request.path == bank_darah_path },
-          { label: t("nav.mikrobiologi"), path: mikrobiologi_path, active: request.path == mikrobiologi_path },
-          { label: t("nav.patologi_anatomi"), path: patologi_anatomi_path, active: request.path == patologi_anatomi_path },
-          { label: t("nav.inventori"), path: inventori_path, active: request.path == inventori_path },
-          { label: t("nav.monitor_qc"), path: monitor_qc_path, active: request.path == monitor_qc_path },
-          { label: t("nav.laporan"), path: laporan_path, active: request.path == laporan_path },
-          { label: t("nav.satu_sehat"), path: "https://satusehat.kemkes.go.id/", active: false, external: true }
-        ] %>
-        <div class="lisa-navbar__inner">
-          <%= link_to "LISA", root_path, class: "lisa-navbar__brand" %>
+      <%# Mobile overlay %>
+      <div id="sidebar-overlay" class="sidebar-overlay hidden" onclick="document.getElementById('sidebar').classList.remove('sidebar--open'); this.classList.add('hidden');"></div>
 
-          <div class="lisa-navbar__links" aria-label="Primary navigation">
-            <% nav_items.each do |item| %>
-              <%= link_to item[:label], item[:path], class: class_names("lisa-navbar__link", "lisa-navbar__link--active": item[:active]), target: (item[:external] ? "_blank" : nil), rel: (item[:external] ? "noopener noreferrer" : nil) %>
-            <% end %>
-            <% if current_user&.admin? %>
-              <%= link_to t("nav.admin"), admin_root_path, class: class_names("lisa-navbar__link lisa-navbar__link--admin", "lisa-navbar__link--active": request.path.start_with?(admin_root_path)) %>
-            <% end %>
-          </div>
-
-          <div class="lisa-navbar__user">
-            <div class="lisa-navbar__user-name">
-              <%= current_user.name %>
-              <span class="lisa-navbar__roles">(<%= current_user.display_roles %>)</span>
-            </div>
-            <%= button_to t("nav.sign_out"), session_path, method: :delete, class: "lisa-navbar__sign-out", form_class: "lisa-navbar__sign-out-form" %>
+      <%# Sidebar %>
+      <aside id="sidebar" class="sidebar"
+             data-controller="sidebar"
+             data-sidebar-collapsed-class="sidebar--collapsed">
+        <%# Logo + collapse toggle %>
+        <div class="flex items-center justify-between flex-shrink-0">
+          <%= image_tag "nexlab-logo.png", alt: "Nexlab", class: "sidebar__brand h-[31px] w-auto" %>
+          <div class="flex items-center gap-1">
+            <%# Desktop collapse toggle %>
+            <button type="button"
+                    class="sidebar__toggle-btn max-lg:hidden"
+                    data-action="click->sidebar#toggle"
+                    aria-label="Toggle sidebar">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            </button>
+            <%# Mobile close button %>
+            <button type="button" class="hidden max-lg:block p-1"
+                    onclick="document.getElementById('sidebar').classList.remove('sidebar--open'); document.getElementById('sidebar-overlay').classList.add('hidden');"
+                    aria-label="Close sidebar">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#606060" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </button>
           </div>
         </div>
-      </nav>
-    <% end %>
-    <% if notice.present? || alert.present? %>
-      <div class="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
-        <% if notice.present? %>
-          <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800"><%= notice %></div>
-        <% end %>
-        <% if alert.present? %>
-          <div class="mt-3 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800"><%= alert %></div>
-        <% end %>
-      </div>
+
+        <%# Company / Date card %>
+        <div class="sidebar__company-card">
+          <div>
+            <div class="sidebar__company-time"><%= Time.current.strftime("%H.%M") %></div>
+            <time><%= l(Date.current, format: :sidebar) %></time>
+          </div>
+        </div>
+
+        <%# Menu %>
+        <nav aria-label="Sidebar navigation" class="flex-1">
+          <ul class="sidebar__menu">
+            <% menu_items = [
+              { key: :dashboard, label: t("nav.dashboard"), path: root_path, active: request.path == root_path, icon: "icon-dashboard.svg" },
+              { key: :specimens, label: t("nav.specimens"), path: specimens_path, active: request.path.start_with?(specimens_path), icon: "icon-specimens.svg" },
+              { key: :works, label: t("nav.works"), path: works_path, active: request.path.start_with?(works_path), icon: "icon-works.svg" },
+              { key: :bank_darah, label: t("nav.bank_darah"), path: bank_darah_path, active: request.path == bank_darah_path, icon: "icon-bank-darah.svg" },
+              { key: :mikrobiologi, label: t("nav.mikrobiologi"), path: mikrobiologi_path, active: request.path == mikrobiologi_path, icon: nil },
+              { key: :patologi_anatomi, label: t("nav.patologi_anatomi"), path: patologi_anatomi_path, active: request.path == patologi_anatomi_path, icon: nil },
+              { key: :inventori, label: t("nav.inventori"), path: inventori_path, active: request.path == inventori_path, icon: "icon-inventori.svg" },
+              { key: :monitor_qc, label: t("nav.monitor_qc"), path: monitor_qc_path, active: request.path == monitor_qc_path, icon: "icon-monitor-qc.svg" },
+              { key: :laporan, label: t("nav.laporan"), path: laporan_path, active: request.path == laporan_path, icon: "icon-laporan.svg" },
+              { key: :satu_sehat, label: t("nav.satu_sehat"), path: "https://satusehat.kemkes.go.id/", active: false, icon: nil, external: true },
+            ] %>
+
+            <% menu_items.each do |item| %>
+              <li>
+                <%= link_to item[:path],
+                      class: class_names("sidebar__menu-item", "sidebar__menu-item--active": item[:active]),
+                      target: (item[:external] ? "_blank" : nil),
+                      rel: (item[:external] ? "noopener noreferrer" : nil) do %>
+                  <span class="sidebar__menu-icon">
+                    <% if item[:icon] %>
+                      <%= image_tag "sidebar/#{item[:icon]}", alt: "", class: "size-6" %>
+                    <% else %>
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#606060" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                    <% end %>
+                  </span>
+                  <span class="sidebar__label truncate"><%= item[:label] %></span>
+                  <% if item[:external] %>
+                    <svg class="sidebar__external-icon ml-auto size-3.5 shrink-0 opacity-40" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                  <% end %>
+                <% end %>
+              </li>
+            <% end %>
+
+            <% if current_user&.admin? %>
+              <li>
+                <%= link_to admin_root_path,
+                      class: class_names("sidebar__menu-item", "sidebar__menu-item--active": request.path.start_with?(admin_root_path)) do %>
+                  <span class="sidebar__menu-icon">
+                    <%= image_tag "sidebar/icon-admin.svg", alt: "", class: "size-6" %>
+                  </span>
+                  <span class="sidebar__label truncate"><%= t("nav.admin") %></span>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </nav>
+      </aside>
     <% end %>
 
-    <main>
-      <%= yield %>
-    </main>
+    <%# Main content area %>
+    <div class="flex-1 flex flex-col min-w-0">
+      <% if logged_in? %>
+        <%# Top navbar %>
+        <header class="topbar">
+          <div class="topbar__inner">
+            <div class="topbar__left">
+              <%# Mobile sidebar toggle %>
+              <button type="button" class="sidebar-toggle max-lg:inline-flex"
+                      onclick="document.getElementById('sidebar').classList.add('sidebar--open'); document.getElementById('sidebar-overlay').classList.remove('hidden');"
+                      aria-label="Open sidebar">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+              </button>
+            </div>
+            <div class="topbar__right">
+              <div class="topbar__user-info">
+                <div class="topbar__user-avatar">
+                  <%= current_user.name.first.upcase %>
+                </div>
+                <div class="topbar__user-text">
+                  <div class="topbar__user-name"><%= current_user.name %></div>
+                  <div class="topbar__user-roles"><%= current_user.display_roles %></div>
+                </div>
+              </div>
+              <%= button_to t("nav.sign_out"), session_path, method: :delete, class: "topbar__sign-out", form: { class: "inline" } %>
+            </div>
+          </div>
+        </header>
+      <% end %>
+      <% if notice.present? || alert.present? %>
+        <div class="mx-auto w-full max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
+          <% if notice.present? %>
+            <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800"><%= notice %></div>
+          <% end %>
+          <% if alert.present? %>
+            <div class="mt-3 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800"><%= alert %></div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <main class="flex-1">
+        <%= yield %>
+      </main>
+    </div>
   </body>
 </html>

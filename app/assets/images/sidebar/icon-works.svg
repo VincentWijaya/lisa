@@ -1,0 +1,28 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="24" height="24" fill="#1E1E1E"/>
+<g id="Dashboard" clip-path="url(#clip0_2_2)">
+<rect width="1440" height="1841" transform="translate(-23 -275)" fill="white"/>
+<g id="Sidebar">
+<rect width="249" height="1024" transform="translate(-24 -275)" fill="white"/>
+<g id="Menu">
+<g id="list menu">
+<g id="Menu_2">
+<g id="Content">
+<g id="hugeicons:task-01">
+<g id="Group">
+<path id="Vector" d="M7.996 15H11.425M7.996 11H15.996M14.496 2H9.496C9.09818 2 8.71664 2.15804 8.43534 2.43934C8.15404 2.72064 7.996 3.10218 7.996 3.5C7.996 3.89782 8.15404 4.27936 8.43534 4.56066C8.71664 4.84196 9.09818 5 9.496 5H14.496C14.8938 5 15.2754 4.84196 15.5567 4.56066C15.838 4.27936 15.996 3.89782 15.996 3.5C15.996 3.10218 15.838 2.72064 15.5567 2.43934C15.2754 2.15804 14.8938 2 14.496 2Z" stroke="#606060" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_2" d="M15.996 3.5C17.55 3.547 18.476 3.72 19.117 4.362C19.997 5.24 19.997 6.655 19.997 9.482V16C19.997 18.828 19.997 20.242 19.117 21.121C18.239 22 16.824 22 13.997 22H9.997C7.167 22 5.753 22 4.875 21.121C3.997 20.242 3.996 18.828 3.996 16V9.483C3.996 6.655 3.996 5.24 4.875 4.362C5.516 3.72 6.443 3.547 7.996 3.5" stroke="#606060" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_2_2">
+<rect width="1440" height="1841" fill="white" transform="translate(-23 -275)"/>
+</clipPath>
+</defs>
+</svg>

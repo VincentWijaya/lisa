@@ -1,156 +1,287 @@
 @import "tailwindcss";
 
+@source "../../../app/views";
+@source "../../../app/helpers";
+@source "../../../app/javascript";
+
 @layer components {
-  .lisa-navbar {
-    border-bottom: 1px solid var(--color-slate-200);
+  /* ── Sidebar ─────────────────────────────────────────────── */
+
+  .sidebar {
+    align-items: stretch;
     background: var(--color-white);
-    padding: 0.75rem 1rem;
-  }
-
-  .lisa-navbar__inner {
-    align-items: center;
     display: flex;
-    gap: 0.75rem;
-    margin-inline: auto;
-    max-width: var(--container-7xl);
-    min-height: 3rem;
+    flex-direction: column;
+    flex-shrink: 0;
+    gap: 24px;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 32px 16px;
+    position: sticky;
+    top: 0;
+    transition: width 200ms ease;
+    width: 250px;
   }
 
-  .lisa-navbar__brand {
-    color: var(--color-slate-900);
-    flex: 0 0 auto;
-    font-size: 1.125rem;
-    font-weight: 700;
-    line-height: 1.25;
+  .sidebar--collapsed {
+    overflow-x: hidden;
+    padding: 32px 14px;
+    width: 72px;
   }
 
-  .lisa-navbar__links {
+  .sidebar__toggle-btn {
     align-items: center;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: #606060;
+    cursor: pointer;
     display: flex;
-    flex: 1 1 auto;
-    gap: 0.125rem;
-    min-width: 0;
-    overflow-x: auto;
-    scrollbar-width: none;
-    white-space: nowrap;
+    flex-shrink: 0;
+    height: 32px;
+    justify-content: center;
+    padding: 4px;
+    transition: background-color 150ms ease, transform 200ms ease;
+    width: 32px;
   }
 
-  .lisa-navbar__links::-webkit-scrollbar {
+  .sidebar__toggle-btn:hover {
+    background: var(--color-slate-100);
+  }
+
+  .sidebar--collapsed .sidebar__toggle-btn {
+    transform: rotate(180deg);
+  }
+
+  .sidebar--collapsed .sidebar__brand,
+  .sidebar--collapsed .sidebar__company-card,
+  .sidebar--collapsed .sidebar__label,
+  .sidebar--collapsed .sidebar__external-icon {
     display: none;
   }
 
-  .lisa-navbar__link {
-    border-radius: 0.5rem;
-    color: var(--color-slate-600);
-    flex: 0 0 auto;
-    font-size: 0.875rem;
-    font-weight: 600;
-    line-height: 1.25;
-    padding: 0.4375rem 0.5rem;
+  .sidebar--collapsed .sidebar__menu-item {
+    justify-content: center;
+    width: 44px;
+  }
+
+  .sidebar--collapsed .sidebar__menu {
+    align-items: center;
+  }
+
+  .sidebar__menu {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 10px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .sidebar__menu-item {
+    align-items: center;
+    border-radius: 8px;
+    color: var(--color-slate-500);
+    display: flex;
+    flex-shrink: 0;
+    font-family: 'Poppins', system-ui, sans-serif;
+    font-size: 14px;
+    gap: 8px;
+    height: 40px;
+    line-height: 1.5;
+    padding: 8px;
+    text-decoration: none;
     transition: background-color 150ms ease, color 150ms ease;
   }
 
-  .lisa-navbar__link:hover {
+  .sidebar__menu-item:hover {
     background: var(--color-slate-100);
-    color: var(--color-slate-900);
   }
 
-  .lisa-navbar__link--active {
-    background: var(--color-sky-100);
-    color: var(--color-sky-800);
+  .sidebar__menu-item--active {
+    background: #f2f2f2;
+    border-radius: 12px;
+    color: #1e1e1e;
+    font-weight: 500;
   }
 
-  .lisa-navbar__link--admin {
-    color: var(--color-sky-700);
+  .sidebar__menu-item--active:hover {
+    background: #e8e8e8;
   }
 
-  .lisa-navbar__user {
+  .sidebar__menu-icon {
     align-items: center;
     display: flex;
-    flex: 0 0 auto;
-    gap: 0.625rem;
-    justify-content: flex-end;
-    min-width: max-content;
+    flex-shrink: 0;
+    height: 24px;
+    justify-content: center;
+    width: 24px;
   }
 
-  .lisa-navbar__user-name {
-    color: var(--color-slate-500);
-    font-size: 0.875rem;
-    max-width: 11rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  .sidebar__menu-icon img,
+  .sidebar__menu-icon svg {
+    height: 24px;
+    width: 24px;
   }
 
-  .lisa-navbar__roles {
+  .sidebar__company-card {
+    align-items: flex-start;
+    border: 1px solid #e7e7e7;
+    border-radius: 12px;
+    display: flex;
+    flex-shrink: 0;
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .sidebar__company-card time {
+    color: #454545;
+    display: block;
+    font-family: 'Poppins', system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+
+  .sidebar__company-card .sidebar__company-time {
+    color: #606060;
+    font-family: 'Poppins', system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
+  /* ── Topbar ──────────────────────────────────────────────── */
+
+  .topbar {
+    background: var(--color-white);
+    border-bottom: 1px solid var(--color-slate-200);
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    z-index: 30;
+  }
+
+  .topbar__inner {
+    align-items: center;
+    display: flex;
+    height: 56px;
+    justify-content: space-between;
+    padding-inline: 16px;
+  }
+
+  .topbar__left {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+  }
+
+  .topbar__right {
+    align-items: center;
+    display: flex;
+    gap: 16px;
+  }
+
+  .topbar__user-info {
+    align-items: center;
+    display: flex;
+    gap: 10px;
+  }
+
+  .topbar__user-avatar {
+    align-items: center;
+    background: var(--color-sky-100);
+    border-radius: 9999px;
+    color: var(--color-sky-700);
+    display: flex;
+    flex-shrink: 0;
+    font-family: 'Poppins', system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    height: 32px;
+    justify-content: center;
+    width: 32px;
+  }
+
+  .topbar__user-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+  }
+
+  .topbar__user-name {
+    color: var(--color-slate-700);
+    font-family: 'Poppins', system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .topbar__user-roles {
     color: var(--color-slate-400);
-    font-size: 0.75rem;
+    font-family: 'Poppins', system-ui, sans-serif;
+    font-size: 11px;
   }
 
-  .lisa-navbar__sign-out-form {
-    flex: 0 0 auto;
-  }
-
-  .lisa-navbar__sign-out {
+  .topbar__sign-out {
+    background: transparent;
     border: 1px solid var(--color-slate-300);
-    border-radius: 0.5rem;
+    border-radius: 8px;
     color: var(--color-slate-600);
     cursor: pointer;
-    font-size: 0.75rem;
-    font-weight: 600;
-    line-height: 1.25;
-    padding: 0.4375rem 0.75rem;
+    font-family: 'Poppins', system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 5px 12px;
     transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
   }
 
-  .lisa-navbar__sign-out:hover {
+  .topbar__sign-out:hover {
     background: var(--color-slate-50);
     border-color: var(--color-slate-400);
     color: var(--color-slate-900);
   }
 
-  @media (min-width: 40rem) {
-    .lisa-navbar {
-      padding-inline: 1.5rem;
-    }
+  /* ── Sidebar toggle (mobile) ───────────────────────────── */
+
+  .sidebar-toggle {
+    align-items: center;
+    background: var(--color-white);
+    border: 1px solid var(--color-slate-200);
+    border-radius: 8px;
+    cursor: pointer;
+    display: none;
+    font-size: 14px;
+    font-weight: 500;
+    gap: 6px;
+    justify-content: center;
+    padding: 6px 12px;
   }
 
-  @media (min-width: 64rem) {
-    .lisa-navbar {
-      padding-inline: 2rem;
-    }
-  }
+  /* ── Responsive ─────────────────────────────────────────── */
 
   @media (max-width: 63.9375rem) {
-    .lisa-navbar__inner {
-      flex-wrap: wrap;
+    .sidebar {
+      bottom: 0;
+      left: 0;
+      overflow-y: auto;
+      position: fixed;
+      top: 0;
+      transform: translateX(-100%);
+      transition: transform 200ms ease;
+      z-index: 50;
+      width: 280px;
     }
 
-    .lisa-navbar__links {
-      order: 3;
-      width: 100%;
+    .sidebar--open {
+      transform: translateX(0);
     }
 
-    .lisa-navbar__user {
-      margin-left: auto;
-    }
-  }
-
-  @media (max-width: 39.9375rem) {
-    .lisa-navbar__inner {
-      align-items: flex-start;
-    }
-
-    .lisa-navbar__user {
-      align-items: flex-start;
-      flex-basis: 100%;
-      justify-content: space-between;
-      margin-left: 0;
-      width: 100%;
-    }
-
-    .lisa-navbar__user-name {
-      max-width: calc(100vw - 9rem);
+    .sidebar-overlay {
+      background: rgb(0 0 0 / 30%);
+      inset: 0;
+      position: fixed;
+      z-index: 40;
     }
   }
 }
