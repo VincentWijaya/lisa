@@ -336,11 +336,12 @@ id:
       barcode_mismatch: "Barcode yang dipindai '%{scanned}' tidak cocok dengan pekerjaan ini (%{expected})."
       work_not_pending: "Pekerjaan ini tidak dapat diverifikasi — status saat ini adalah '%{status}'."
     scan_modal:
-      title: "Scan Barcode untuk Verifikasi"
-      instruction: "Arahkan kamera ke label barcode, atau ketik ID barcode di bawah ini."
+      title: "Scan Barcode Untuk Verifikasi"
+      instruction: "Arahkan kamera ke label barcode atau ketik ID barcode untuk melakukan verifikasi"
+      camera_hint: "Izinkan akses kamera sebelum memulai foto"
       manual_label: "ID Barcode"
       submit: "Verifikasi"
-      cancel: "Batal"
+      cancel: "Batalkan"
     edit_result_modal:
       title: "Edit Hasil"
       submit: "Simpan Perubahan"

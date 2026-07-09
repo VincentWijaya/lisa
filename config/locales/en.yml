@@ -188,7 +188,8 @@ en:
       work_not_pending: "This work cannot be verified — current status is '%{status}'."
     scan_modal:
       title: "Scan Barcode to Verify"
-      instruction: "Point the camera at the barcode label, or type the barcode ID below."
+      instruction: "Point the camera at the barcode label or type the barcode ID to verify"
+      camera_hint: "Allow camera access before starting the photo"
       manual_label: "Barcode ID"
       submit: "Verify"
       cancel: "Cancel"
