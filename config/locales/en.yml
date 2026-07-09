@@ -266,8 +266,14 @@ en:
         male: "Male"
         female: "Female"
     show:
+      title: "Specimen Detail"
+      back: "Back"
+      breadcrumb:
+        specimens: "Specimens"
+        current: "Specimen Detail"
+      header: "Specimen Detail"
       label: "Specimen Detail"
-      back: "Back to specimens"
+      age_value: "%{years} years old"
       patient_section: "Patient Details"
       collection_section: "Collection Details"
       works_section: "Associated Works"
@@ -287,13 +293,16 @@ en:
         lab_id: "Lab ID"
         department: "Department"
         collected_at: "Collected At"
+        dianognes: "Diagnosis"
         status: "Status"
       works_table:
         barcode_id: "Barcode ID"
+        patient: "Patient"
         examination: "Examination"
         result: "Result"
         interpretation: "Interpretation"
         status: "Status"
+        created_at: "Created At"
         actions: "Actions"
       works_empty: "No works linked to this specimen."
     actions:
