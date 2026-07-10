@@ -89,3 +89,5 @@
 /.vscode/
 
 .claude/plans/*
+
+opencode*
