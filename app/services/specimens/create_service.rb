@@ -43,9 +43,10 @@ module Specimens
       end
 
       @examinations = Examination.active.where(id: ids).index_by(&:id)
-      ids.each do |examination_id|
-        errors << "Examination #{examination_id} not found or inactive" unless examinations.key?(examination_id)
-      end
+      return if @examinations.size == ids.size
+
+      missing = ids - @examinations.keys
+      missing.each { |id| errors << "Examination #{id} not found or inactive" }
     end
 
     def create_specimen!
@@ -69,7 +70,11 @@ module Specimens
     end
 
     def create_works!(specimen)
-      Works::WorkCreationService.call(specimen: specimen, examinations: ordered_examinations)
+      Works::WorkCreationService.call(
+        specimen:     specimen,
+        examinations: ordered_examinations,
+        manual_input: truthy?(params[:manual_input])
+      )
     end
 
     def next_order_number
@@ -82,6 +87,10 @@ module Specimens
 
     def ordered_examinations
       @ordered_examinations ||= examination_ids.filter_map { |examination_id| examinations[examination_id] }
+    end
+
+    def truthy?(value)
+      %w[1 true t yes y on].include?(value.to_s.downcase.strip)
     end
   end
 end

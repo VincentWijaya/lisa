@@ -1,9 +1,10 @@
 module Works
   class BarcodeGenerator
-    def initialize(specimen:, label_sequence:, examination: nil, examinations: nil)
+    def initialize(specimen:, label_sequence:, examination: nil, examinations: nil, manual_input: false)
       @specimen = specimen
       @examinations = Array(examinations || examination)
       @label_sequence = label_sequence
+      @manual_input = manual_input
     end
 
     def create!
@@ -14,13 +15,14 @@ module Works
         specimen_type: specimen_type,
         test_codes_text: test_codes_text,
         sample_taken_datetime: specimen.collection_datetime,
-        status: Work.statuses[:pending]
+        status: Work.statuses[:pending],
+        manual_input: manual_input
       )
     end
 
     private
 
-    attr_reader :specimen, :examinations, :label_sequence
+    attr_reader :specimen, :examinations, :label_sequence, :manual_input
 
     def primary_examination
       examinations.first

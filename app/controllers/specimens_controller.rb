@@ -12,6 +12,29 @@ class SpecimensController < ApplicationController
     @pagy, @specimens = pagy(:countless, scope, limit: 10)
   end
 
+  def new
+    @examination_groups = Examination.active
+                                      .order(:category, :name)
+                                      .group_by(&:category)
+    @specimen = Specimen.new(
+      lab_id: "LAB-01",
+      gender: "Laki-laki"
+    )
+  end
+
+  def create
+    result = Specimens::CreateService.call(web_specimen_params)
+
+    if result.success?
+      redirect_to specimen_path(result.specimen), notice: t("specimens.flash.created")
+    else
+      flash.now[:alert] = result.errors.to_sentence
+      @specimen = Specimen.new(web_specimen_params.except(:examination_ids, :manual_input))
+      @examination_groups = Examination.active.order(:category, :name).group_by(&:category)
+      render :new, status: :unprocessable_content
+    end
+  end
+
   def show
     @works = @specimen.works.includes(:examination, :examination_results).order(:label_sequence)
   end
@@ -80,6 +103,26 @@ class SpecimensController < ApplicationController
 
   def specimen_params
     params.require(:specimen).permit(:ai_summary)
+  end
+
+  def web_specimen_params
+    params.require(:specimen).permit(
+      :patient_id,
+      :patient_name,
+      :birth_date,
+      :gender,
+      :medical_record_id,
+      :lab_id,
+      :department,
+      :collection_datetime,
+      :dianognes,
+      :referring_doctor,
+      :affiliation,
+      :patient_address,
+      :responsible_doctor,
+      :manual_input,
+      examination_ids: []
+    )
   end
 
   def collection_times_by_type(works)
