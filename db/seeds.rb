@@ -46,7 +46,7 @@ elektrolit_codes = %w[CL K NA].freeze
 fungsi_ginjal_codes = %w[CRE UR].freeze
 
 examinations_data = [
-  # ── HEMATOLOGI / DARAH LENGKAP ──
+  # ── HEMATOLOGI / DARAH LENGKAP (LOINC aligned: 718-7, 4544-3, 789-8, 6690-2, 777-3, 787-2, 785-6, 786-4, 788-0, 21232-4, 4537-7, 711-2) ──
   { code: "RDW-CV",     name: "RDW-CV",                category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "%"      },
   { code: "RDW-SD",     name: "RDW-SD",                category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "fL"     },
   { code: "MONO",       name: "Monosit",               category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "%"      },
@@ -73,7 +73,18 @@ examinations_data = [
   { code: "PLCC",       name: "PLCC",                  category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "10⁹/L"  },
   { code: "PLCR",       name: "PLCR",                  category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "%"      },
   { code: "LED",        name: "LED",                   category: "HEMATOLOGI",    label_group: nil,               specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "mm/jam" },
+  { code: "DIFF",       name: "Hitung Jenis (DIFF)",   category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "qualitative", default_unit: nil      },
   { code: "GOLDAR",     name: "Golongan Darah",        category: "HEMATOLOGI",    label_group: "Golongan Darah",  specimen_type: "Darah EDTA",  default_result_type: "qualitative", default_unit: nil      },
+
+  # ── HEMATOLOGI / Tambahan (LOINC: 26515-7, 883-9, 10331-7, 17849-1, 1250-7, 1007-4, 890-4, 2132-9, 49019-1, 30522-7) ──
+  { code: "PHLEBO",     name: "Phlebotomi",            category: "HEMATOLOGI",    label_group: nil,               specimen_type: "Darah EDTA",  default_result_type: "qualitative", default_unit: nil      },
+  { code: "RETIC",      name: "Retikulosit",           category: "HEMATOLOGI",    label_group: nil,               specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "%"      },
+  { code: "CROSSMATCH", name: "Cross Match",           category: "HEMATOLOGI",    label_group: nil,               specimen_type: "Darah EDTA",  default_result_type: "qualitative", default_unit: nil      },
+  { code: "COOMBS-D",   name: "Coombs Test Direk",     category: "HEMATOLOGI",    label_group: nil,               specimen_type: "Darah EDTA",  default_result_type: "qualitative", default_unit: nil      },
+  { code: "COOMBS-I",   name: "Coombs Test Indirek",   category: "HEMATOLOGI",    label_group: nil,               specimen_type: "Darah Beku",  default_result_type: "qualitative", default_unit: nil      },
+  { code: "VITB12",     name: "Vitamin B12",           category: "HEMATOLOGI",    label_group: nil,               specimen_type: "Darah Beku",  default_result_type: "numeric",     default_unit: "pg/mL"  },
+  { code: "HAMSTEST",   name: "Hams Test",             category: "HEMATOLOGI",    label_group: nil,               specimen_type: "Darah EDTA",  default_result_type: "qualitative", default_unit: nil      },
+  { code: "ITRATIO",    name: "IT Ratio",              category: "HEMATOLOGI",    label_group: nil,               specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "Rasio"  },
   # ── KIMIA KLINIK ──
   { code: "CL",         name: "Chloride (Cl)",         category: "KIMIA KLINIK",  label_group: "Elektrolit",      specimen_type: "Darah Beku",  default_result_type: "numeric",     default_unit: "mmol/L" },
   { code: "K",          name: "Kalium (K)",            category: "KIMIA KLINIK",  label_group: "Elektrolit",      specimen_type: "Darah Beku",  default_result_type: "numeric",     default_unit: "mmol/L" },
@@ -84,6 +95,12 @@ examinations_data = [
   { code: "HBA1C",      name: "Panel HbA1C",           category: "KIMIA KLINIK",  label_group: "HbA1C",           specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "%"      },
   { code: "LEMAK",      name: "Profil Lemak",          category: "KIMIA KLINIK",  label_group: "Profil Lemak",    specimen_type: "Darah Beku",  default_result_type: "numeric",     default_unit: "mg/dL"  },
   { code: "FUNGSI-H",   name: "Fungsi Hati",           category: "KIMIA KLINIK",  label_group: "Fungsi Hati",     specimen_type: "Darah Beku",  default_result_type: "numeric",     default_unit: "U/L"    },
+  # ── KIMIA KLINIK / Tambahan (LOINC: 2885-2, 1751-7, 2336-6, 1798-8, 3040-3, 2532-0) ──
+  { code: "TP",         name: "Total Protein",         category: "KIMIA KLINIK",  label_group: nil,               specimen_type: "Darah Beku",  default_result_type: "numeric",     default_unit: "g/dL"   },
+  { code: "ALB",        name: "Albumin",               category: "KIMIA KLINIK",  label_group: nil,               specimen_type: "Darah Beku",  default_result_type: "numeric",     default_unit: "g/dL"   },
+  { code: "AMY",        name: "Amilase Serum",         category: "KIMIA KLINIK",  label_group: nil,               specimen_type: "Darah Beku",  default_result_type: "numeric",     default_unit: "U/L"    },
+  { code: "LIP",        name: "Lipase Serum",          category: "KIMIA KLINIK",  label_group: nil,               specimen_type: "Darah Beku",  default_result_type: "numeric",     default_unit: "U/L"    },
+  { code: "LDH",        name: "Laktat Dehidrogenase",  category: "KIMIA KLINIK",  label_group: nil,               specimen_type: "Darah Beku",  default_result_type: "numeric",     default_unit: "U/L"    },
   # ── IMUNOSEROLOGI ──
   { code: "HIV",        name: "Anti HIV",              category: "IMUNOSEROLOGI", label_group: nil,               specimen_type: "Darah Beku",  default_result_type: "qualitative", default_unit: nil      },
   { code: "VDRL",       name: "VDRL",                  category: "IMUNOSEROLOGI", label_group: nil,               specimen_type: "Darah Beku",  default_result_type: "qualitative", default_unit: nil      },
@@ -93,6 +110,18 @@ examinations_data = [
   # ── URINALISIS ──
   { code: "URINE-L",    name: "Urine Lengkap",         category: "URINALISIS",    label_group: "Urine Lengkap",   specimen_type: "Urine Rutin", default_result_type: "qualitative", default_unit: nil      },
   { code: "URINE-S",    name: "Sedimen Urine",         category: "URINALISIS",    label_group: "Sedimen Urine",   specimen_type: "Urine Rutin", default_result_type: "qualitative", default_unit: nil      },
+  # ── FAECES (LOINC: 9397-5, 48021-0, 43398-7, 14725-6, 19005-8, 6762-9, 10701-1, 10703-7, 29771-3) ──
+  { code: "FAECES",     name: "Faeces Lengkap",        category: "FAECES",        label_group: "Faeces Lengkap",  specimen_type: "Faeces",      default_result_type: "qualitative", default_unit: nil      },
+  # ── MIKROBIOLOGI (LOINC: 664-3, 11545-1, 632-4, 625-8) ──
+  { code: "GRAM",       name: "Pewarnaan Gram",        category: "MIKROBIOLOGI",  label_group: nil,               specimen_type: "Swab",        default_result_type: "qualitative", default_unit: nil      },
+  { code: "BTA",        name: "Pewarnaan BTA",         category: "MIKROBIOLOGI",  label_group: nil,               specimen_type: "Sputum",      default_result_type: "qualitative", default_unit: nil      },
+  { code: "KULTUR",     name: "Kultur & Sensitivitas", category: "MIKROBIOLOGI",  label_group: nil,               specimen_type: "Swab",        default_result_type: "text",        default_unit: nil      },
+  { code: "KOH",        name: "Pewarnaan Jamur (KOH)", category: "MIKROBIOLOGI",  label_group: nil,               specimen_type: "Swab",        default_result_type: "qualitative", default_unit: nil      },
+  # ── PATOLOGI ANATOMI (LOINC: 49015-9, 33717-0, 44835-7, 10524-7) ──
+  { code: "HPA",        name: "Histopatologi (Biopsi)",  category: "PATOLOGI ANATOMI", label_group: nil,          specimen_type: "Jaringan",    default_result_type: "text",        default_unit: nil      },
+  { code: "SITOLOGI",   name: "Sitologi Non-Ginekologi", category: "PATOLOGI ANATOMI", label_group: nil,          specimen_type: "Sitologi",    default_result_type: "text",        default_unit: nil      },
+  { code: "FNAB",       name: "Fine Needle Aspiration",  category: "PATOLOGI ANATOMI", label_group: nil,          specimen_type: "Aspirat",     default_result_type: "text",        default_unit: nil      },
+  { code: "PAP",        name: "Pap Smear",               category: "PATOLOGI ANATOMI", label_group: nil,          specimen_type: "Sekret Serviks", default_result_type: "text",     default_unit: nil      },
 
   # ── Computed source examinations (referenced by formula rules below) ──
   { code: "LYM#",       name: "Limfosit Absolut",      category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "10^3/µL" },
@@ -165,7 +194,9 @@ def upsert_ref_rule(exam_code, name:, result_type:, low: nil, high: nil, unit: n
   rule.save!
 end
 
-# ── Darah Lengkap (CBC) – names follow the screenshot order ──
+# ── Darah Lengkap (CBC) – names follow the screenshot order, ranges per LOINC Kamus ──
+upsert_ref_rule "RDW-CV", name: "Darah Lengkap (Panel)",  result_type: "qualitative",
+  allowed: ["Multi-parameter (Panel)"], normal: ["Multi-parameter (Panel)"], loinc: "58410-2"
 upsert_ref_rule "RDW-CV", name: "RDW-CV",                result_type: "numeric", low: 11.5, high: 14.5, unit: "%",       reference_value: "11.5 - 14.5", loinc: "788-0",  previous_names: ["RDW"]
 upsert_ref_rule "RDW-SD", name: "RDW-SD",                result_type: "numeric", low: 39,   high: 46,   unit: "fL",      reference_value: "39 - 46",      loinc: "21000-5"
 upsert_ref_rule "MONO",   name: "Monosit",               result_type: "numeric", low: 2,    high: 11,   unit: "%",       reference_value: "2 - 11",       loinc: "5905-5"
@@ -175,34 +206,56 @@ upsert_ref_rule "BAND",   name: "Batang",                result_type: "numeric",
 upsert_ref_rule "EOS",    name: "Eosinofil",             result_type: "numeric", low: 1,    high: 3,    unit: "%",       reference_value: "1 - 3",        loinc: "713-8"
 upsert_ref_rule "BASO",   name: "Basofil",               result_type: "numeric", low: 0,    high: 2,    unit: "%",       reference_value: "0 - 2",        loinc: "706-2"
 upsert_ref_rule "MCHC",   name: "MCHC",                  result_type: "numeric", low: 32,   high: 36,   unit: "g/dL",    reference_value: "32 - 36",      loinc: "786-4"
-upsert_ref_rule "MCH",    name: "MCH",                   result_type: "numeric", low: 26,   high: 34,   unit: "pg",      reference_value: "26 - 34",      loinc: "785-6"
+upsert_ref_rule "MCH",    name: "MCH",                   result_type: "numeric", low: 27,   high: 33,   unit: "pg",      reference_value: "27 - 33",      loinc: "785-6"
 upsert_ref_rule "MCV",    name: "MCV",                   result_type: "numeric", low: 80,   high: 100,  unit: "fL",      reference_value: "80 - 100",     loinc: "787-2"
-upsert_ref_rule "RBC",    name: "ERITROSIT (Pria)",      result_type: "numeric", low: 4.20, high: 6.00, unit: "10⁶/µL", reference_value: "4.20 - 6.00",  loinc: "789-8",  previous_names: ["Eritrosit (Pria)"],   gender: "male"
-upsert_ref_rule "RBC",    name: "ERITROSIT (Wanita)",    result_type: "numeric", low: 3.80, high: 5.40, unit: "10⁶/µL", reference_value: "3.80 - 5.40",  loinc: "789-8",  previous_names: ["Eritrosit (Wanita)"], gender: "female"
-upsert_ref_rule "PLT",    name: "Trombosit",             result_type: "numeric", low: 100,  high: 300,  unit: "10³/µL", reference_value: "100 - 300",    loinc: "777-3"
+upsert_ref_rule "RBC",    name: "ERITROSIT (Pria)",      result_type: "numeric", low: 4.5,  high: 5.9,  unit: "10⁶/µL", reference_value: "4.5 - 5.9",    loinc: "789-8",  previous_names: ["Eritrosit (Pria)"],   gender: "male"
+upsert_ref_rule "RBC",    name: "ERITROSIT (Wanita)",    result_type: "numeric", low: 4.1,  high: 5.1,  unit: "10⁶/µL", reference_value: "4.1 - 5.1",    loinc: "789-8",  previous_names: ["Eritrosit (Wanita)"], gender: "female"
+upsert_ref_rule "PLT",    name: "Trombosit",             result_type: "numeric", low: 150,  high: 450,  unit: "10³/µL", reference_value: "150 - 450",    loinc: "777-3"
 upsert_ref_rule "BAS#",   name: "Basofil Absolut",       result_type: "numeric", low: 0.00, high: 0.10, unit: "10³/µL", reference_value: "0.00 - 0.10",  loinc: "704-7"
 upsert_ref_rule "NEU#",   name: "Neutrofil Absolut",     result_type: "numeric", low: 2.00, high: 7.00, unit: "10³/µL", reference_value: "2.00 - 7.00",  loinc: "751-8"
 upsert_ref_rule "EOS#",   name: "Eosinofil Absolut",     result_type: "numeric", low: 0.02, high: 0.50, unit: "10³/µL", reference_value: "0.02 - 0.50",  loinc: "711-2"
 upsert_ref_rule "MON#",   name: "Monosit Absolut",       result_type: "numeric", low: 0.12, high: 1.20, unit: "10³/µL", reference_value: "0.12 - 1.20",  loinc: "742-7"
-upsert_ref_rule "HCT",    name: "Hematokrit",            result_type: "numeric", low: 37.0, high: 54.0, unit: "%",       reference_value: "37.0 - 54.0",  loinc: "4544-3"
+upsert_ref_rule "HCT",    name: "Hematokrit (Pria)",     result_type: "numeric", low: 41.0, high: 50.0, unit: "%",       reference_value: "41.0 - 50.0",  loinc: "4544-3",  previous_names: ["Hematokrit Pria"],   gender: "male"
+upsert_ref_rule "HCT",    name: "Hematokrit (Wanita)",   result_type: "numeric", low: 36.0, high: 48.0, unit: "%",       reference_value: "36.0 - 48.0",  loinc: "4544-3",  previous_names: ["Hematokrit Wanita"], gender: "female"
 upsert_ref_rule "MPV",    name: "MPV",                   result_type: "numeric", low: 7.0,  high: 11.0, unit: "fL",      reference_value: "7.0 - 11.0",   loinc: "32623-1"
 upsert_ref_rule "PDW",    name: "PDW",                   result_type: "numeric", low: 9.0,  high: 17.0, unit: nil,      reference_value: "9.0 - 17.0",   loinc: "32207-3"
 upsert_ref_rule "PCT",    name: "PCT",                   result_type: "numeric", low: 1.08, high: 2.82, unit: "mL/L",    reference_value: "1.08 - 2.82",  loinc: "10002"
 upsert_ref_rule "PLCC",   name: "PLCC",                  result_type: "numeric", low: 30,   high: 90,   unit: "10⁹/L",  reference_value: "30 - 90",      loinc: "10013"
 upsert_ref_rule "PLCR",   name: "PLCR",                  result_type: "numeric", low: 11.0, high: 45.0, unit: "%",       reference_value: "11.0 - 45.0",  loinc: "10014"
-upsert_ref_rule "WBC",    name: "Lekosit",               result_type: "numeric", low: 3.6,  high: 10.6, unit: "10³/µL", reference_value: "3.6 - 10.6",   loinc: "6690-2",  previous_names: ["Leukosit"]
-upsert_ref_rule "HGB",    name: "Hemoglobin (Pria)",     result_type: "numeric", low: 13.5, high: 18.0, unit: "g/dL",    reference_value: "13.5 - 18.0", loinc: "718-7",  previous_names: ["Hemoglobin Male"],   gender: "male"
-upsert_ref_rule "HGB",    name: "Hemoglobin (Wanita)",   result_type: "numeric", low: 12.0, high: 16.0, unit: "g/dL",    reference_value: "12.0 - 16.0", loinc: "718-7",  previous_names: ["Hemoglobin Female"], gender: "female"
+upsert_ref_rule "WBC",    name: "Lekosit",               result_type: "numeric", low: 4.5,  high: 11.0, unit: "10³/µL", reference_value: "4.5 - 11.0",   loinc: "6690-2",  previous_names: ["Leukosit"]
+upsert_ref_rule "HGB",    name: "Hemoglobin (Pria)",     result_type: "numeric", low: 13.5, high: 17.5, unit: "g/dL",    reference_value: "13.5 - 17.5", loinc: "718-7",  previous_names: ["Hemoglobin Male"],   gender: "male"
+upsert_ref_rule "HGB",    name: "Hemoglobin (Wanita)",   result_type: "numeric", low: 12.0, high: 15.5, unit: "g/dL",    reference_value: "12.0 - 15.5", loinc: "718-7",  previous_names: ["Hemoglobin Female"], gender: "female"
 
 # ── LED ──
 upsert_ref_rule "LED", name: "LED (Pria)",   result_type: "numeric", low: 0, high: 15, unit: "mm/jam", reference_value: "0 - 15",  loinc: "4537-7", gender: "male"
 upsert_ref_rule "LED", name: "LED (Wanita)", result_type: "numeric", low: 0, high: 20, unit: "mm/jam", reference_value: "0 - 20",  loinc: "4537-7", gender: "female"
 
+# ── Hematologi Tambahan (LOINC) ──
+upsert_ref_rule "PHLEBO", name: "Phlebotomi", result_type: "qualitative",
+  allowed: ["Selesai"], normal: ["Selesai"], loinc: "26515-7"
+upsert_ref_rule "RETIC", name: "Retikulosit", result_type: "numeric",
+  low: 0.5, high: 2.5, unit: "%", reference_value: "0.5 - 2.5", loinc: "17849-1"
+upsert_ref_rule "CROSSMATCH", name: "Cross Match", result_type: "qualitative",
+  allowed: ["Compatible (Cocok)", "Incompatible (Tidak Cocok)"],
+  normal: ["Compatible (Cocok)"], abnormal: ["Incompatible (Tidak Cocok)"], loinc: "1250-7"
+upsert_ref_rule "COOMBS-D", name: "Coombs Test Direk", result_type: "qualitative",
+  allowed: %w[Positif Negatif], normal: %w[Negatif], abnormal: %w[Positif], loinc: "1007-4"
+upsert_ref_rule "COOMBS-I", name: "Coombs Test Indirek", result_type: "qualitative",
+  allowed: %w[Positif Negatif], normal: %w[Negatif], abnormal: %w[Positif], loinc: "890-4"
+upsert_ref_rule "VITB12", name: "Vitamin B12", result_type: "numeric",
+  low: 200, high: 900, unit: "pg/mL", reference_value: "200 - 900", loinc: "2132-9"
+upsert_ref_rule "HAMSTEST", name: "Hams Test", result_type: "qualitative",
+  allowed: %w[Positif Negatif], normal: %w[Negatif], abnormal: %w[Positif], loinc: "49019-1"
+upsert_ref_rule "ITRATIO", name: "IT Ratio", result_type: "numeric",
+  high: 0.20, unit: "Rasio", reference_value: "< 0.20", loinc: "30522-7"
+upsert_ref_rule "DIFF",   name: "Hitung Jenis (DIFF)", result_type: "qualitative",
+  allowed: ["Bervariasi per jenis sel"], normal: ["Bervariasi per jenis sel"], loinc: "21232-4"
+
 # ── Golongan Darah ──
 upsert_ref_rule "GOLDAR", name: "Golongan Darah", result_type: "qualitative",
-  allowed: %w[A B AB O], normal: %w[A B AB O]
+  allowed: %w[A B AB O], normal: %w[A B AB O], loinc: "883-9"
 upsert_ref_rule "GOLDAR", name: "Rhesus", result_type: "qualitative",
-  allowed: ["Positif (+)", "Negatif (-)"], normal: ["Positif (+)"], abnormal: ["Negatif (-)"]
+  allowed: ["Positif (+)", "Negatif (-)"], normal: ["Positif (+)"], abnormal: ["Negatif (-)"], loinc: "10331-7"
 
 # ── Gula Darah Sewaktu ──
 upsert_ref_rule "GDS", name: "GULA DARAH SEWAKTU", result_type: "numeric",
@@ -244,6 +297,13 @@ upsert_ref_rule "FUNGSI-H", name: "Bilirubin Total",        result_type: "numeri
 upsert_ref_rule "FUNGSI-H", name: "Albumin",                result_type: "numeric", low: 3.5,high: 5.0, unit: "g/dL",  reference_value: "3.5 - 5.0",loinc: "1751-7"
 upsert_ref_rule "FUNGSI-H", name: "Gamma GT",               result_type: "numeric", low: 8,  high: 61,  unit: "U/L",   reference_value: "8 - 61",   loinc: "2324-2"
 
+  # ── Kimia Klinik Tambahan (LOINC) ──
+upsert_ref_rule "TP",   name: "Total Protein",   result_type: "numeric", low: 6.4,  high: 8.3,  unit: "g/dL", reference_value: "6.4 - 8.3",  loinc: "2885-2"
+upsert_ref_rule "ALB",  name: "Albumin",         result_type: "numeric", low: 3.5,  high: 5.0,  unit: "g/dL", reference_value: "3.5 - 5.0",  loinc: "1751-7"
+upsert_ref_rule "AMY",  name: "Amilase Serum",   result_type: "numeric", low: 30,   high: 110,  unit: "U/L", reference_value: "30 - 110",   loinc: "1798-8"
+upsert_ref_rule "LIP",  name: "Lipase Serum",    result_type: "numeric", low: 10,   high: 140,  unit: "U/L", reference_value: "10 - 140",   loinc: "3040-3"
+upsert_ref_rule "LDH",  name: "Laktat Dehidrogenase", result_type: "numeric", low: 140, high: 280, unit: "U/L", reference_value: "140 - 280", loinc: "2532-0"
+
 # ── Fungsi Ginjal ──
 upsert_ref_rule "CRE", name: "CREATININE (Pria)",   result_type: "numeric", low: 0.7, high: 1.2, unit: "mg/dL", reference_value: "0.7 - 1.2", loinc: "2160-0", previous_names: ["Kreatinin (Pria)", "Adult Male Creatinine"],   gender: "male"
 upsert_ref_rule "CRE", name: "CREATININE (Wanita)", result_type: "numeric", low: 0.5, high: 1.0, unit: "mg/dL", reference_value: "0.5 - 1.0", loinc: "2160-0", previous_names: ["Kreatinin (Wanita)", "Adult Female Creatinine"], gender: "female"
@@ -270,36 +330,82 @@ upsert_ref_rule "HBSAG", name: "HBsAg (Kualitatif)", result_type: "qualitative",
 # ── Urine Lengkap ──
 KUNING_NORMAL = ["Kuning Muda", "Kuning", "Kuning Tua"].freeze
 upsert_ref_rule "URINE-L", name: "Warna",             result_type: "qualitative",
-  allowed: KUNING_NORMAL + ["Merah", "Coklat", "Keruh"], normal: KUNING_NORMAL, abnormal: ["Merah", "Coklat"]
+  allowed: KUNING_NORMAL + ["Merah", "Coklat", "Keruh"], normal: KUNING_NORMAL, abnormal: ["Merah", "Coklat"], loinc: "13481-7"
 upsert_ref_rule "URINE-L", name: "Kejernihan",         result_type: "qualitative",
-  allowed: %w[Jernih Keruh], normal: %w[Jernih], abnormal: %w[Keruh]
-upsert_ref_rule "URINE-L", name: "Berat Jenis",        result_type: "numeric", low: 1.003, high: 1.030, reference_value: "1.003 - 1.030"
-upsert_ref_rule "URINE-L", name: "pH",                 result_type: "numeric", low: 4.5,   high: 8.0,   reference_value: "4.5 - 8"
+  allowed: %w[Jernih Keruh], normal: %w[Jernih], abnormal: %w[Keruh], loinc: "5767-9"
+upsert_ref_rule "URINE-L", name: "Berat Jenis",        result_type: "numeric", low: 1.003, high: 1.030, reference_value: "1.003 - 1.030", loinc: "5812-7"
+upsert_ref_rule "URINE-L", name: "pH",                 result_type: "numeric", low: 4.5,   high: 8.0,   reference_value: "4.5 - 8.0", loinc: "5803-6"
 upsert_ref_rule "URINE-L", name: "Protein",            result_type: "qualitative",
-  allowed: %w[Negatif Positif +1 +2 +3], normal: %w[Negatif], abnormal: %w[Positif +1 +2 +3]
+  allowed: %w[Negatif Positif +1 +2 +3], normal: %w[Negatif], abnormal: %w[Positif +1 +2 +3], loinc: "20454-5"
 upsert_ref_rule "URINE-L", name: "Glukosa",            result_type: "qualitative",
-  allowed: %w[Negatif Positif +1 +2 +3], normal: %w[Negatif], abnormal: %w[Positif +1 +2 +3]
+  allowed: %w[Negatif Positif +1 +2 +3], normal: %w[Negatif], abnormal: %w[Positif +1 +2 +3], loinc: "25428-4"
 upsert_ref_rule "URINE-L", name: "Keton",              result_type: "qualitative",
-  allowed: %w[Negatif Positif +1 +2 +3], normal: %w[Negatif], abnormal: %w[Positif +1 +2 +3]
+  allowed: %w[Negatif Positif +1 +2 +3], normal: %w[Negatif], abnormal: %w[Positif +1 +2 +3], loinc: "2514-8"
 upsert_ref_rule "URINE-L", name: "Bilirubin",          result_type: "qualitative",
-  allowed: %w[Negatif Positif +1 +2 +3], normal: %w[Negatif], abnormal: %w[Positif +1 +2 +3]
+  allowed: %w[Negatif Positif +1 +2 +3], normal: %w[Negatif], abnormal: %w[Positif +1 +2 +3], loinc: "5770-3"
 upsert_ref_rule "URINE-L", name: "Darah",              result_type: "qualitative",
-  allowed: %w[Negatif Positif +1 +2 +3], normal: %w[Negatif], abnormal: %w[Positif +1 +2 +3]
+  allowed: %w[Negatif Positif +1 +2 +3], normal: %w[Negatif], abnormal: %w[Positif +1 +2 +3], loinc: "5794-7"
 upsert_ref_rule "URINE-L", name: "Nitrit",             result_type: "qualitative",
-  allowed: %w[Negatif Positif], normal: %w[Negatif], abnormal: %w[Positif]
-upsert_ref_rule "URINE-L", name: "Urobilinogen",       result_type: "qualitative",
-  allowed: %w[<1 Normal Positif], normal: %w[<1 Normal], reference_value: "< 1 mg/dL, Normal atau Positif"
+  allowed: %w[Negatif Positif], normal: %w[Negatif], abnormal: %w[Positif], loinc: "5797-0"
+upsert_ref_rule "URINE-L", name: "Urobilinogen",       result_type: "numeric",
+  low: 0.2, high: 1.0, unit: "mg/dL", reference_value: "0.2 - 1.0 mg/dL", loinc: "5802-8"
 upsert_ref_rule "URINE-L", name: "Esterase Lekosit",  result_type: "qualitative",
-  allowed: %w[Negatif Positif +1 +2 +3], normal: %w[Negatif], abnormal: %w[Positif +1 +2 +3]
+  allowed: %w[Negatif Positif +1 +2 +3], normal: %w[Negatif], abnormal: %w[Positif +1 +2 +3], loinc: "5799-6"
 
 # ── Sedimen Urine ──
-upsert_ref_rule "URINE-S", name: "Lekosit",  result_type: "numeric",     high: 11, unit: "/uL", reference_value: "< 11"
-upsert_ref_rule "URINE-S", name: "Eritrosit",result_type: "numeric",     high: 16, unit: "/uL", reference_value: "< 16"
-upsert_ref_rule "URINE-S", name: "Epitel",   result_type: "qualitative", allowed: %w[Negatif Positif],                normal: %w[Positif Negatif]
+upsert_ref_rule "URINE-S", name: "Eritrosit Sedimen", result_type: "numeric", high: 2, unit: "/LPB (hpf)", reference_value: "0 - 2", loinc: "5811-9"
+upsert_ref_rule "URINE-S", name: "Leukosit Sedimen",  result_type: "numeric", high: 5, unit: "/LPB (hpf)", reference_value: "0 - 5", loinc: "5821-8"
+upsert_ref_rule "URINE-S", name: "Epitel Sel",        result_type: "qualitative",
+  allowed: ["Negatif", "Positif (+) Rendah", "Positif (+) Sedang", "Positif (+) Tinggi"],
+  normal: ["Negatif", "Positif (+) Rendah"],
+  abnormal: ["Positif (+) Sedang", "Positif (+) Tinggi"], loinc: "5788-5"
 upsert_ref_rule "URINE-S", name: "Silinder", result_type: "qualitative", allowed: %w[Negatif Positif], normal: %w[Negatif], abnormal: %w[Positif]
 upsert_ref_rule "URINE-S", name: "Kristal",  result_type: "qualitative", allowed: %w[Negatif Positif], normal: %w[Negatif], abnormal: %w[Positif]
 upsert_ref_rule "URINE-S", name: "Jamur",    result_type: "qualitative", allowed: %w[Negatif Positif], normal: %w[Negatif], abnormal: %w[Positif]
 upsert_ref_rule "URINE-S", name: "Bakteri",  result_type: "qualitative", allowed: %w[Negatif Positif], normal: %w[Negatif], abnormal: %w[Positif]
+
+# ── Faeces Lengkap (LOINC) ──
+upsert_ref_rule "FAECES", name: "Warna",                result_type: "qualitative",
+  allowed: ["Cokelat", "Kuning", "Hijau", "Hitam", "Merah", "Pucat"],
+  normal: ["Cokelat"], abnormal: ["Hitam", "Merah", "Pucat"], loinc: "9397-5"
+upsert_ref_rule "FAECES", name: "Konsistensi",          result_type: "qualitative",
+  allowed: ["Lunak / Berbentuk", "Cair", "Keras", "Lembek", "Berdarah"],
+  normal: ["Lunak / Berbentuk"], abnormal: ["Cair", "Keras", "Berdarah"], loinc: "48021-0"
+upsert_ref_rule "FAECES", name: "Lendir",               result_type: "qualitative",
+  allowed: %w[Negatif Positif], normal: %w[Negatif], abnormal: %w[Positif], loinc: "43398-7"
+upsert_ref_rule "FAECES", name: "Darah Makroskopis",    result_type: "qualitative",
+  allowed: %w[Negatif Positif], normal: %w[Negatif], abnormal: %w[Positif], loinc: "14725-6"
+upsert_ref_rule "FAECES", name: "Eritrosit Mikroskopis",result_type: "numeric", high: 1, unit: "/LPB", reference_value: "0 - 1", loinc: "19005-8"
+upsert_ref_rule "FAECES", name: "Leukosit Mikroskopis", result_type: "numeric", high: 1, unit: "/LPB", reference_value: "0 - 1", loinc: "6762-9"
+upsert_ref_rule "FAECES", name: "Amoeba / Parasit",     result_type: "qualitative",
+  allowed: %w[Negatif Positif], normal: %w[Negatif], abnormal: %w[Positif], loinc: "10701-1"
+upsert_ref_rule "FAECES", name: "Telur Cacing",         result_type: "qualitative",
+  allowed: %w[Negatif Positif], normal: %w[Negatif], abnormal: %w[Positif], loinc: "10703-7"
+upsert_ref_rule "FAECES", name: "Darah Samar",          result_type: "qualitative",
+  allowed: %w[Negatif Positif], normal: %w[Negatif], abnormal: %w[Positif], loinc: "29771-3"
+
+# ── Mikrobiologi (LOINC) ──
+upsert_ref_rule "GRAM",   name: "Pewarnaan Gram",         result_type: "qualitative",
+  allowed: ["Flora Normal", "Tidak ditemukan bakteri", "Bakteri Gram Positif", "Bakteri Gram Negatif"],
+  normal: ["Flora Normal", "Tidak ditemukan bakteri"],
+  abnormal: ["Bakteri Gram Positif", "Bakteri Gram Negatif"], loinc: "664-3"
+upsert_ref_rule "BTA",    name: "Pewarnaan BTA",          result_type: "qualitative",
+  allowed: %w[Negatif Positif], normal: %w[Negatif], abnormal: %w[Positif], loinc: "11545-1"
+upsert_ref_rule "KULTUR", name: "Kultur & Sensitivitas",  result_type: "text",
+  reference_value: "Tidak ada pertumbuhan kuman patogen", loinc: "632-4"
+upsert_ref_rule "KOH",    name: "Pewarnaan Jamur (KOH)",  result_type: "qualitative",
+  allowed: ["Negatif", "Positif (+) Hifa", "Positif (+) Spora", "Positif (+) Pseudohifa"],
+  normal: ["Negatif"], abnormal: ["Positif (+) Hifa", "Positif (+) Spora", "Positif (+) Pseudohifa"], loinc: "625-8"
+
+# ── Patologi Anatomi (LOINC) ──
+upsert_ref_rule "HPA",      name: "Histopatologi (Biopsi)",  result_type: "text",
+  reference_value: "Jinak (Benigna) / Tidak ditemukan keganasan", loinc: "49015-9"
+upsert_ref_rule "SITOLOGI", name: "Sitologi Non-Ginekologi", result_type: "text",
+  reference_value: "Negatif untuk keganasan", loinc: "33717-0"
+upsert_ref_rule "FNAB",     name: "Fine Needle Aspiration",  result_type: "text",
+  reference_value: "Interpretasi sitologi sel aspirat", loinc: "44835-7"
+upsert_ref_rule "PAP",      name: "Pap Smear",               result_type: "text",
+  reference_value: "NILM (Negative for Intraepithelial Lesion or Malignancy)", loinc: "10524-7"
 
 # ── Source reference rules for computed values (must exist before formula can fire) ──
 upsert_ref_rule "LYM#",      name: "Limfosit Absolut", result_type: "numeric", low: 1.0, high: 4.0,  unit: "10^3/µL", reference_value: "1.0 - 4.0"
@@ -308,8 +414,6 @@ upsert_ref_rule "TG",        name: "Trigliserida",     result_type: "numeric", l
 upsert_ref_rule "HDL",       name: "HDL",              result_type: "numeric", low: 40,  high: 999,  unit: "mg/dL",   reference_value: "> 40"
 upsert_ref_rule "TOT_BIL",   name: "Bilirubin Total",  result_type: "numeric", low: 0.0, high: 1.2,  unit: "mg/dL",   reference_value: "0.0 - 1.2"
 upsert_ref_rule "DIREK_BIL", name: "Bilirubin Direk",  result_type: "numeric", low: 0.0, high: 0.3,  unit: "mg/dL",   reference_value: "0.0 - 0.3"
-upsert_ref_rule "TP",        name: "Total Protein",    result_type: "numeric", low: 6.0, high: 8.3,  unit: "g/dL",    reference_value: "6.0 - 8.3"
-upsert_ref_rule "ALB",       name: "Albumin",          result_type: "numeric", low: 3.5, high: 5.0,  unit: "g/dL",    reference_value: "3.5 - 5.0"
 
 # ── Computed reference rules (auto-fill from sibling results) ──
 upsert_ref_rule "NLR",        name: "NLR",                result_type: "numeric", low: 1.0,  high: 3.0,  reference_value: "1.0 - 3.0",
@@ -321,7 +425,7 @@ upsert_ref_rule "CHOL-RATIO", name: "Cholesterol Ratio",  result_type: "numeric"
 upsert_ref_rule "INDIREK",    name: "Bilirubin Indirek",  result_type: "numeric", low: 0.0,  high: 1.1,  unit: "mg/dL", reference_value: "0.0 - 1.1",
                              formula_expression: "TOT_BIL - DIREK_BIL",     formula_inputs: [{ "code" => "TOT_BIL" }, { "code" => "DIREK_BIL" }]
 upsert_ref_rule "GLOB",       name: "Globulin",           result_type: "numeric", low: 2.0,  high: 3.5,  unit: "g/dL", reference_value: "2.0 - 3.5",
-                             formula_expression: "TP - ALB",                formula_inputs: [{ "code" => "TP" }, { "code" => "ALB" }]
+                             formula_expression: "TP - ALB",                formula_inputs: [{ "code" => "TP" }, { "code" => "ALB" }], loinc: "2336-6"
 
 puts "  ✅ #{ReferenceRule.count} reference rules seeded"
 
