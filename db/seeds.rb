@@ -41,7 +41,7 @@ puts "🔬 Creating examinations..."
 # One examination per analyzer row/test.
 # label_group → examinations sharing one barcode label.
 # category    → report grouping (header in print report).
-darah_lengkap_codes = %w[RDW-CV RDW-SD MONO LYMPH SEG BAND EOS BASO MCHC MCH MCV RBC PLT HCT WBC HGB BAS# NEU# EOS# MON# MPV PDW PCT PLCC PLCR].freeze
+darah_lengkap_codes = %w[RDW-CV RDW-SD MONO LYMPH SEG BAND EOS BASO MCHC MCH MCV RBC PLT HCT WBC HGB BAS# NEU# EOS# MON# LYM# MPV PDW PCT PLCC PLCR].freeze
 elektrolit_codes = %w[CL K NA].freeze
 fungsi_ginjal_codes = %w[CRE UR].freeze
 
@@ -124,7 +124,7 @@ examinations_data = [
   { code: "PAP",        name: "Pap Smear",               category: "PATOLOGI ANATOMI", label_group: nil,          specimen_type: "Sekret Serviks", default_result_type: "text",     default_unit: nil      },
 
   # ── Computed source examinations (referenced by formula rules below) ──
-  { code: "LYM#",       name: "Limfosit Absolut",      category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "10^3/µL" },
+  { code: "LYM#",       name: "Limfosit Absolut",      category: "HEMATOLOGI",    label_group: "Darah Lengkap",   specimen_type: "Darah EDTA",  default_result_type: "numeric",     default_unit: "10³/µL" },
   { code: "CHOL",       name: "Cholesterol Total",     category: "KIMIA KLINIK",  label_group: "Profil Lemak",    specimen_type: "Darah Beku",  default_result_type: "numeric",     default_unit: "mg/dL"  },
   { code: "TG",         name: "Trigliserida",          category: "KIMIA KLINIK",  label_group: "Profil Lemak",    specimen_type: "Darah Beku",  default_result_type: "numeric",     default_unit: "mg/dL"  },
   { code: "HDL",        name: "HDL Cholesterol",       category: "KIMIA KLINIK",  label_group: "Profil Lemak",    specimen_type: "Darah Beku",  default_result_type: "numeric",     default_unit: "mg/dL"  },
@@ -408,7 +408,7 @@ upsert_ref_rule "PAP",      name: "Pap Smear",               result_type: "text"
   reference_value: "NILM (Negative for Intraepithelial Lesion or Malignancy)", loinc: "10524-7"
 
 # ── Source reference rules for computed values (must exist before formula can fire) ──
-upsert_ref_rule "LYM#",      name: "Limfosit Absolut", result_type: "numeric", low: 1.0, high: 4.0,  unit: "10^3/µL", reference_value: "1.0 - 4.0"
+upsert_ref_rule "LYM#",      name: "Limfosit Absolut", result_type: "numeric", low: 1.0, high: 4.0,  unit: "10³/µL", reference_value: "1.0 - 4.0"
 upsert_ref_rule "CHOL",      name: "Cholesterol",      result_type: "numeric", low: 0,   high: 200,  unit: "mg/dL",   reference_value: "< 200"
 upsert_ref_rule "TG",        name: "Trigliserida",     result_type: "numeric", low: 0,   high: 150,  unit: "mg/dL",   reference_value: "< 150"
 upsert_ref_rule "HDL",       name: "HDL",              result_type: "numeric", low: 40,  high: 999,  unit: "mg/dL",   reference_value: "> 40"
@@ -483,6 +483,11 @@ if Specimen.count < 5
   ]
 
   sample_patients.each do |data|
+    if Specimen.exists?(patient_id: data[:patient_id])
+      puts "  ⏭️  #{data[:patient_name]} sudah ada, skip"
+      next
+    end
+
     result = Specimens::CreateService.call(
       patient_id:          data[:patient_id],
       patient_name:        data[:patient_name],
@@ -606,11 +611,13 @@ def default_value_for(rule)
 end
 
 complete_patient_id = "P-99999"
-if Specimen.find_by(patient_id: complete_patient_id).nil?
-  supervisor_user = User.find_by!(email: "supervisor@lisa.local")
-  tech1_user      = User.find_by!(email: "tech1@lisa.local")
-  all_exam_ids    = Examination.active.pluck(:id)
+supervisor_user = User.find_by!(email: "supervisor@lisa.local")
+tech1_user      = User.find_by!(email: "tech1@lisa.local")
+all_exam_ids    = Examination.active.pluck(:id)
 
+complete_specimen = Specimen.find_by(patient_id: complete_patient_id)
+
+if complete_specimen.nil?
   create_result = Specimens::CreateService.call(
     patient_id:          complete_patient_id,
     patient_name:        "Lengkap Sari (Demo Complete)",
@@ -627,42 +634,50 @@ if Specimen.find_by(patient_id: complete_patient_id).nil?
 
   if create_result.success?
     complete_specimen = create_result.specimen
-    works = complete_specimen.works.includes(:examination, examination_results: :reference_rule).to_a
-
-    works.each do |work|
-      exam = work.examination
-      enum_gender = ReferenceRule.specimen_gender_to_enum(complete_specimen.gender)
-      rules = exam.reference_rules.select { |r| r.gender.nil? || r.gender.to_s == enum_gender.to_s }
-      chosen = rules.empty? ? exam.reference_rules.to_a : rules
-
-      chosen.each do |rule|
-        next if rule.formula_expression.present?
-        next if work.examination_results.exists?(reference_rule_id: rule.id)
-
-        ExaminationResult.create!(
-          work:             work,
-          reference_rule:   rule,
-          result_value:     default_value_for(rule),
-          result_unit:      rule.unit,
-          source:           "manual",
-          entered_by:       tech1_user.id,
-          verified_by:      supervisor_user.id,
-          verified_at:      Time.current
-        )
-      end
-
-      work.update!(status: Work.statuses[:validated], validated_at: Time.current, verified_at: Time.current) if work.pending?
-      work.reload
-      work.update!(status: Work.statuses[:verified], verified_at: Time.current) unless work.verified?
-    end
-
-    complete_specimen.update!(status: Specimen.statuses[:complete])
-    puts "  ✅ Specimen #{complete_specimen.order_number} complete (#{works.size} works, all verified)"
   else
     puts "  ⚠️  Gagal membuat complete specimen: #{create_result.errors.join(', ')}"
   end
-else
-  puts "  ⏭️  Complete specimen sudah ada, skip"
+end
+
+if complete_specimen
+  works = complete_specimen.works.includes(:examination, examination_results: :reference_rule).to_a
+
+  works.each do |work|
+    exam = work.examination
+    enum_gender = ReferenceRule.specimen_gender_to_enum(complete_specimen.gender)
+
+    grouped_exams = if exam.label_group.present?
+      Examination.where(label_group: exam.label_group)
+    else
+      Examination.where(id: exam.id)
+    end
+
+    rules = grouped_exams.flat_map(&:reference_rules).select { |r| r.gender.nil? || r.gender.to_s == enum_gender.to_s }
+    chosen = rules.empty? ? grouped_exams.flat_map(&:reference_rules) : rules
+
+    chosen.each do |rule|
+      next if rule.formula_expression.present?
+      next if work.examination_results.exists?(reference_rule_id: rule.id)
+
+      ExaminationResult.create!(
+        work:             work,
+        reference_rule:   rule,
+        result_value:     default_value_for(rule),
+        result_unit:      rule.unit,
+        source:           "manual",
+        entered_by:       tech1_user.id,
+        verified_by:      supervisor_user.id,
+        verified_at:      Time.current
+      )
+    end
+
+    work.update!(status: Work.statuses[:validated], validated_at: Time.current, verified_at: Time.current) if work.pending?
+    work.reload
+    work.update!(status: Work.statuses[:verified], verified_at: Time.current) unless work.verified?
+  end
+
+  complete_specimen.update!(status: Specimen.statuses[:complete])
+  puts "  ✅ Specimen #{complete_specimen.order_number} complete (#{works.size} works, all verified)"
 end
 
 puts ""
