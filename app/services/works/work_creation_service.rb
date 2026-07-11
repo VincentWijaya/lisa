@@ -1,12 +1,13 @@
 module Works
   class WorkCreationService
-    def self.call(specimen:, examinations:)
-      new(specimen: specimen, examinations: examinations).call
+    def self.call(specimen:, examinations:, manual_input: false)
+      new(specimen: specimen, examinations: examinations, manual_input: manual_input).call
     end
 
-    def initialize(specimen:, examinations:)
+    def initialize(specimen:, examinations:, manual_input: false)
       @specimen = specimen
       @examinations = Array(examinations)
+      @manual_input = manual_input
       @errors = []
     end
 
@@ -18,7 +19,8 @@ module Works
         Works::BarcodeGenerator.new(
           specimen: specimen,
           examinations: grouped_examinations,
-          label_sequence: index + 1
+          label_sequence: index + 1,
+          manual_input: manual_input
         ).create!
       end
 
@@ -29,7 +31,7 @@ module Works
 
     private
 
-    attr_reader :specimen, :examinations, :errors
+    attr_reader :specimen, :examinations, :manual_input, :errors
 
     def grouped_examinations
       @grouped_examinations ||= examinations.each_with_object({}) do |examination, groups|

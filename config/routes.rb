@@ -51,7 +51,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :specimens, only: [:index, :show, :update] do
+  resources :specimens, only: [:index, :show, :new, :create, :update] do
     member do
       get :barcode_labels
       get :print_report

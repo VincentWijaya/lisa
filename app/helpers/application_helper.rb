@@ -1,4 +1,8 @@
 module ApplicationHelper
+  def text_field_classes
+    "block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+  end
+
   def action_icon_link(label, url, icon:, tone: :secondary, **html_options)
     html_options[:class] = [action_icon_button_classes(tone), html_options[:class]].compact.join(" ")
     html_options[:title] = label
