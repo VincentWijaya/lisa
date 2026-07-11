@@ -10,14 +10,15 @@ class ExaminationDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
     code: Field::String,
-    default_result_type: Field::String,
-    default_unit: Field::String,
+    name: Field::String,
+    category: Field::String,
     description: Field::Text,
     label_group: Field::String,
-    name: Field::String,
-    reference_rules: Field::HasMany,
     specimen_type: Field::String,
+    default_result_type: Field::Select.with_options(searchable: false, collection: %w[numeric qualitative text]),
+    default_unit: Field::String,
     status: Field::Select.with_options(searchable: false, collection: ->(field) { field.resource.class.send(field.attribute.to_s.pluralize).keys }),
+    reference_rules: Field::HasMany,
     works: Field::HasMany,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
@@ -42,14 +43,15 @@ class ExaminationDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = %i[
     id
     code
-    default_result_type
-    default_unit
+    name
+    category
     description
     label_group
-    name
-    reference_rules
     specimen_type
+    default_result_type
+    default_unit
     status
+    reference_rules
     created_at
     updated_at
   ].freeze
@@ -59,13 +61,13 @@ class ExaminationDashboard < Administrate::BaseDashboard
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = %i[
     code
-    default_result_type
-    default_unit
+    name
+    category
     description
     label_group
-    name
-    reference_rules
     specimen_type
+    default_result_type
+    default_unit
     status
   ].freeze
 
