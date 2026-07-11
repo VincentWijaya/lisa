@@ -272,6 +272,7 @@ en:
       ai_summary_section: "AI Summary"
       ai_summary_placeholder: "Write or paste an AI-generated summary for this specimen…"
       ai_summary_save: "Save summary"
+      ai_summary_generate: "Generate with AI"
       fields:
         patient_id: "Patient ID"
         medical_record: "Medical Record"

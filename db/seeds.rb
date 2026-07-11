@@ -579,6 +579,92 @@ if ExaminationResult.count < 5
 end
 
 puts "  ✅ #{ExaminationResult.count} examination results seeded"
+
+# ─── Complete Specimen (all examinations, verified) ────────────────────────────
+
+puts "🏁 Creating one complete specimen (all exams, all verified)..."
+
+def default_value_for(rule)
+  case rule.result_type
+  when "numeric"
+    if rule.numeric_low_value.present? && rule.numeric_high_value.present?
+      ((rule.numeric_low_value + rule.numeric_high_value) / 2.0).round(2).to_s
+    elsif rule.numeric_low_value.present?
+      (rule.numeric_low_value + 0.1).round(2).to_s
+    elsif rule.numeric_high_value.present?
+      (rule.numeric_high_value - 0.1).round(2).to_s
+    else
+      "0"
+    end
+  when "qualitative"
+    Array(rule.normal_values).first.presence || Array(rule.allowed_values).first.presence || "Negatif"
+  when "text"
+    rule.reference_value.presence || "Normal"
+  else
+    "-"
+  end
+end
+
+complete_patient_id = "P-99999"
+if Specimen.find_by(patient_id: complete_patient_id).nil?
+  supervisor_user = User.find_by!(email: "supervisor@lisa.local")
+  tech1_user      = User.find_by!(email: "tech1@lisa.local")
+  all_exam_ids    = Examination.active.pluck(:id)
+
+  create_result = Specimens::CreateService.call(
+    patient_id:          complete_patient_id,
+    patient_name:        "Lengkap Sari (Demo Complete)",
+    birth_date:          "1980-06-15",
+    gender:              "Laki-laki",
+    medical_record_id:   "RM-COMPLETE-001",
+    lab_id:              "LAB-01",
+    department:          "Penyakit Dalam",
+    referring_doctor:    "dr. Andi Kusuma, Sp.PD",
+    dianognes:           "Pemeriksaan laboratorium lengkap (medical check-up)",
+    collection_datetime: Time.current,
+    examination_ids:     all_exam_ids
+  )
+
+  if create_result.success?
+    complete_specimen = create_result.specimen
+    works = complete_specimen.works.includes(:examination, examination_results: :reference_rule).to_a
+
+    works.each do |work|
+      exam = work.examination
+      enum_gender = ReferenceRule.specimen_gender_to_enum(complete_specimen.gender)
+      rules = exam.reference_rules.select { |r| r.gender.nil? || r.gender.to_s == enum_gender.to_s }
+      chosen = rules.empty? ? exam.reference_rules.to_a : rules
+
+      chosen.each do |rule|
+        next if rule.formula_expression.present?
+        next if work.examination_results.exists?(reference_rule_id: rule.id)
+
+        ExaminationResult.create!(
+          work:             work,
+          reference_rule:   rule,
+          result_value:     default_value_for(rule),
+          result_unit:      rule.unit,
+          source:           "manual",
+          entered_by:       tech1_user.id,
+          verified_by:      supervisor_user.id,
+          verified_at:      Time.current
+        )
+      end
+
+      work.update!(status: Work.statuses[:validated], validated_at: Time.current, verified_at: Time.current) if work.pending?
+      work.reload
+      work.update!(status: Work.statuses[:verified], verified_at: Time.current) unless work.verified?
+    end
+
+    complete_specimen.update!(status: Specimen.statuses[:complete])
+    puts "  ✅ Specimen #{complete_specimen.order_number} complete (#{works.size} works, all verified)"
+  else
+    puts "  ⚠️  Gagal membuat complete specimen: #{create_result.errors.join(', ')}"
+  end
+else
+  puts "  ⏭️  Complete specimen sudah ada, skip"
+end
+
 puts ""
 puts "✅ Seeding selesai!"
 puts ""
