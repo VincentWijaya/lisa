@@ -82,17 +82,42 @@ en:
   dashboard:
     title: "Laboratory Dashboard"
     subtitle: "Monitor specimen intake, work progress, and barcode printing."
+    date_label: "Select date"
+    date_range_from: "From"
+    date_range_to: "To"
+    date_range_apply: "Apply"
+    date_range_reset: "Reset"
     cards:
-      specimens: "Specimens"
-      pending_works: "Pending Works"
-      validated_works: "Verified Works"
-      verified_works: "Validated Works"
+      pending_specimens: "Pending Specimens"
+      pending_specimens_sub: "2% more than 1 day ago"
+      in_progress_specimens: "Specimens In Progress"
+      in_progress_specimens_sub: "%{count} completed"
+      verified_works: "Verified Works"
+      verified_works_sub: "out of %{count} total works"
+      validated_works: "Validated Works"
+      validated_works_sub: "8.5% validated from yesterday"
+      blood_expiry: "Blood Expiring Within 3 Days"
+      blood_expiry_sub: "out of %{count} total units"
+      qc_report: "QC Report"
+      qc_report_sub: "total units"
     recent_works:
       title: "Recent Works"
       view_all: "View all"
+      empty: "No works yet"
     recent_specimens:
-      title: "Recent Specimens"
+      title: "Pending Specimens"
       view_all: "View all"
+      empty: "No pending specimens"
+    processing_chart:
+      title: "Pending Processing Time Per Department"
+      legend_0_30: "0-30 min"
+      legend_31_60: "31-60 min"
+      legend_gt_60: ">60 min"
+    time_stats:
+      title: "Time Statistics"
+      avg_tat: "Overall average TAT"
+      tat_ratio: "Average TAT statistic"
+      target: "Target (Routine)"
 
   works:
     index:

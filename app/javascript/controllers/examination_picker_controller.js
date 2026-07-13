@@ -72,15 +72,15 @@ export default class extends Controller {
     }
 
     const parts = [
-      this.summaryValue("selection_count", count: checked, total: total)
+      this.summaryValue("selection_count", { count: checked, total: total })
     ]
     if (groups.size > 0) {
-      parts.push(this.summaryValue("selection_groups", count: groups.size))
+      parts.push(this.summaryValue("selection_groups", { count: groups.size }))
     }
     this.summaryTarget.textContent = parts.join(" • ")
   }
 
-  summaryValue(key, **vars) {
+  summaryValue(key, vars = {}) {
     const value = this.summaryTarget.dataset[`summary${key.charAt(0).toUpperCase() + key.slice(1)}`]
     if (!value) return ""
     return value.replace(/%\{(\w+)\}/g, (_, name) => vars[name] || "")

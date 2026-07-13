@@ -33,6 +33,13 @@ class Work < ApplicationRecord
   scope :verified,  -> { where(status: :verified) }
   scope :cancelled, -> { where(status: :cancelled) }
   scope :with_details, -> { includes(:specimen, :examination, :examination_results) }
+  scope :for_date,  ->(date) { date ? where(created_at: date.all_day) : all }
+  scope :for_range, ->(start_date, end_date) {
+    rel = all
+    rel = rel.where("created_at >= ?", start_date.beginning_of_day) if start_date
+    rel = rel.where("created_at <= ?",   end_date.end_of_day)     if end_date
+    rel
+  }
   scope :filter_by_status, ->(value) { value.present? ? where(status: value) : all }
   scope :search, ->(query) {
     next all if query.blank?

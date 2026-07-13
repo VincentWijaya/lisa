@@ -231,17 +231,42 @@ id:
   dashboard:
     title: "Dasbor Laboratorium"
     subtitle: "Pantau penerimaan spesimen, progres pekerjaan, dan pencetakan barcode."
+    date_label: "Pilih tanggal"
+    date_range_from: "Dari"
+    date_range_to: "Sampai"
+    date_range_apply: "Terapkan"
+    date_range_reset: "Reset"
     cards:
-      specimens: "Spesimen"
-      pending_works: "Pekerjaan Menunggu"
-      validated_works: "Pekerjaan Terverifikasi"
-      verified_works: "Pekerjaan Tervalidasi"
+      pending_specimens: "Spesimen Tertunda"
+      pending_specimens_sub: "2% lebih banyak dari 1 hari lalu"
+      in_progress_specimens: "Spesimen Dalam Proses"
+      in_progress_specimens_sub: "%{count} selesai"
+      verified_works: "Pekerjaan Terverifikasi"
+      verified_works_sub: "dari total %{count} pekerjaan"
+      validated_works: "Pekerjaan Tervalidasi"
+      validated_works_sub: "8.5% tervalidasi dari kemarin"
+      blood_expiry: "Darah Kadaluarsa Dalam 3 Hari"
+      blood_expiry_sub: "dari %{count} total unit"
+      qc_report: "Laporan QC"
+      qc_report_sub: "total unit"
     recent_works:
       title: "Pekerjaan Terbaru"
       view_all: "Lihat semua"
+      empty: "Belum ada pekerjaan"
     recent_specimens:
-      title: "Spesimen Terbaru"
+      title: "Spesimen Tertunda"
       view_all: "Lihat semua"
+      empty: "Belum ada spesimen"
+    processing_chart:
+      title: "Waktu Pemrosesan Per Departemen Tertunda"
+      legend_0_30: "0-30 menit"
+      legend_31_60: "31-60 menit"
+      legend_gt_60: ">60 menit"
+    time_stats:
+      title: "Statistik Waktu"
+      avg_tat: "Rata2 TAT keseluruhan"
+      tat_ratio: "Statistik rata2 TAT"
+      target: "Target (Rutin)"
 
   # ── Works ─────────────────────────────────────────────────────────────────────
   works:

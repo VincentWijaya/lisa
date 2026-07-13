@@ -1,4 +1,24 @@
 module SpecimensHelper
+  def specimen_gender_key(gender)
+    g = gender.to_s.downcase.strip
+    case g
+    when "laki-laki", "laki laki", "male", "m", "pria"
+      "male"
+    when "perempuan", "female", "f", "wanita"
+      "female"
+    else
+      g
+    end
+  end
+
+  def specimen_gender_icon(gender)
+    if specimen_gender_key(gender) == "female"
+      %(<circle cx="12" cy="9" r="6"/><path d="M12 15v6"/><path d="M9 18h6"/>).html_safe
+    else
+      %(<circle cx="10" cy="14" r="6"/><path d="M14 10l6-6"/><path d="M16 4h4v4"/>).html_safe
+    end
+  end
+
   def specimen_status_classes(status)
     case status
     when "complete" then "bg-[#cefde3] text-[#2f6740]"
