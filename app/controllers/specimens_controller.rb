@@ -1,6 +1,6 @@
 class SpecimensController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_specimen, only: %i[show update barcode_labels print_report send_report send_report_form]
+  before_action :set_specimen, only: %i[show update barcode_labels print_report send_report send_report_form generate_ai_summary]
 
   def index
     scope = Specimen.with_works
@@ -82,6 +82,17 @@ class SpecimensController < ApplicationController
     SpecimenReportJob.perform_later(@specimen.id, email)
     redirect_to specimens_path, notice: t("specimens.flash.report_sent", email: email)
   end
+
+  def generate_ai_summary
+    result = Specimens::AiSummaryService.call(@specimen)
+
+    if result.success?
+      redirect_to specimen_path(@specimen), notice: t("specimens.flash.ai_summary_generated")
+    else
+      redirect_to specimen_path(@specimen), alert: result.errors.to_sentence
+    end
+  end
+
   private
 
   # Keep only the latest result per reference rule (skip empty values),

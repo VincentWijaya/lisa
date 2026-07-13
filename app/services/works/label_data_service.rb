@@ -20,7 +20,7 @@ module Works
         ageYears: specimen.age_in_years,
         gender: specimen.gender,
         birthDate: formatted_birth_date,
-        testCodesText: work.examination&.category,
+        testCodesText: "#{work.examination&.category} - #{work.examination&.label_group.presence || work.examination&.code}",
         department: specimen.department
       }
     end

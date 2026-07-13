@@ -57,6 +57,7 @@ Rails.application.routes.draw do
       get :print_report
       get :send_report_form
       post :send_report
+      post :generate_ai_summary
     end
   end
 

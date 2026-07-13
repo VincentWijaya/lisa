@@ -422,6 +422,7 @@ id:
       ai_summary_section: "Ringkasan AI"
       ai_summary_placeholder: "Tulis atau tempel ringkasan hasil AI untuk spesimen ini…"
       ai_summary_save: "Perbarui ringkasan"
+      ai_summary_generate: "Generate dengan AI"
       fields:
         patient_id: "ID Pasien"
         medical_record: "No. Rekam Medis"
@@ -454,6 +455,7 @@ id:
       report_sent: "Laporan akan dikirim ke %{email}"
       invalid_email: "Alamat email tidak valid"
       summary_saved: "Ringkasan AI berhasil disimpan."
+      ai_summary_generated: "Ringkasan AI berhasil dibuat."
       created: "Spesimen berhasil dibuat."
     status:
       pending: "Menunggu"
