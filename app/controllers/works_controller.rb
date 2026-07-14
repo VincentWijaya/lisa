@@ -1,6 +1,6 @@
 class WorksController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_work, only: %i[show update validate_work verify_work cancel_work barcode_label add_result upsert_results scan_validate]
+  before_action :set_work, only: %i[show update validate_work verify_work cancel_work barcode_label add_result upsert_results scan_validate generate_ai_summary]
 
   def index
     scope = Work.with_details
@@ -89,6 +89,16 @@ class WorksController < ApplicationController
 
     if result.success?
       redirect_to work_path(@work), notice: t("works.flash.results_saved")
+    else
+      redirect_to work_path(@work), alert: result.errors.to_sentence
+    end
+  end
+
+  def generate_ai_summary
+    result = Works::AiSummaryService.call(@work)
+
+    if result.success?
+      redirect_to work_path(@work), notice: t("works.flash.ai_summary_generated")
     else
       redirect_to work_path(@work), alert: result.errors.to_sentence
     end

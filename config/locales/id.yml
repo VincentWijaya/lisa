@@ -272,6 +272,7 @@ id:
       ai_summary_section: "Ringkasan AI"
       ai_summary_placeholder: "Tulis atau tempel ringkasan hasil AI untuk pekerjaan ini…"
       ai_summary_save: "Simpan ringkasan"
+      ai_summary_generate: "Generate dengan AI"
       fields:
         patient: "Pasien"
         patient_id: "ID Pasien"

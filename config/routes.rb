@@ -43,6 +43,7 @@ Rails.application.routes.draw do
       post :add_result
       post :upsert_results
       post :scan_validate
+      post :generate_ai_summary
     end
     resources :examination_results, only: [:update, :destroy], module: :works do
       member do

@@ -123,6 +123,7 @@ en:
       ai_summary_section: "AI Summary"
       ai_summary_placeholder: "Write or paste an AI-generated summary for this work…"
       ai_summary_save: "Save summary"
+      ai_summary_generate: "Generate with AI"
       fields:
         patient: "Patient"
         patient_id: "Patient ID"
@@ -178,6 +179,7 @@ en:
       result_verified: "Result validated successfully."
       barcode_mismatch: "Scanned barcode '%{scanned}' does not match this work (%{expected})."
       summary_saved: "AI summary saved."
+      ai_summary_generated: "AI summary generated."
       work_not_pending: "This work cannot be verified — current status is '%{status}'."
     scan_modal:
       title: "Scan Barcode to Verify"
