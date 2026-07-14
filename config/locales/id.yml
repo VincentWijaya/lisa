@@ -262,11 +262,14 @@ id:
       legend_0_30: "0-30 menit"
       legend_31_60: "31-60 menit"
       legend_gt_60: ">60 menit"
+      empty: "Belum ada pekerjaan tertunda"
     time_stats:
       title: "Statistik Waktu"
       avg_tat: "Rata2 TAT keseluruhan"
       tat_ratio: "Statistik rata2 TAT"
       target: "Target (Rutin)"
+      unit_minutes: "menit"
+      empty_value: "-"
 
   # ── Works ─────────────────────────────────────────────────────────────────────
   works:

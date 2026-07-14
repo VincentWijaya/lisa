@@ -11,6 +11,12 @@ class DashboardController < ApplicationController
       build_stats(@start_date, @end_date)
     end
 
+    processing = Rails.cache.fetch(cache_key_for(@start_date, @end_date, "processing"), expires_in: STATS_TTL) do
+      Dashboard::ProcessingTimeService.call(start_date: @start_date, end_date: @end_date)
+    end
+    @processing_chart = processing[:chart]
+    @time_stats      = build_time_stats(processing[:stats])
+
     @summary_cards = [
       {
         title:    t("dashboard.cards.pending_specimens"),
@@ -66,22 +72,8 @@ class DashboardController < ApplicationController
                         .order(created_at: :desc)
                         .limit(5)
 
-    # Mock data: bar chart per department (Waktu Pemrosesan)
-    @processing_chart = {
-      labels: [ "Hematologi", "Kimia Klinik", "Mikrobiologi", "Bank Darah", "Patologi" ],
-      series: {
-        lt_30:  [ 30, 32, 28, 33, 29 ],
-        mid:    [ 55, 53, 56, 52, 54 ],
-        gt_60:  [ 100, 100, 100, 100, 100 ]
-      }
-    }
-
-    # Mock data: Statistik Waktu sidebar
-    @time_stats = [
-      { value: "54 menit",  tone: "emerald", label: t("dashboard.time_stats.avg_tat") },
-      { value: "50%",       tone: "emerald", label: t("dashboard.time_stats.tat_ratio") },
-      { value: "<61 menit", tone: "dark",    label: t("dashboard.time_stats.target") }
-    ]
+    @processing_chart = processing[:chart]
+    @time_stats      = build_time_stats(processing[:stats])
   end
 
   private
@@ -114,8 +106,32 @@ class DashboardController < ApplicationController
     nil
   end
 
-  def cache_key_for(start_date, end_date)
-    [ STATS_CACHE_KEY, "range", start_date.iso8601, end_date.iso8601 ].join("/")
+  def cache_key_for(start_date, end_date, suffix = nil)
+    [ STATS_CACHE_KEY, "range", start_date.iso8601, end_date.iso8601, suffix ].compact.join("/")
+  end
+
+  def build_time_stats(stats)
+    avg_tat  = stats[:avg_tat_minutes]
+    pct_60   = stats[:pct_under_60]
+    target   = stats[:target_minutes]
+
+    [
+      {
+        value: avg_tat ? "#{avg_tat} #{t('dashboard.time_stats.unit_minutes')}" : t("dashboard.time_stats.empty_value"),
+        tone:  avg_tat && avg_tat < target ? "emerald" : "dark",
+        label: t("dashboard.time_stats.avg_tat")
+      },
+      {
+        value: pct_60.nil? ? t("dashboard.time_stats.empty_value") : "#{pct_60}%",
+        tone:  pct_60 && pct_60 >= 50 ? "emerald" : "dark",
+        label: t("dashboard.time_stats.tat_ratio")
+      },
+      {
+        value: "<#{target} #{t('dashboard.time_stats.unit_minutes')}",
+        tone:  "dark",
+        label: t("dashboard.time_stats.target")
+      }
+    ]
   end
 
   def build_stats(start_date, end_date)

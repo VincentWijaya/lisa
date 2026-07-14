@@ -143,24 +143,31 @@
 
           <%# Grouped bars: 3 bars per department, separated by gap %>
           <div class="flex h-full flex-1 items-end justify-between gap-2">
-            <% @processing_chart[:labels].each_with_index do |label, i| %>
-              <% max = 100 %>
-              <% lt30_h = (@processing_chart[:series][:lt_30][i] / max.to_f) * 100 %>
-              <% mid_h  = (@processing_chart[:series][:mid][i]  / max.to_f) * 100 %>
-              <% gt60_h = (@processing_chart[:series][:gt_60][i] / max.to_f) * 100 %>
-
-              <div class="flex h-full flex-1 items-end justify-center gap-1">
-                <div class="w-3 rounded-t-[2px]" style="height: <%= lt30_h %>%; background: #c8eedd;"></div>
-                <div class="w-3 rounded-t-[2px]" style="height: <%= mid_h %>%; background: #fceeb3;"></div>
-                <div class="w-3 rounded-t-[2px]" style="height: <%= gt60_h %>%; background: #fcb9c4;"></div>
+            <% chart_labels = @processing_chart[:labels] %>
+            <% if chart_labels.empty? %>
+              <div class="flex h-full w-full items-center justify-center text-[12px] text-slate-500" style="font-family: 'Poppins', system-ui, sans-serif;">
+                <%= t("dashboard.processing_chart.empty") %>
               </div>
+            <% else %>
+              <% max = [ @processing_chart[:series][:lt_30].max, @processing_chart[:series][:mid].max, @processing_chart[:series][:gt_60].max, 1 ].compact.max %>
+              <% chart_labels.each_with_index do |label, i| %>
+                <% lt30_h = (@processing_chart[:series][:lt_30][i] / max.to_f) * 100 %>
+                <% mid_h  = (@processing_chart[:series][:mid][i]  / max.to_f) * 100 %>
+                <% gt60_h = (@processing_chart[:series][:gt_60][i] / max.to_f) * 100 %>
+
+                <div class="flex h-full flex-1 items-end justify-center gap-1">
+                  <div class="w-3 rounded-t-[2px]" style="height: <%= lt30_h %>%; background: #c8eedd;"></div>
+                  <div class="w-3 rounded-t-[2px]" style="height: <%= mid_h %>%; background: #fceeb3;"></div>
+                  <div class="w-3 rounded-t-[2px]" style="height: <%= gt60_h %>%; background: #fcb9c4;"></div>
+                </div>
+              <% end %>
             <% end %>
           </div>
         </div>
 
-        <%# X-axis labels (departments) + "menit" label %>
+        <%# X-axis labels (departments) + unit label %>
         <div class="flex items-end gap-2 pl-10">
-          <div class="-ml-10 w-10 text-[10px] text-slate-500" style="font-family: 'Poppins', system-ui, sans-serif;">menit</div>
+          <div class="-ml-10 w-10 text-[10px] text-slate-500" style="font-family: 'Poppins', system-ui, sans-serif;"><%= t("dashboard.time_stats.unit_minutes") %></div>
           <div class="flex flex-1 justify-between gap-2">
             <% @processing_chart[:labels].each do |label| %>
               <span class="flex-1 text-center text-[10px] text-slate-600" style="font-family: 'Poppins', system-ui, sans-serif;"><%= label %></span>

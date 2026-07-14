@@ -113,11 +113,14 @@ en:
       legend_0_30: "0-30 min"
       legend_31_60: "31-60 min"
       legend_gt_60: ">60 min"
+      empty: "No pending works"
     time_stats:
       title: "Time Statistics"
       avg_tat: "Overall average TAT"
       tat_ratio: "Average TAT statistic"
       target: "Target (Routine)"
+      unit_minutes: "min"
+      empty_value: "-"
 
   works:
     index:
