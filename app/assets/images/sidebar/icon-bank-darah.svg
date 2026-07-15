@@ -1,0 +1,28 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="24" height="24" fill="#1E1E1E"/>
+<g id="Dashboard" clip-path="url(#clip0_2_2)">
+<rect width="1440" height="1841" transform="translate(-23 -325)" fill="white"/>
+<g id="Sidebar">
+<rect width="249" height="1024" transform="translate(-24 -325)" fill="white"/>
+<g id="Menu">
+<g id="list menu">
+<g id="Menu_2">
+<g id="Content">
+<g id="streamline-ultimate:blood-drop">
+<g id="Group">
+<path id="Vector" d="M18.5 16.147C18.5 17.9372 17.7888 19.6541 16.523 20.92C15.2571 22.1858 13.5402 22.897 11.75 22.897C9.95979 22.897 8.2429 22.1858 6.97703 20.92C5.71116 19.6541 5 17.9372 5 16.147C5 11.277 9.448 3.93501 11.122 1.34701C11.1893 1.2415 11.2822 1.15466 11.3919 1.0945C11.5017 1.03434 11.6248 1.00281 11.75 1.00281C11.8752 1.00281 11.9983 1.03434 12.1081 1.0945C12.2178 1.15466 12.3107 1.2415 12.378 1.34701C14.052 3.93501 18.5 11.277 18.5 16.147Z" stroke="#606060" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_2" d="M11.75 19.9C11.2573 19.9 10.7694 19.8029 10.3142 19.6143C9.85908 19.4256 9.44555 19.1491 9.09729 18.8006C8.74903 18.4521 8.47287 18.0383 8.28459 17.583C8.09631 17.1277 7.99961 16.6397 8 16.147" stroke="#606060" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_2_2">
+<rect width="1440" height="1841" fill="white" transform="translate(-23 -325)"/>
+</clipPath>
+</defs>
+</svg>

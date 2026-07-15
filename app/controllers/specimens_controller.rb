@@ -1,9 +1,10 @@
 class SpecimensController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_specimen, only: %i[show update barcode_labels print_report send_report send_report_form generate_ai_summary]
+  before_action :set_specimen, only: %i[show update barcode_labels print_report send_report send_report_form send_whatsapp generate_ai_summary]
 
   def index
     scope = Specimen.with_works
+                    .search(params[:q])
                     .filter_by_status(params[:status])
                     .filter_by_patient_name(params[:patient_name])
                     .filter_by_medical_record_id(params[:medical_record_id])
@@ -93,6 +94,9 @@ class SpecimensController < ApplicationController
     end
   end
 
+  def send_whatsapp
+    redirect_to specimens_path, notice: t("specimens.flash.whatsapp_sent", order_number: @specimen.order_number)
+  end
   private
 
   # Keep only the latest result per reference rule (skip empty values),

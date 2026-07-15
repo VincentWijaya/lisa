@@ -5,10 +5,8 @@ class WorksController < ApplicationController
   def index
     scope = Work.with_details
                 .order(created_at: :desc)
+                .search(params[:q])
                 .filter_by_status(params[:status])
-                .filter_by_lab_id(params[:lab_id])
-                .filter_by_medical_record_id(params[:medical_record_id])
-                .filter_by_barcode_id(params[:query])
                 .distinct
     @pagy, @works = pagy(:countless, scope, limit: 10)
   end

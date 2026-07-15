@@ -1,15 +1,46 @@
 module SpecimensHelper
+  def specimen_gender_key(gender)
+    g = gender.to_s.downcase.strip
+    case g
+    when "laki-laki", "laki laki", "male", "m", "pria"
+      "male"
+    when "perempuan", "female", "f", "wanita"
+      "female"
+    else
+      g
+    end
+  end
+
+  def specimen_gender_icon(gender)
+    if specimen_gender_key(gender) == "female"
+      %(<circle cx="12" cy="9" r="6"/><path d="M12 15v6"/><path d="M9 18h6"/>).html_safe
+    else
+      %(<circle cx="10" cy="14" r="6"/><path d="M14 10l6-6"/><path d="M16 4h4v4"/>).html_safe
+    end
+  end
+
   def specimen_status_classes(status)
     case status
-    when "complete" then "bg-emerald-100 text-emerald-800"
+    when "complete" then "bg-[#cefde3] text-[#2f6740]"
     when "cancelled" then "bg-rose-100 text-rose-800"
     when "in_progress" then "bg-sky-100 text-sky-800"
-    else "bg-amber-100 text-amber-800"
+    else "bg-[#fceeb3] text-[#b28c2f]"
     end
   end
 
   def specimen_summary(specimen)
     [specimen.medical_record_id, specimen.age_in_years&.then { |age| "#{age} years" }, specimen.gender].compact.join(" • ")
+  end
+
+  # Comma-separated, de-duplicated list of work category names
+  # (e.g. "Hematologi, Kimia"). Falls back to "-" when no works.
+  def specimen_work_list(specimen)
+    names = specimen.works
+                   .includes(:examination)
+                   .map { |w| w.examination&.category.to_s.titleize }
+                   .reject { |c| c.blank? || c == "-" }
+                   .uniq
+    names.any? ? names.join(", ") : "-"
   end
 
   # Returns the formatted reference range string for display in the report.

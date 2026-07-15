@@ -1,0 +1,23 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="24" height="24" fill="#1E1E1E"/>
+<g id="Dashboard" clip-path="url(#clip0_2_2)">
+<rect width="1440" height="1841" transform="translate(-23 -225)" fill="white"/>
+<g id="Sidebar">
+<rect width="249" height="1024" transform="translate(-24 -225)" fill="white"/>
+<g id="Menu">
+<g id="list menu">
+<g id="Menu_2">
+<g id="material-symbols-light:labs-outline-sharp">
+<path id="Vector" d="M20.0498 1.9502V7.2207H17.959V17.5801C17.8612 18.8466 17.2837 19.9097 16.2314 20.7666C15.2452 21.5697 14.0896 21.9955 12.7666 22.0449L12.5 22.0498C10.9839 22.0498 9.69018 21.5869 8.62207 20.6592C7.55358 19.7311 7.01762 18.5959 7.01758 17.2568V7.2207H4.9502V1.9502H20.0498ZM8.36719 17.2568C8.36723 18.2663 8.76856 19.1143 9.57422 19.8037H9.5752C10.3846 20.4932 11.3585 20.8389 12.5 20.8389C13.6414 20.8389 14.6111 20.4938 15.4121 19.8047C16.2108 19.1152 16.6084 18.2667 16.6084 17.2568V16.4736H12.6172V15.2627H16.6084V12.2002H12.6191V10.9893H16.6084V7.2207H8.36719V17.2568ZM6.2998 6.00977H18.7002V3.16113H6.2998V6.00977Z" fill="#606060" stroke="#606060" stroke-width="0.1"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_2_2">
+<rect width="1440" height="1841" fill="white" transform="translate(-23 -225)"/>
+</clipPath>
+</defs>
+</svg>

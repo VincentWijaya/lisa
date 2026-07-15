@@ -1,55 +1,337 @@
-<div class="mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
-  <div class="flex items-center justify-between">
-    <div>
-      <h1 class="text-3xl font-semibold text-slate-900"><%= t("dashboard.title") %></h1>
-      <p class="mt-2 text-sm text-slate-600"><%= t("dashboard.subtitle") %></p>
+<div class="mx-auto max-w-7xl space-y-10 px-6 py-6 lg:px-8">
+  <%# Title + date filter bar %>
+  <div class="space-y-3">
+    <div class="flex items-center gap-3">
+      <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-[#0556cf]">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white" aria-hidden="true">
+          <rect x="3" y="3" width="7" height="7"/>
+          <rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/>
+        </svg>
+      </div>
+      <h1 class="text-[20px] font-semibold text-slate-900" style="font-family: 'Poppins', system-ui, sans-serif;"><%= t("dashboard.title") %></h1>
+    </div>
+    <p class="text-sm text-slate-500"><%= t("dashboard.subtitle") %></p>
+
+    <%# Date range filter — Stimulus controller opens a popover with start/end inputs %>
+    <div data-controller="date-picker"
+         data-date-picker-base-url-value="<%= root_path %>"
+         data-date-picker-max-value="<%= Date.current.iso8601 %>"
+         data-action="click@window->date-picker#close"
+         class="relative inline-block">
+      <button type="button"
+              data-action="click->date-picker#open"
+              data-date-picker-target="trigger"
+              data-placeholder="<%= t("dashboard.date_label") %>"
+              class="inline-flex items-center gap-2 rounded-[4px] border border-slate-300 bg-white px-4 py-2 text-sm text-slate-600 hover:border-slate-400 min-w-[180px]"
+              style="font-family: 'Poppins', system-ui, sans-serif;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500" aria-hidden="true">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        <span><%= t("dashboard.date_label") %></span>
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="ml-auto"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+
+      <%# Popover %>
+      <div data-date-picker-target="popover"
+           class="absolute right-0 z-20 mt-2 hidden w-[300px] rounded-[8px] border border-slate-200 bg-white p-4 shadow-[6px_6px_54px_0px_rgba(0,0,0,0.12)]">
+        <div class="space-y-3">
+          <div>
+            <label class="mb-1 block text-[12px] font-medium text-slate-600" style="font-family: 'Poppins', system-ui, sans-serif;"><%= t("dashboard.date_range_from") %></label>
+            <input type="date"
+                   data-date-picker-target="startInput"
+                   max="<%= Date.current.iso8601 %>"
+                   value="<%= @start_date&.iso8601 %>"
+                   class="w-full rounded-[4px] border border-slate-300 px-3 py-2 text-sm text-slate-700 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+                   style="font-family: 'Poppins', system-ui, sans-serif;" />
+          </div>
+          <div>
+            <label class="mb-1 block text-[12px] font-medium text-slate-600" style="font-family: 'Poppins', system-ui, sans-serif;"><%= t("dashboard.date_range_to") %></label>
+            <input type="date"
+                   data-date-picker-target="endInput"
+                   max="<%= Date.current.iso8601 %>"
+                   value="<%= @end_date&.iso8601 %>"
+                   class="w-full rounded-[4px] border border-slate-300 px-3 py-2 text-sm text-slate-700 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+                   style="font-family: 'Poppins', system-ui, sans-serif;" />
+          </div>
+          <div class="flex items-center justify-between gap-2 pt-1">
+            <button type="button"
+                    data-action="click->date-picker#reset"
+                    data-date-picker-target="resetBtn"
+                    class="rounded-[4px] border border-slate-300 bg-white px-3 py-1.5 text-[12px] font-medium text-slate-600 hover:bg-slate-50"
+                    style="font-family: 'Poppins', system-ui, sans-serif;">
+              <%= t("dashboard.date_range_reset") %>
+            </button>
+            <button type="button"
+                    data-action="click->date-picker#apply"
+                    data-date-picker-target="applyBtn"
+                    class="rounded-[4px] bg-[#0556cf] px-3 py-1.5 text-[12px] font-semibold text-white hover:opacity-90"
+                    style="font-family: 'Poppins', system-ui, sans-serif;">
+              <%= t("dashboard.date_range_apply") %>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+  <%# Everything below this point is a Turbo Frame — date picker refreshes just this region %>
+  <%= turbo_frame_tag "dashboard_stats" do %>
+
+  <%# Stat cards — 3 per row matching Figma %>
+  <div class="grid gap-[17px] sm:grid-cols-2 xl:grid-cols-3">
     <% @summary_cards.each do |card| %>
-      <div class="rounded-2xl p-6 shadow-sm <%= card[:tone] %>">
-        <p class="text-sm font-medium opacity-80"><%= card[:title] %></p>
-        <p class="mt-3 text-3xl font-semibold"><%= card[:value] %></p>
+      <div class="relative h-[180px] rounded-[14px] bg-white p-6 shadow-[6px_6px_54px_0px_rgba(0,0,0,0.05)]">
+        <%# Icon top-right (60x60) %>
+        <div class="absolute right-6 top-6 size-[60px]">
+          <%= image_tag "dashboard/#{card[:icon]}", alt: "", class: "size-full" %>
+        </div>
+
+        <%# Title — limit to 2 lines max to prevent overflow %>
+        <p class="pr-[70px] text-[16px] font-medium leading-snug text-[#202224] opacity-70" style="font-family: 'Poppins', system-ui, sans-serif;">
+          <%= card[:title] %>
+        </p>
+
+        <%# Value %>
+        <p class="mt-[36px] text-[28px] font-bold tracking-[1px] text-[#202224]" style="font-family: 'Nunito Sans', system-ui, sans-serif;">
+          <%= card[:value] %>
+        </p>
+
+        <%# Subtitle %>
+        <div class="absolute bottom-6 left-6 right-6">
+          <% case card[:subtitle_tone] %>
+          <% when "rose" %>
+            <p class="text-[16px]" style="font-family: 'Poppins', system-ui, sans-serif;">
+              <span class="text-[#f93c65]"><%= card[:subtitle] %></span>
+            </p>
+          <% when "emerald" %>
+            <p class="text-[16px]" style="font-family: 'Poppins', system-ui, sans-serif;">
+              <span class="text-[#00b69b]"><%= card[:subtitle] %></span>
+            </p>
+          <% else %>
+            <p class="text-[16px] text-[#606060]" style="font-family: 'Poppins', system-ui, sans-serif;">
+              <%= card[:subtitle] %>
+            </p>
+          <% end %>
+        </div>
       </div>
     <% end %>
   </div>
 
-  <div class="grid gap-6 xl:grid-cols-2">
-    <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-      <div class="mb-4 flex items-center justify-between">
-        <h2 class="text-lg font-semibold text-slate-900"><%= t("dashboard.recent_specimens.title") %></h2>
-        <%= link_to t("dashboard.recent_specimens.view_all"), specimens_path, class: "text-sm font-medium text-sky-700 hover:text-sky-600" %>
-      </div>
+  <%# Processing time chart + Statistik Waktu %>
+  <div class="grid gap-6 xl:grid-cols-[1fr_280px] py-8">
+    <%# Bar chart — Waktu Pemrosesan Per Departemen Tertunda %>
+    <section class="rounded-[12px] border border-[#ececec] bg-white p-6">
+      <h2 class="mb-6 flex items-center gap-2 border-l-4 border-[#0556cf] pl-3 text-[20px] font-semibold text-slate-900" style="font-family: 'Poppins', system-ui, sans-serif;">
+        <%= t("dashboard.processing_chart.title") %>
+      </h2>
+
+      <%# Chart area — y-axis label + grouped bars (3 per dept) + x-axis labels + legend %>
       <div class="space-y-3">
-        <% @recent_specimens.each do |specimen| %>
-          <%= link_to specimen_path(specimen), class: "flex items-center justify-between rounded-xl border border-slate-200 px-4 py-3 hover:border-sky-300 hover:bg-sky-50" do %>
-            <div>
-              <p class="text-sm font-semibold text-slate-900"><%= specimen.order_number %></p>
-              <p class="text-sm text-slate-600"><%= specimen.patient_name %> • <%= specimen_summary(specimen) %></p>
-            </div>
-            <span class="rounded-full px-3 py-1 text-xs font-semibold <%= specimen_status_classes(specimen.status) %>"><%= t("specimens.status.#{specimen.status}") %></span>
-          <% end %>
-        <% end %>
+        <%# Y-axis labels + grouped bars %>
+        <div class="flex items-end gap-2 pl-10" style="height: 200px;">
+          <%# Y-axis labels (100 at top, 0 at bottom) %>
+          <div class="relative -ml-10 flex h-full w-10 flex-col justify-between text-right text-[10px] text-slate-500" style="font-family: 'Poppins', system-ui, sans-serif;">
+            <% [ "100", "80", "60", "40", "20", "00" ].each do |label| %>
+              <span><%= label %></span>
+            <% end %>
+          </div>
+
+          <%# Grouped bars: 3 bars per department, separated by gap %>
+          <div class="flex h-full flex-1 items-end justify-between gap-2">
+            <% chart_labels = @processing_chart[:labels] %>
+            <% if chart_labels.empty? %>
+              <div class="flex h-full w-full items-center justify-center text-[12px] text-slate-500" style="font-family: 'Poppins', system-ui, sans-serif;">
+                <%= t("dashboard.processing_chart.empty") %>
+              </div>
+            <% else %>
+              <% max = [ @processing_chart[:series][:lt_30].max, @processing_chart[:series][:mid].max, @processing_chart[:series][:gt_60].max, 1 ].compact.max %>
+              <% chart_labels.each_with_index do |label, i| %>
+                <% lt30_h = (@processing_chart[:series][:lt_30][i] / max.to_f) * 100 %>
+                <% mid_h  = (@processing_chart[:series][:mid][i]  / max.to_f) * 100 %>
+                <% gt60_h = (@processing_chart[:series][:gt_60][i] / max.to_f) * 100 %>
+
+                <div class="flex h-full flex-1 items-end justify-center gap-1">
+                  <div class="w-3 rounded-t-[2px]" style="height: <%= lt30_h %>%; background: #c8eedd;"></div>
+                  <div class="w-3 rounded-t-[2px]" style="height: <%= mid_h %>%; background: #fceeb3;"></div>
+                  <div class="w-3 rounded-t-[2px]" style="height: <%= gt60_h %>%; background: #fcb9c4;"></div>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+
+        <%# X-axis labels (departments) + unit label %>
+        <div class="flex items-end gap-2 pl-10">
+          <div class="-ml-10 w-10 text-[10px] text-slate-500" style="font-family: 'Poppins', system-ui, sans-serif;"><%= t("dashboard.time_stats.unit_minutes") %></div>
+          <div class="flex flex-1 justify-between gap-2">
+            <% @processing_chart[:labels].each do |label| %>
+              <span class="flex-1 text-center text-[10px] text-slate-600" style="font-family: 'Poppins', system-ui, sans-serif;"><%= label %></span>
+            <% end %>
+          </div>
+        </div>
+
+        <%# Legend %>
+        <div class="flex items-center justify-center gap-8 pt-4 text-[12px] text-slate-700" style="font-family: 'Poppins', system-ui, sans-serif;">
+          <div class="flex items-center gap-2">
+            <span class="inline-block h-0.5 w-8" style="background: #00b69b;"></span>
+            <span><%= t("dashboard.processing_chart.legend_0_30") %></span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="inline-block h-0.5 w-8" style="background: #f4b400;"></span>
+            <span><%= t("dashboard.processing_chart.legend_31_60") %></span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="inline-block h-0.5 w-8" style="background: #f93c65;"></span>
+            <span><%= t("dashboard.processing_chart.legend_gt_60") %></span>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-      <div class="mb-4 flex items-center justify-between">
-        <h2 class="text-lg font-semibold text-slate-900"><%= t("dashboard.recent_works.title") %></h2>
-        <%= link_to t("dashboard.recent_works.view_all"), works_path, class: "text-sm font-medium text-sky-700 hover:text-sky-600" %>
-      </div>
-      <div class="space-y-3">
-        <% @recent_works.each do |work| %>
-          <%= link_to work_path(work), class: "flex items-center justify-between rounded-xl border border-slate-200 px-4 py-3 hover:border-sky-300 hover:bg-sky-50" do %>
-            <div>
-              <p class="text-sm font-semibold text-slate-900"><%= work.barcode_id %></p>
-              <p class="text-sm text-slate-600"><%= work.specimen.patient_name %> • <%= work.test_codes_text.presence || work.examination.name %></p>
-            </div>
-            <span class="rounded-full px-3 py-1 text-xs font-semibold <%= work_status_classes(work.status) %>"><%= t("works.status.#{work.status}") %></span>
-          <% end %>
+    <%# Statistik Waktu sidebar %>
+    <section class="rounded-[12px] border border-[#ececec] bg-white p-6">
+      <h2 class="mb-6 flex items-center gap-2 border-l-4 border-[#0556cf] pl-3 text-[20px] font-semibold text-slate-900" style="font-family: 'Poppins', system-ui, sans-serif;">
+        <%= t("dashboard.time_stats.title") %>
+      </h2>
+
+      <div class="space-y-5">
+        <% @time_stats.each do |stat| %>
+          <div>
+            <% case stat[:tone] %>
+            <% when "emerald" %>
+              <p class="text-[24px] font-bold text-[#00b69b]" style="font-family: 'Nunito Sans', system-ui, sans-serif;"><%= stat[:value] %></p>
+            <% else %>
+              <p class="text-[24px] font-bold text-slate-900" style="font-family: 'Nunito Sans', system-ui, sans-serif;"><%= stat[:value] %></p>
+            <% end %>
+            <p class="mt-1 text-[12px] text-slate-600" style="font-family: 'Poppins', system-ui, sans-serif;"><%= stat[:label] %></p>
+            <div class="mt-2 h-px w-full bg-slate-200"></div>
+          </div>
         <% end %>
       </div>
     </section>
   </div>
+
+  <%# List sections — Lihat semua BELOW the list, centered, bigger (Figma style) %>
+  <div class="grid gap-6 xl:grid-cols-2">
+    <%# Recent specimens (Spesimen Tertunda = pending) %>
+    <section>
+      <h2 class="mb-4 flex items-center gap-2 border-l-4 border-[#0556cf] pl-3 text-[20px] font-semibold text-slate-900" style="font-family: 'Poppins', system-ui, sans-serif;">
+        <%= t("dashboard.recent_specimens.title") %>
+      </h2>
+      <div class="overflow-hidden rounded-[12px] border-2 border-[#ececec]">
+        <% @recent_specimens.each do |specimen| %>
+          <%= link_to specimen_path(specimen), data: { turbo_frame: "_top" }, class: "flex items-center gap-[10px] border-b border-[#e5e5ea] bg-white px-4 py-4 last:border-b-0 hover:bg-slate-50" do %>
+            <%# Avatar %>
+            <div class="flex size-12 shrink-0 items-center justify-center rounded-[24px] bg-[#0556cf]">
+              <span class="text-[16px] font-bold text-white" style="font-family: 'Poppins', system-ui, sans-serif;">SP</span>
+            </div>
+
+            <%# Details %>
+            <div class="flex flex-1 flex-col gap-[10px] py-1">
+              <div class="flex items-center gap-[10px]">
+                <p class="text-[18px] font-semibold text-[#0556cf]" style="font-family: 'Poppins', system-ui, sans-serif;"><%= specimen.order_number %></p>
+                <p class="text-[16px] font-medium text-black" style="font-family: 'Poppins', system-ui, sans-serif;"><%= specimen.medical_record_id %></p>
+              </div>
+              <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-700" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  <p class="text-[12px] text-black" style="font-family: 'Poppins', system-ui, sans-serif;"><%= specimen.patient_name %></p>
+                </div>
+                <% if specimen.gender.present? %>
+                  <div class="flex items-center gap-2">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-700" aria-hidden="true"><%= specimen_gender_icon(specimen.gender) %></svg>
+                    <p class="text-[12px] text-black" style="font-family: 'Poppins', system-ui, sans-serif;"><%= t("specimens.gender.#{specimen_gender_key(specimen.gender)}", default: specimen.gender) %></p>
+                  </div>
+                <% end %>
+                <% if specimen.age_in_years %>
+                  <div class="flex items-center gap-2">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-700" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <p class="text-[12px] text-black" style="font-family: 'Poppins', system-ui, sans-serif;"><%= t("specimens.show.age_value", years: specimen.age_in_years) %></p>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+
+            <%# Status badge %>
+            <div class="shrink-0">
+              <span class="inline-flex items-center rounded-[13.5px] px-3 py-1 text-[14px] font-bold <%= specimen_status_classes(specimen.status) %>" style="font-family: 'Poppins', system-ui, sans-serif;">
+                <%= t("specimens.status.#{specimen.status}") %>
+              </span>
+            </div>
+          <% end %>
+        <% end %>
+        <% if @recent_specimens.empty? %>
+          <div class="bg-white p-12 text-center text-sm text-slate-500"><%= t("dashboard.recent_specimens.empty") %></div>
+        <% end %>
+      </div>
+      <%# Lihat semua — centered, below list %>
+      <div class="mt-4 text-center">
+        <%= link_to t("dashboard.recent_specimens.view_all"), specimens_path, data: { turbo_frame: "_top" }, class: "text-[20px] font-medium text-[#0556cf] hover:underline", style: "font-family: 'Poppins', system-ui, sans-serif;" %>
+      </div>
+    </section>
+
+    <%# Recent works (Pekerjaan Terbaru) %>
+    <section>
+      <h2 class="mb-4 flex items-center gap-2 border-l-4 border-[#0556cf] pl-3 text-[20px] font-semibold text-slate-900" style="font-family: 'Poppins', system-ui, sans-serif;">
+        <%= t("dashboard.recent_works.title") %>
+      </h2>
+      <div class="overflow-hidden rounded-[12px] border-2 border-[#ececec]">
+        <% @recent_works.each do |work| %>
+          <%= link_to work_path(work), data: { turbo_frame: "_top" }, class: "flex items-center gap-[10px] border-b border-[#e5e5ea] bg-white px-4 py-4 last:border-b-0 hover:bg-slate-50" do %>
+            <%# Avatar %>
+            <div class="flex size-12 shrink-0 items-center justify-center rounded-[24px] bg-[#0556cf]">
+              <span class="text-[16px] font-bold text-white" style="font-family: 'Poppins', system-ui, sans-serif;">PK</span>
+            </div>
+
+            <%# Details %>
+            <div class="flex flex-1 flex-col gap-[10px] py-1">
+              <div class="flex items-center gap-[10px]">
+                <p class="text-[18px] font-semibold text-[#0556cf]" style="font-family: 'Poppins', system-ui, sans-serif;"><%= work.barcode_id %></p>
+                <p class="text-[16px] font-medium text-black" style="font-family: 'Poppins', system-ui, sans-serif;"><%= work.test_codes_text.presence || work.examination.name %></p>
+              </div>
+              <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-700" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  <p class="text-[12px] text-black" style="font-family: 'Poppins', system-ui, sans-serif;"><%= work.specimen.patient_name %></p>
+                </div>
+                <% if work.specimen.gender.present? %>
+                  <div class="flex items-center gap-2">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-700" aria-hidden="true"><%= specimen_gender_icon(work.specimen.gender) %></svg>
+                    <p class="text-[12px] text-black" style="font-family: 'Poppins', system-ui, sans-serif;"><%= t("specimens.gender.#{specimen_gender_key(work.specimen.gender)}", default: work.specimen.gender) %></p>
+                  </div>
+                <% end %>
+                <% if work.specimen.age_in_years %>
+                  <div class="flex items-center gap-2">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-700" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <p class="text-[12px] text-black" style="font-family: 'Poppins', system-ui, sans-serif;"><%= t("specimens.show.age_value", years: work.specimen.age_in_years) %></p>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+
+            <%# Status badge %>
+            <div class="shrink-0">
+              <span class="inline-flex items-center rounded-[13.5px] px-3 py-1 text-[14px] font-bold <%= work_status_classes(work.status) %>" style="font-family: 'Poppins', system-ui, sans-serif;">
+                <%= t("works.status.#{work.status}") %>
+              </span>
+            </div>
+          <% end %>
+        <% end %>
+        <% if @recent_works.empty? %>
+          <div class="bg-white p-12 text-center text-sm text-slate-500"><%= t("dashboard.recent_works.empty") %></div>
+        <% end %>
+      </div>
+      <%# Lihat semua — centered, below list %>
+      <div class="mt-4 text-center">
+        <%= link_to t("dashboard.recent_works.view_all"), works_path, data: { turbo_frame: "_top" }, class: "text-[20px] font-medium text-[#0556cf] hover:underline", style: "font-family: 'Poppins', system-ui, sans-serif;" %>
+      </div>
+    </section>
+  </div>
+
+  <% end %>
 </div>

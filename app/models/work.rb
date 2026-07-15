@@ -33,10 +33,25 @@ class Work < ApplicationRecord
   scope :verified,  -> { where(status: :verified) }
   scope :cancelled, -> { where(status: :cancelled) }
   scope :with_details, -> { includes(:specimen, :examination, :examination_results) }
+  scope :for_date,  ->(date) { date ? where(created_at: date.all_day) : all }
+  scope :for_range, ->(start_date, end_date) {
+    rel = all
+    rel = rel.where("created_at >= ?", start_date.beginning_of_day) if start_date
+    rel = rel.where("created_at <= ?",   end_date.end_of_day)     if end_date
+    rel
+  }
   scope :filter_by_status, ->(value) { value.present? ? where(status: value) : all }
-  scope :filter_by_lab_id, ->(value) { value.present? ? joins(:specimen).where(specimens: { lab_id: value.strip }) : all }
-  scope :filter_by_medical_record_id, ->(value) { value.present? ? joins(:specimen).where(specimens: { medical_record_id: value.strip }) : all }
-  scope :filter_by_barcode_id, ->(value) { value.present? ? where(barcode_id: value.strip) : all }
+  scope :search, ->(query) {
+    next all if query.blank?
+    q = query.to_s.strip
+    joins(:specimen).where(
+      "works.barcode_id = :q
+       OR specimens.patient_name = :q
+       OR specimens.medical_record_id = :q
+       OR specimens.order_number = :q",
+      q: q
+    )
+  }
 
   after_commit :expire_caches
 

@@ -1,4 +1,6 @@
 class SessionsController < ApplicationController
+  layout false
+
   def new
     redirect_to root_path if logged_in?
   end
