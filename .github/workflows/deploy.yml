@@ -28,7 +28,7 @@ jobs:
         with:
           api-key: ${{ secrets.HOSTINGER_API_KEY }}
           virtual-machine: ${{ vars.HOSTINGER_VM_ID }}
-          project-name: tbtb_dev_lis
+          project-name: lisa
           personal-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           docker-compose-path: docker-compose.yml
           environment-variables: |
