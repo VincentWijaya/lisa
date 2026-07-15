@@ -24,6 +24,7 @@ services:
       MAILER_PORT: ${MAILER_PORT:-443}
       MAIL_FROM: ${MAIL_FROM}
       LAB_NAME: ${LAB_NAME:-LABORATORIUM}
+      OPENAI_KEY: ${OPENAI_KEY}
     volumes:
       - lisa_storage:/rails/storage
     restart: unless-stopped
