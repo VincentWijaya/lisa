@@ -41,3 +41,17 @@ jobs:
             DB_NAME_PRODUCTION=${{ env.DB_NAME_PRODUCTION }}
             DB_NAME_TEST=${{ env.DB_NAME_TEST }}
             SOLID_QUEUE_IN_PUMA=true
+            SMTP_ADDRESS=${{ env.SMTP_ADDRESS }}
+            SMTP_PORT=${{ env.SMTP_PORT }}
+            SMTP_USERNAME=${{ env.SMTP_USERNAME }}
+            SMTP_PASSWORD=${{ env.SMTP_PASSWORD }}
+            SMTP_AUTH=${{ env.SMTP_AUTH }}
+            MAILER_HOST=${{ env.MAILER_HOST }}
+            MAILER_PORT=${{ env.MAILER_PORT }}
+            MAIL_FROM=${{ env.MAIL_FROM }}
+            LAB_NAME=${{ env.LAB_NAME }}
+            OPENAI_KEY=${{ env.OPENAI_KEY }}
+          cmd: |
+            cd /root/lisa
+            git pull origin master
+            docker compose up -d --build
