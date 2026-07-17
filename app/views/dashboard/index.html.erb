@@ -240,7 +240,7 @@
               <div class="flex items-center gap-4">
                 <div class="flex items-center gap-2">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-700" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                  <p class="text-[12px] text-black" style="font-family: 'Poppins', system-ui, sans-serif;"><%= specimen.patient_name %></p>
+                  <p class="text-[12px] text-black" style="font-family: 'Poppins', system-ui, sans-serif;"><%= specimen_gender_key(specimen.gender) == "female" && specimen.patient_name.to_s.length > 10 ? specimen.patient_name.to_s[0, 10] : specimen.patient_name %></p>
                 </div>
                 <% if specimen.gender.present? %>
                   <div class="flex items-center gap-2">
