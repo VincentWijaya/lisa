@@ -292,23 +292,17 @@
             <div class="flex flex-1 flex-col gap-[10px] py-1">
               <div class="flex items-center gap-[10px]">
                 <p class="text-[18px] font-semibold text-[#0556cf]" style="font-family: 'Poppins', system-ui, sans-serif;"><%= work.barcode_id %></p>
-                <p class="text-[16px] font-medium text-black" style="font-family: 'Poppins', system-ui, sans-serif;"><%= work.test_codes_text.presence || work.examination.name %></p>
+                <p class="text-[16px] font-medium text-black" style="font-family: 'Poppins', system-ui, sans-serif;"><%= work.specimen.medical_record_id || work.examination.name %></p>
               </div>
               <div class="flex items-center gap-4">
                 <div class="flex items-center gap-2">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-700" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                   <p class="text-[12px] text-black" style="font-family: 'Poppins', system-ui, sans-serif;"><%= work.specimen.patient_name %></p>
                 </div>
-                <% if work.specimen.gender.present? %>
+                <% if work.examination.code.present? %>
                   <div class="flex items-center gap-2">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-700" aria-hidden="true"><%= specimen_gender_icon(work.specimen.gender) %></svg>
-                    <p class="text-[12px] text-black" style="font-family: 'Poppins', system-ui, sans-serif;"><%= t("specimens.gender.#{specimen_gender_key(work.specimen.gender)}", default: work.specimen.gender) %></p>
-                  </div>
-                <% end %>
-                <% if work.specimen.age_in_years %>
-                  <div class="flex items-center gap-2">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-700" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    <p class="text-[12px] text-black" style="font-family: 'Poppins', system-ui, sans-serif;"><%= t("specimens.show.age_value", years: work.specimen.age_in_years) %></p>
+                    <%= image_tag "sidebar/icon-specimens.svg", alt: "ic-specimen", class: "size-4" %>
+                    <p class="text-[12px] text-black" style="font-family: 'Poppins', system-ui, sans-serif;"><%= "#{work.examination.code}" %></p>
                   </div>
                 <% end %>
               </div>
