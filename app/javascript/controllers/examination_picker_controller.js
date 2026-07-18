@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["input", "category", "list", "checkbox", "summary"]
+  static targets = ["input", "category", "list", "checkbox", "summary", "categorySelectAll"]
 
   connect() {
     this.sync()
@@ -55,7 +55,41 @@ export default class extends Controller {
     this.sync()
   }
 
+  toggleCategory(event) {
+    const category = event.target.dataset.categoryKey
+    if (!category) return
+
+    const checked = event.target.checked
+    this.checkboxTargets.forEach((box) => {
+      if (box.dataset.categoryKey === category) {
+        box.checked = checked
+      }
+    })
+    this.sync()
+  }
+
+  syncCategorySelectAll() {
+    if (!this.hasCategorySelectAllTarget) return
+
+    this.categorySelectAllTargets.forEach((trigger) => {
+      const category = trigger.dataset.categoryKey
+      if (!category) return
+
+      const boxes = this.checkboxTargets.filter((box) => box.dataset.categoryKey === category)
+      if (boxes.length === 0) {
+        trigger.checked = false
+        return
+      }
+      trigger.checked = boxes.every((box) => box.checked)
+    })
+  }
+
   sync() {
+    this.syncSummary()
+    this.syncCategorySelectAll()
+  }
+
+  syncSummary() {
     if (!this.hasSummaryTarget) return
 
     const total    = this.checkboxTargets.length

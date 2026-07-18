@@ -26,6 +26,26 @@ RSpec.describe "Specimens manual input", type: :request do
       expect(response.body).to include("KIMIA KLINIK")
       expect(response.body).to include("HEMATOLOGI")
     end
+
+    it "renders the redesigned layout (kembali, breadcrumb, section bars, search, per-category select-all)" do
+      get new_specimen_path
+      expect(response.body).to include(I18n.t("specimens.new.back"))
+      expect(response.body).to include(I18n.t("specimens.new.breadcrumb.specimens"))
+      expect(response.body).to include(I18n.t("specimens.new.breadcrumb.current"))
+      expect(response.body).to include(I18n.t("specimens.new.patient_section"))
+      expect(response.body).to include(CGI.escapeHTML(I18n.t("specimens.new.collection_section")))
+      expect(response.body).to include(I18n.t("specimens.new.works_section"))
+      expect(response.body).to include(I18n.t("specimens.new.options_section"))
+      expect(response.body).to include(I18n.t("specimens.new.search_placeholder"))
+      expect(response.body).to include(I18n.t("specimens.new.select_label_groups"))
+      expect(response.body).to include('data-examination-picker-target="categorySelectAll"')
+    end
+
+    it "renders patient_id as an inputable field" do
+      get new_specimen_path
+      expect(response.body).not_to match(/<input[^>]*name="specimen\[patient_id\]"[^>]*disabled/)
+      expect(response.body).to include('name="specimen[patient_id]"')
+    end
   end
 
   describe "POST /specimens" do
