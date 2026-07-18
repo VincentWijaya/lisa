@@ -65,6 +65,27 @@
             <%= t("works.actions.validate") %>
           </span>
         <% end %>
+        <% has_unverified_results = @work.examination_results.any? { |r| r.verified_at.blank? } %>
+        <% if has_unverified_results %>
+          <%= button_to verify_all_results_work_path(@work),
+                method: :patch,
+                form: { data: { turbo_confirm: t("works.show.confirm_verify_all") } },
+                class: "inline-flex items-center gap-2 rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-600 cursor-pointer" do %>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="9 11 12 14 22 4"/>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+            </svg>
+            <%= t("works.actions.verify") %>
+          <% end %>
+        <% else %>
+          <span title="<%= t("works.actions.verify") %>" aria-label="<%= t("works.actions.verify") %>" class="inline-flex items-center gap-2 rounded-md bg-slate-200 px-4 py-2 text-sm font-semibold text-slate-400 cursor-not-allowed">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="9 11 12 14 22 4"/>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+            </svg>
+            <%= t("works.actions.verify") %>
+          </span>
+        <% end %>
       </div>
     </div>
   </section>
@@ -126,7 +147,7 @@
           <table class="min-w-full divide-y divide-slate-200 text-sm">
             <thead class="sticky top-0 z-10 bg-slate-100 shadow-[inset_0_-1px_0_#e2e8f0]">
               <tr>
-                <% %w[reference_rule value unit interpretation reference_range source verified_at actions].each do |col| %>
+                <% %w[reference_rule value unit interpretation reference_range source verified_at].each do |col| %>
                   <th class="px-4 py-4 text-left text-sm font-bold text-slate-900"><%= t("works.show.results_table.#{col}") %></th>
                 <% end %>
               </tr>
@@ -171,21 +192,11 @@
                     <% end %>
                   </td>
                   <td class="px-4 py-3 align-middle text-slate-700"><%= result&.verified_at ? l(result.verified_at, format: :short_with_year) : "-" %></td>
-                  <td class="px-4 py-3 align-middle">
-                    <% if result.present? && result.verified_at.blank? %>
-                      <%= link_to t("works.result_actions.verify"),
-                          verify_work_examination_result_path(@work, result),
-                          data: { turbo_method: :patch },
-                          class: "text-xs font-semibold text-emerald-700 hover:text-emerald-500" %>
-                    <% else %>
-                      <span class="text-slate-400">-</span>
-                    <% end %>
-                  </td>
                 </tr>
               <% end %>
               <% if @reference_rules.empty? %>
                 <tr>
-                  <td colspan="8" class="px-4 py-12 text-center text-sm text-slate-500"><%= t("works.show.results_empty") %></td>
+                  <td colspan="7" class="px-4 py-12 text-center text-sm text-slate-500"><%= t("works.show.results_empty") %></td>
                 </tr>
               <% end %>
             </tbody>

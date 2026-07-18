@@ -180,6 +180,7 @@ en:
         verified_at: "Validated At"
         actions: "Actions"
       results_empty: "No examination results recorded yet."
+      confirm_verify_all: "Validate all results on this work?"
       bulk_results:
         submit: "Save Results"
       add_result:
@@ -210,6 +211,8 @@ en:
       result_updated: "Result updated successfully."
       result_deleted: "Result deleted successfully."
       result_verified: "Result validated successfully."
+      results_verified: "All results validated successfully."
+      no_results_to_verify: "No results to validate."
       barcode_mismatch: "Scanned barcode '%{scanned}' does not match this work (%{expected})."
       summary_saved: "AI summary saved."
       ai_summary_generated: "AI summary generated."

@@ -58,7 +58,7 @@ id:
     formats:
       default: "%d/%m/%Y %H:%M"
       short: "%d %b %Y %H:%M"
-      short_with_year: "%H:%M, %d %b %Y"
+      short_with_year: "%d %b %Y, %H:%M"
       long: "%d %B %Y pukul %H:%M"
     am: "pagi"
     pm: "sore"
@@ -330,6 +330,7 @@ id:
         verified_at: "Waktu Validasi"
         actions: "Aksi"
       results_empty: "Belum ada hasil pemeriksaan."
+      confirm_verify_all: "Validasi semua hasil pada pekerjaan ini?"
       bulk_results:
         submit: "Simpan Hasil"
       add_result:
@@ -360,6 +361,8 @@ id:
       result_updated: "Hasil berhasil diperbarui."
       result_deleted: "Hasil berhasil dihapus."
       result_verified: "Hasil berhasil divalidasi."
+      results_verified: "Semua hasil berhasil divalidasi."
+      no_results_to_verify: "Tidak ada hasil yang perlu divalidasi."
       summary_saved: "Ringkasan AI berhasil disimpan."
       barcode_mismatch: "Barcode yang dipindai '%{scanned}' tidak cocok dengan pekerjaan ini (%{expected})."
       work_not_pending: "Pekerjaan ini tidak dapat diverifikasi — status saat ini adalah '%{status}'."

@@ -38,6 +38,7 @@ Rails.application.routes.draw do
     member do
       patch :validate_work
       patch :verify_work
+      patch :verify_all_results
       patch :cancel_work
       get :barcode_label
       post :add_result

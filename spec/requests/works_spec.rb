@@ -49,6 +49,31 @@ RSpec.describe "Works", type: :request do
     end
   end
 
+  describe "PATCH /works/:id/verify_all_results" do
+    it "verifies all unverified results on the work" do
+      result_a = create(:examination_result, work: work, reference_rule: reference_rule, result_value: "5.1", verified_at: nil)
+      result_b = create(:examination_result, work: work, reference_rule: reference_rule, result_value: "6.2", verified_at: nil)
+
+      patch verify_all_results_work_path(work)
+
+      expect(response).to redirect_to(work_path(work))
+      expect(result_a.reload.verified_at).not_to be_nil
+      expect(result_b.reload.verified_at).not_to be_nil
+      expect(result_a.reload.verified_by).to eq(user.id)
+      expect(result_b.reload.verified_by).to eq(user.id)
+    end
+
+    it "alerts when there are no unverified results" do
+      create(:examination_result, work: work, reference_rule: reference_rule, result_value: "5.1", verified_at: Time.current)
+
+      patch verify_all_results_work_path(work)
+
+      expect(response).to redirect_to(work_path(work))
+      follow_redirect!
+      expect(response.body).to include(I18n.t("works.flash.no_results_to_verify"))
+    end
+  end
+
   describe "GET /works (index)" do
     let!(:specimen_a) { create(:specimen, patient_name: "Marjolaine Landing", patient_id: "P-10005", medical_record_id: "RM-2004-005", order_number: "2606090095") }
     let!(:specimen_b) { create(:specimen, patient_name: "Budi Santoso",       patient_id: "P-20007", medical_record_id: "RM-2004-099", order_number: "2606090099") }

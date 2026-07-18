@@ -1,6 +1,6 @@
 class WorksController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_work, only: %i[show update validate_work verify_work cancel_work barcode_label add_result upsert_results scan_validate generate_ai_summary]
+  before_action :set_work, only: %i[show update validate_work verify_work verify_all_results cancel_work barcode_label add_result upsert_results scan_validate generate_ai_summary]
 
   def index
     scope = Work.with_details
@@ -37,6 +37,33 @@ class WorksController < ApplicationController
   def verify_work
     transition_result = Works::VerifyService.call(work: @work)
     redirect_with_transition_result(transition_result, success_notice: t("works.flash.verified"))
+  end
+
+  def verify_all_results
+    unverified_results = @work.examination_results.where(verified_at: nil)
+
+    if unverified_results.empty?
+      redirect_to work_path(@work), alert: t("works.flash.no_results_to_verify")
+      return
+    end
+
+    errors = []
+    ApplicationRecord.transaction do
+      unverified_results.each do |result|
+        service_result = ExaminationResults::VerifyService.call(
+          examination_result: result,
+          verified_by: current_user.id
+        )
+        errors.concat(service_result.errors) unless service_result.success?
+      end
+      raise ActiveRecord::Rollback if errors.any?
+    end
+
+    if errors.any?
+      redirect_to work_path(@work), alert: errors.to_sentence
+    else
+      redirect_to work_path(@work), notice: t("works.flash.results_verified")
+    end
   end
 
   def cancel_work
