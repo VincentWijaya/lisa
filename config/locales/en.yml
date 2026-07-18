@@ -157,6 +157,7 @@ en:
       ai_summary_placeholder: "Write or paste an AI-generated summary for this work…"
       ai_summary_save: "Save summary"
       ai_summary_generate: "Generate with AI"
+      ai_summary_reset: "Reset"
       fields:
         patient: "Patient"
         patient_id: "Patient ID"
@@ -332,6 +333,7 @@ en:
       ai_summary_placeholder: "Write or paste an AI-generated summary for this specimen…"
       ai_summary_save: "Save summary"
       ai_summary_generate: "Generate with AI"
+      ai_summary_reset: "Reset"
       fields:
         patient_id: "Patient ID"
         medical_record: "Medical Record"

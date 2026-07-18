@@ -307,6 +307,7 @@ id:
       ai_summary_placeholder: "Tulis atau tempel ringkasan hasil AI untuk pekerjaan ini…"
       ai_summary_save: "Simpan ringkasan"
       ai_summary_generate: "Generate dengan AI"
+      ai_summary_reset: "Reset"
       fields:
         patient: "Pasien"
         patient_id: "ID Pasien"
@@ -483,6 +484,7 @@ id:
       ai_summary_placeholder: "Tulis atau tempel ringkasan hasil AI untuk spesimen ini…"
       ai_summary_save: "Perbarui ringkasan"
       ai_summary_generate: "Generate dengan AI"
+      ai_summary_reset: "Reset"
       fields:
         patient_id: "ID Pasien"
         medical_record: "No Rekam Medis"
