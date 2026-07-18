@@ -36,5 +36,23 @@ RSpec.describe "Dashboard", type: :request do
       get root_path, params: { start_date: Date.current.iso8601, end_date: Date.current.iso8601 }
       expect(response).to have_http_status(:ok)
     end
+
+    it "renders a Chart.js canvas with the processing chart data when categories exist" do
+      exam = create(:examination, name: "CBC", category: "Hematologi")
+      specimen = create(:specimen)
+      create(:work, specimen: specimen, examination: exam, status: "pending", created_at: 10.minutes.ago)
+
+      get root_path
+
+      expect(response.body).to include('data-controller="processing-chart"')
+      expect(response.body).to include('data-processing-chart-target="canvas"')
+      expect(response.body).to include('data-processing-chart-labels-value=')
+      expect(response.body).to include("Hematologi")
+    end
+
+    it "includes the Chart.js UMD script tag in the layout" do
+      get root_path
+      expect(response.body).to match(%r{<script[^>]+src=["'][^"']*chart\.js})
+    end
   end
 end

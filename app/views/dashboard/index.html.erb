@@ -125,72 +125,44 @@
   <%# Processing time chart + Statistik Waktu %>
   <div class="grid gap-6 xl:grid-cols-[1fr_280px] py-8">
     <%# Bar chart — Waktu Pemrosesan Per Departemen Tertunda %>
-    <section class="rounded-[12px] border border-[#ececec] bg-white p-6">
+    <section class="rounded-[12px] border border-[#ececec] bg-white p-6"
+             data-controller="processing-chart"
+             data-processing-chart-labels-value="<%= @processing_chart[:labels].to_json %>"
+             data-processing-chart-lt30-value="<%= @processing_chart[:series][:lt_30].to_json %>"
+             data-processing-chart-mid-value="<%= @processing_chart[:series][:mid].to_json %>"
+             data-processing-chart-gt60-value="<%= @processing_chart[:series][:gt_60].to_json %>"
+             data-processing-chart-legend-lt30-value="<%= t("dashboard.processing_chart.legend_0_30") %>"
+             data-processing-chart-legend-mid-value="<%= t("dashboard.processing_chart.legend_31_60") %>"
+             data-processing-chart-legend-gt60-value="<%= t("dashboard.processing_chart.legend_gt_60") %>"
+             data-processing-chart-unit-label-value="<%= t("dashboard.time_stats.unit_minutes") %>">
       <h2 class="mb-6 flex items-center gap-2 border-l-4 border-[#0556cf] pl-3 text-[20px] font-semibold text-slate-900" style="font-family: 'Poppins', system-ui, sans-serif;">
         <%= t("dashboard.processing_chart.title") %>
       </h2>
 
-      <%# Chart area — y-axis label + grouped bars (3 per dept) + x-axis labels + legend %>
-      <div class="space-y-3">
-        <%# Y-axis labels + grouped bars %>
-        <div class="flex items-end gap-2 pl-10" style="height: 200px;">
-          <%# Y-axis labels (100 at top, 0 at bottom) %>
-          <div class="relative -ml-10 flex h-full w-10 flex-col justify-between text-right text-[10px] text-slate-500" style="font-family: 'Poppins', system-ui, sans-serif;">
-            <% [ "100", "80", "60", "40", "20", "00" ].each do |label| %>
-              <span><%= label %></span>
-            <% end %>
-          </div>
-
-          <%# Grouped bars: 3 bars per department, separated by gap %>
-          <div class="flex h-full flex-1 items-end justify-between gap-2">
-            <% chart_labels = @processing_chart[:labels] %>
-            <% if chart_labels.empty? %>
-              <div class="flex h-full w-full items-center justify-center text-[12px] text-slate-500" style="font-family: 'Poppins', system-ui, sans-serif;">
-                <%= t("dashboard.processing_chart.empty") %>
-              </div>
-            <% else %>
-              <% max = [ @processing_chart[:series][:lt_30].max, @processing_chart[:series][:mid].max, @processing_chart[:series][:gt_60].max, 1 ].compact.max %>
-              <% chart_labels.each_with_index do |label, i| %>
-                <% lt30_h = (@processing_chart[:series][:lt_30][i] / max.to_f) * 100 %>
-                <% mid_h  = (@processing_chart[:series][:mid][i]  / max.to_f) * 100 %>
-                <% gt60_h = (@processing_chart[:series][:gt_60][i] / max.to_f) * 100 %>
-
-                <div class="flex h-full flex-1 items-end justify-center gap-1">
-                  <div class="w-3 rounded-t-[2px]" style="height: <%= lt30_h %>%; background: #c8eedd;"></div>
-                  <div class="w-3 rounded-t-[2px]" style="height: <%= mid_h %>%; background: #fceeb3;"></div>
-                  <div class="w-3 rounded-t-[2px]" style="height: <%= gt60_h %>%; background: #fcb9c4;"></div>
-                </div>
-              <% end %>
-            <% end %>
-          </div>
+      <% if @processing_chart[:labels].empty? %>
+        <div class="flex h-[260px] w-full items-center justify-center text-[12px] text-slate-500" style="font-family: 'Poppins', system-ui, sans-serif;">
+          <%= t("dashboard.processing_chart.empty") %>
+        </div>
+      <% else %>
+        <div class="relative h-[260px] w-full">
+          <canvas data-processing-chart-target="canvas"></canvas>
         </div>
 
-        <%# X-axis labels (departments) + unit label %>
-        <div class="flex items-end gap-2 pl-10">
-          <div class="-ml-10 w-10 text-[10px] text-slate-500" style="font-family: 'Poppins', system-ui, sans-serif;"><%= t("dashboard.time_stats.unit_minutes") %></div>
-          <div class="flex flex-1 justify-between gap-2">
-            <% @processing_chart[:labels].each do |label| %>
-              <span class="flex-1 text-center text-[10px] text-slate-600" style="font-family: 'Poppins', system-ui, sans-serif;"><%= label %></span>
-            <% end %>
-          </div>
-        </div>
-
-        <%# Legend %>
         <div class="flex items-center justify-center gap-8 pt-4 text-[12px] text-slate-700" style="font-family: 'Poppins', system-ui, sans-serif;">
           <div class="flex items-center gap-2">
-            <span class="inline-block h-0.5 w-8" style="background: #00b69b;"></span>
+            <span class="inline-block h-3 w-3 rounded-sm" style="background: #00b69b;"></span>
             <span><%= t("dashboard.processing_chart.legend_0_30") %></span>
           </div>
           <div class="flex items-center gap-2">
-            <span class="inline-block h-0.5 w-8" style="background: #f4b400;"></span>
+            <span class="inline-block h-3 w-3 rounded-sm" style="background: #f4b400;"></span>
             <span><%= t("dashboard.processing_chart.legend_31_60") %></span>
           </div>
           <div class="flex items-center gap-2">
-            <span class="inline-block h-0.5 w-8" style="background: #f93c65;"></span>
+            <span class="inline-block h-3 w-3 rounded-sm" style="background: #f93c65;"></span>
             <span><%= t("dashboard.processing_chart.legend_gt_60") %></span>
           </div>
         </div>
-      </div>
+      <% end %>
     </section>
 
     <%# Statistik Waktu sidebar %>
