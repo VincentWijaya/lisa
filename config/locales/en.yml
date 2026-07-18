@@ -155,7 +155,7 @@ en:
       results_section: "Results"
       ai_summary_section: "AI Summary"
       ai_summary_placeholder: "Write or paste an AI-generated summary for this work…"
-      ai_summary_save: "Save summary"
+      ai_summary_save: "Save"
       ai_summary_generate: "Generate with AI"
       ai_summary_reset: "Reset"
       fields:
@@ -331,7 +331,7 @@ en:
       works_section: "Associated Works"
       ai_summary_section: "AI Summary"
       ai_summary_placeholder: "Write or paste an AI-generated summary for this specimen…"
-      ai_summary_save: "Save summary"
+      ai_summary_save: "Save"
       ai_summary_generate: "Generate with AI"
       ai_summary_reset: "Reset"
       fields:

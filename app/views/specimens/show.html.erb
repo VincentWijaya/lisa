@@ -1,83 +1,59 @@
 <div class="mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
   <div>
-    <%= link_to specimens_path, class: "inline-flex items-center gap-2 rounded-md border border-sky-700 px-3 py-1.5 text-sm font-semibold text-sky-700 hover:bg-sky-50" do %>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <line x1="19" y1="12" x2="5" y2="12"/>
-        <polyline points="12 19 5 12 12 5"/>
-      </svg>
+    <%= link_to specimens_path, class: "inline-flex items-center gap-2 rounded-md border border-sky-700 px-4 py-2 text-sm font-bold text-sky-700 hover:bg-sky-50" do %>
       <%= t("specimens.show.back") %>
     <% end %>
   </div>
 
-  <div class="space-y-2 border-b border-slate-200 pb-6">
-    <h1 class="text-[22px] font-semibold text-slate-800"><%= t("specimens.show.title") %></h1>
-    <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-sm text-slate-500">
+  <div class="space-y-1">
+    <h1 class="text-2xl font-bold text-slate-800"><%= t("specimens.show.title") %></h1>
+    <nav aria-label="Breadcrumb" class="flex items-center gap-1.5 text-sm text-slate-400">
       <%= link_to t("specimens.show.breadcrumb.specimens"), specimens_path, class: "hover:text-sky-700" %>
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <polyline points="9 18 15 12 9 6"/>
-      </svg>
-      <span class="font-semibold text-sky-700"><%= t("specimens.show.breadcrumb.current") %></span>
+      <span>▶</span>
+      <span class="text-sky-700 font-medium"><%= t("specimens.show.breadcrumb.current") %></span>
     </nav>
   </div>
 
-  <section class="rounded-2xl border border-slate-200 bg-sky-50 p-6 shadow-sm">
-    <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-      <div class="flex items-start gap-3">
-        <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-sky-700 text-white">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M9 3v8a3 3 0 0 0 6 0V3"/>
-            <path d="M9 3h6"/>
-            <path d="M6 21h12"/>
-            <path d="M10 13l-1 8"/>
-            <path d="M14 13l1 8"/>
-          </svg>
+  <%# Top Highlight Banner Bar %>
+  <section class="rounded-xl border border-slate-200 bg-sky-50 p-6 shadow-sm">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div class="flex items-center gap-3">
+        <%# Lab Beaker Icon %>
+        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#0556cf] text-white">
+         <%= image_tag "dashboard/ic-lab.svg", alt: "Lab Icon", class: "size-6" %>
         </div>
-        <h2 class="text-[22px] font-semibold text-slate-900 leading-9"><%= @specimen.order_number %></h2>
+        <h2 class="text-xl font-bold text-slate-800"><%= @specimen.order_number %></h2>
       </div>
-      <div class="flex flex-wrap items-center gap-2">
-        <%= link_to print_report_specimen_path(@specimen), target: "_blank", rel: "noopener", class: "inline-flex items-center gap-2 rounded-md bg-sky-700 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-600" do %>
+      <div class="flex flex-wrap items-center gap-3">
+        <%= link_to print_report_specimen_path(@specimen), target: "_blank", rel: "noopener", class: "inline-flex items-center gap-2 rounded-lg bg-[#0556cf] px-4 py-2.5 text-sm font-medium text-white hover:opacity-90" do %>
           <%= t("specimens.actions.print_report") %>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
         <% end %>
-        <%= link_to barcode_labels_specimen_path(@specimen), target: "_blank", rel: "noopener", class: "inline-flex items-center gap-2 rounded-md border border-sky-700 bg-white px-4 py-2 text-sm font-semibold text-sky-700 hover:bg-sky-50" do %>
+        <%= link_to barcode_labels_specimen_path(@specimen), target: "_blank", rel: "noopener", class: "inline-flex items-center gap-2 rounded-lg border border-[#0556cf] bg-white px-4 py-2.5 text-sm font-medium text-[#0556cf] hover:bg-slate-50" do %>
           <%= t("specimens.actions.print_labels") %>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
-            <line x1="7" y1="7" x2="7.01" y2="7"/>
-          </svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
         <% end %>
       </div>
     </div>
-    <div class="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-700">
+    
+    <%# Metadata List items matching exact screenshot icon tokens %>
+    <div class="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-700">
       <span class="inline-flex items-center gap-2">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="text-slate-500">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-          <circle cx="12" cy="7" r="4"/>
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-900"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         <%= @specimen.patient_name %>
       </span>
       <span class="inline-flex items-center gap-2">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="text-slate-500">
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-          <line x1="16" y1="2" x2="16" y2="6"/>
-          <line x1="8" y1="2" x2="8" y2="6"/>
-          <line x1="3" y1="10" x2="21" y2="10"/>
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-900"><rect x="3" y="4" width="18" height="14" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="4"/><line x1="8" y1="2" x2="8" y2="4"/><path d="M3 10h18"/></svg>
         <%= @specimen.medical_record_id %>
       </span>
       <span class="inline-flex items-center gap-2">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="text-slate-500">
-          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-          <circle cx="9" cy="7" r="4"/>
-          <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-900">
+          <%= specimen_gender_icon(@specimen.gender) %>
         </svg>
         <%= @specimen.gender %>
       </span>
       <span class="inline-flex items-center gap-2">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="text-slate-500">
-          <circle cx="12" cy="12" r="10"/>
-          <polyline points="12 6 12 12 16 14"/>
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-900"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
         <% if @specimen.age_in_years %>
           <%= t("specimens.show.age_value", years: @specimen.age_in_years) %>
         <% else %>
@@ -87,61 +63,87 @@
     </div>
   </section>
 
-  <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-    <div class="flex items-start justify-between gap-4">
-          <h2 class="border-b-2 border-sky-700 pb-3 text-lg font-semibold text-slate-900"><%= t("specimens.show.ai_summary_section") %></h2>
-      <div class="flex items-center gap-2">
-        <%= button_to t("specimens.show.ai_summary_generate"), generate_ai_summary_specimen_path(@specimen), method: :post, disabled: @specimen.complete?, class: "rounded-md bg-sky-700 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-600 cursor-pointer disabled:cursor-not-allowed disabled:bg-slate-300 disabled:hover:bg-slate-300", data: { turbo_confirm: "Generate ringkasan AI sekarang?" } %>
-        <% reset_class = @specimen.complete? ? "rounded-md border border-slate-300 bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-400 cursor-not-allowed" : "rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer" %>
-        <%= link_to t("specimens.show.ai_summary_reset"), @specimen.complete? ? "#" : specimen_path(@specimen), class: reset_class, aria: { disabled: @specimen.complete? } %>
-      </div>
+  <%# AI Summary Management Section %>
+  <section class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+    <%# Top Header Row: Title + "Buat dengan AI" Button %>
+    <div class="flex items-center justify-between gap-4 pb-4">
+      <h2 class="text-lg font-bold text-slate-800"><%= t("specimens.show.ai_summary_section") %></h2>
+      
+      <%= button_to generate_ai_summary_specimen_path(@specimen), 
+            method: :post, 
+            disabled: @specimen.complete?, 
+            class: "inline-flex items-center gap-2 rounded-lg border border-blue-600 bg-white px-4 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 transition", 
+            data: { turbo_confirm: "Generate ringkasan AI sekarang?" } do %>
+        <span><%= t("specimens.show.ai_summary_generate") %></span>
+        <%= image_tag "dashboard/ic-ai.svg", alt: "AI Icon", class: "size-4" %>
+      <% end %>
     </div>
-    <%= form_with model: @specimen, url: specimen_path(@specimen), method: :patch, class: "mt-4 space-y-3" do %>
+
+    <%# Exact Horizontal Accent Divider %>
+    <div class="h-0.5 w-full bg-[#0556cf]"></div>
+
+    <%# Form Container %>
+    <%= form_with model: @specimen, url: specimen_path(@specimen), method: :patch, class: "mt-4 space-y-4" do %>
       <%= text_area_tag "specimen[ai_summary]",
           @specimen.ai_summary,
-          rows: 4,
+          rows: 3,
           disabled: @specimen.complete?,
-          class: "block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500",
+          class: "block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 disabled:cursor-not-allowed disabled:bg-slate-50",
           placeholder: t("specimens.show.ai_summary_placeholder") %>
-      <div class="flex justify-end">
+      
+      <%# Bottom Right Actions Area %>
+      <div class="flex justify-end items-center gap-3">
+        <% reset_class = @specimen.complete? ? 
+          "rounded-lg border border-slate-200 bg-slate-100 px-4 py-2 text-sm font-medium text-slate-400 cursor-not-allowed pointer-events-none" : 
+          "rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 cursor-pointer transition" %>
+        <%= link_to t("specimens.show.ai_summary_reset"), @specimen.complete? ? "#" : specimen_path(@specimen), class: reset_class, aria: { disabled: @specimen.complete? } %>
+
         <%= submit_tag t("specimens.show.ai_summary_save"),
             disabled: @specimen.complete?,
-            class: "rounded-md bg-sky-700 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-600 cursor-pointer disabled:cursor-not-allowed disabled:bg-slate-300 disabled:hover:bg-slate-300" %>
+            class: "rounded-lg bg-[#0556cf] px-5 py-2 text-sm font-medium text-white hover:opacity-90 cursor-pointer disabled:cursor-not-allowed disabled:bg-slate-300 transition" %>
       </div>
     <% end %>
   </section>
 
+  <%# Grid info segments below %>
   <div class="grid gap-6 lg:grid-cols-2">
-    <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 class="border-b-2 border-sky-700 pb-3 text-lg font-semibold text-slate-900"><%= t("specimens.show.patient_section") %></h2>
-      <dl class="mt-4 space-y-3 text-sm text-slate-700">
-        <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-900"><%= t("specimens.show.fields.patient_id") %></dt><dd class="text-slate-900"><%= @specimen.patient_id %></dd></div>
-        <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-900"><%= t("specimens.show.fields.medical_record") %></dt><dd class="text-slate-900"><%= @specimen.medical_record_id %></dd></div>
-        <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-900"><%= t("specimens.show.fields.birth_date") %></dt><dd class="text-slate-900"><%= @specimen.birth_date %></dd></div>
-        <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-900"><%= t("specimens.show.fields.gender") %></dt><dd class="text-slate-900"><%= @specimen.gender %></dd></div>
-        <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-900"><%= t("specimens.show.fields.referring_doctor") %></dt><dd class="text-slate-900"><%= @specimen.referring_doctor.presence || "-" %></dd></div>
-        <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-900"><%= t("specimens.show.fields.affiliation") %></dt><dd class="text-slate-900"><%= @specimen.affiliation.presence || "-" %></dd></div>
-        <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-900"><%= t("specimens.show.fields.responsible_doctor") %></dt><dd class="text-slate-900"><%= @specimen.responsible_doctor.presence || "-" %></dd></div>
-        <% if @specimen.patient_address.present? %>
-          <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-900"><%= t("specimens.show.fields.patient_address") %></dt><dd class="text-slate-900"><%= @specimen.patient_address %></dd></div>
-        <% end %>
+    <%# Data Pasien %>
+    <section class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm space-y-4">
+      <div class="flex items-center gap-2 border-l-4 border-blue-700 pl-3">
+        <h2 class="text-lg font-bold text-slate-900"><%= t("specimens.show.patient_section") %></h2>
+      </div>
+      <hr class="border-blue-600" />
+      <dl class="space-y-3 text-sm">
+        <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-700"><%= t("specimens.show.fields.patient_id") %></dt><dd class="text-slate-900"><%= @specimen.patient_id %></dd></div>
+        <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-700"><%= t("specimens.show.fields.medical_record") %></dt><dd class="text-slate-900"><%= @specimen.medical_record_id %></dd></div>
+        <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-700"><%= t("specimens.show.fields.birth_date") %></dt><dd class="text-slate-900"><%= @specimen.birth_date %></dd></div>
+        <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-700"><%= t("specimens.show.fields.gender") %></dt><dd class="text-slate-900"><%= @specimen.gender %></dd></div>
+        <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-700"><%= t("specimens.show.fields.referring_doctor") %></dt><dd class="text-slate-900"><%= @specimen.referring_doctor.presence || "-" %></dd></div>
+        <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-700"><%= t("specimens.show.fields.affiliation") %></dt><dd class="text-slate-900"><%= @specimen.affiliation.presence || "-" %></dd></div>
+        <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-700"><%= t("specimens.show.fields.responsible_doctor") %></dt><dd class="text-slate-900"><%= @specimen.responsible_doctor.presence || "-" %></dd></div>
       </dl>
     </section>
 
-    <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 class="border-b-2 border-sky-700 pb-3 text-lg font-semibold text-slate-900"><%= t("specimens.show.collection_section") %></h2>
-      <dl class="mt-4 space-y-3 text-sm text-slate-700">
-        <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-900"><%= t("specimens.show.fields.lab_id") %></dt><dd class="text-slate-900"><%= @specimen.lab_id %></dd></div>
-        <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-900"><%= t("specimens.show.fields.medical_record") %></dt><dd class="text-slate-900"><%= @specimen.medical_record_id %></dd></div>
-        <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-900"><%= t("specimens.show.fields.collected_at") %></dt><dd class="text-slate-900"><%= @specimen.collection_datetime ? l(@specimen.collection_datetime, format: :short_with_year) : "-" %></dd></div>
-        <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-900"><%= t("specimens.show.fields.dianognes") %></dt><dd class="text-slate-900"><%= @specimen.dianognes.presence || "-" %></dd></div>
-        <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-900"><%= t("specimens.show.fields.status") %></dt><dd><span class="inline-flex items-center rounded-[13.5px] px-3 py-1 text-sm font-bold <%= specimen_status_classes(@specimen.status) %>"><%= t("specimens.status.#{@specimen.status}") %></span></dd></div>
+    <%# Data Pengambilan %>
+    <section class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm space-y-4">
+      <div class="flex items-center gap-2 border-l-4 border-blue-700 pl-3">
+        <h2 class="text-lg font-bold text-slate-900"><%= t("specimens.show.collection_section") %></h2>
+      </div>
+      <hr class="border-blue-600" />
+      <dl class="space-y-3 text-sm">
+        <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-700"><%= t("specimens.show.fields.lab_id") %></dt><dd class="text-slate-900"><%= @specimen.lab_id %></dd></div>
+        <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-700"><%= t("specimens.show.fields.medical_record") %></dt><dd class="text-slate-900"><%= @specimen.medical_record_id %></dd></div>
+        <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-700"><%= t("specimens.show.fields.collected_at") %></dt><dd class="text-slate-900"><%= @specimen.collection_datetime ? l(@specimen.collection_datetime, format: :short_with_year) : "-" %></dd></div>
+        <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-700"><%= t("specimens.show.fields.dianognes") %></dt><dd class="text-slate-900"><%= @specimen.dianognes.presence || "-" %></dd></div>
+        <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-700"><%= t("specimens.show.fields.status") %></dt><dd><span class="inline-flex items-center rounded-xl bg-yellow-100 px-3 py-1 text-xs font-bold text-yellow-700"><%= t("specimens.status.#{@specimen.status}") %></span></dd></div>
       </dl>
     </section>
   </div>
 
   <section class="space-y-4">
-    <h2 class="text-lg font-semibold text-slate-900"><%= t("specimens.show.works_section") %></h2>
+    <div class="ml-4 flex items-center gap-2 border-l-4 border-blue-700 pl-3">
+      <h2 class="text-lg font-semibold text-slate-900"><%= t("specimens.show.works_section") %></h2>
+    </div>
     <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
       <div class="max-h-[28rem] overflow-x-auto overflow-y-auto">
         <table class="min-w-full divide-y divide-slate-200 text-sm">

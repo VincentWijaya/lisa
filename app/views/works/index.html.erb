@@ -89,10 +89,10 @@
                 <td class="px-4 py-4 align-middle">
                   <div class="flex items-center gap-4" data-controller="barcode-scanner">
                     <%= link_to work_path(work), title: t("works.actions.view"), aria: { label: t("works.actions.view") }, data: { turbo_frame: "_top" }, class: "inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-slate-600 transition hover:bg-slate-100" do %>
-                      <%= image_tag "table/ic-eye.svg", alt: "", class: "h-5 w-5" %>
+                      <%= image_tag "table/ic-eye.svg", alt: "", class: "h-7 w-7" %>
                     <% end %>
                     <%= link_to barcode_label_work_path(work), target: "_blank", rel: "noopener", title: t("works.actions.print_barcode"), aria: { label: t("works.actions.print_barcode") }, data: { turbo_frame: "_top" }, class: "inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-slate-600 transition hover:bg-slate-100" do %>
-                      <%= image_tag "table/ic-barcode.svg", alt: "", class: "h-5 w-5" %>
+                      <%= image_tag "table/ic-barcode.svg", alt: "", class: "h-7 w-7" %>
                     <% end %>
                     <% if work.pending? %>
                       <%= button_tag type: "button",
@@ -100,12 +100,12 @@
                             aria: { label: t("works.actions.validate") },
                             data: { action: "click->barcode-scanner#open" },
                             class: "inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md transition hover:bg-slate-100" do %>
-                        <%= image_tag "table/ic-checked.svg", alt: "", class: "h-5 w-5" %>
+                        <%= image_tag "table/ic-checked.svg", alt: "", class: "h-7 w-7" %>
                       <% end %>
                       <%= render "works/scan_validation_modal", work: work %>
                     <% else %>
                       <span title="<%= t("works.actions.validate") %>" aria-label="<%= t("works.actions.validate") %>" class="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md opacity-40 cursor-not-allowed">
-                        <%= image_tag "table/ic-check-disabled.svg", alt: "", class: "h-5 w-5" %>
+                        <%= image_tag "table/ic-check-disabled.svg", alt: "", class: "h-7 w-7" %>
                       </span>
                     <% end %>
                   </div>

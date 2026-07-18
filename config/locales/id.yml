@@ -305,8 +305,8 @@ id:
       results_section: "Hasil Pemeriksaan"
       ai_summary_section: "Ringkasan AI"
       ai_summary_placeholder: "Tulis atau tempel ringkasan hasil AI untuk pekerjaan ini…"
-      ai_summary_save: "Simpan ringkasan"
-      ai_summary_generate: "Generate dengan AI"
+      ai_summary_save: "Simpan"
+      ai_summary_generate: "Buat dengan AI"
       ai_summary_reset: "Reset"
       fields:
         patient: "Pasien"
@@ -482,8 +482,8 @@ id:
       works_section: "Pekerjaan Terkait"
       ai_summary_section: "Ringkasan AI"
       ai_summary_placeholder: "Tulis atau tempel ringkasan hasil AI untuk spesimen ini…"
-      ai_summary_save: "Perbarui ringkasan"
-      ai_summary_generate: "Generate dengan AI"
+      ai_summary_save: "Simpan"
+      ai_summary_generate: "Buat dengan AI"
       ai_summary_reset: "Reset"
       fields:
         patient_id: "ID Pasien"
