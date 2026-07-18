@@ -59,7 +59,7 @@ export default class extends Controller {
           {
             label: this.legendLt30Value,
             data: this.lt30Value,
-            backgroundColor: "#00b69b",
+            backgroundColor: "#D9F7E8",
             borderRadius: 2,
             barThickness: 40,
             barPercentage: 1.0,
@@ -68,7 +68,7 @@ export default class extends Controller {
           {
             label: this.legendMidValue,
             data: this.midValue,
-            backgroundColor: "#f4b400",
+            backgroundColor: "#FFF3D6",
             borderRadius: 2,
             barThickness: 40,
             barPercentage: 1.0,
@@ -77,7 +77,7 @@ export default class extends Controller {
           {
             label: this.legendGt60Value,
             data: this.gt60Value,
-            backgroundColor: "#f93c65",
+            backgroundColor: "#FFB3B3",
             borderRadius: 2,
             barThickness: 40,
             barPercentage: 1.0,
