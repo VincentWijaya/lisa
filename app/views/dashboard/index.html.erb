@@ -35,16 +35,16 @@
             data-date-picker-base-url-value="<%= root_path %>"
             data-date-picker-max-value="<%= Date.current.iso8601 %>"
             data-action="click@window->date-picker#close"
-            class="relative inline-block">
+            class="relative">
         
         <button type="button"
                 data-action="click->date-picker#open"
                 data-date-picker-target="trigger"
                 data-placeholder="<%= t("dashboard.date_label") %>"
-                class="inline-flex items-center gap-2 rounded-md border border-slate-300 bg-white px-4 py-2 text-sm text-slate-600 hover:border-slate-400 min-w-[180px]"
+                class="inline-flex items-center gap-3 rounded-md border border-slate-300 bg-white px-4 py-2 text-sm text-[#606060] hover:text-slate-800 min-w-[243px] h-[33px]"
                 style="font-family: 'Poppins', system-ui, sans-serif;">
-          <span><%= t("dashboard.date_label") %></span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="ml-auto text-slate-500"><polyline points="6 9 12 15 18 9"/></svg>
+          <%= image_tag "dashboard/ic-calendar.svg", alt: "", class: "size-5 shrink-0", aria: { hidden: true } %>
+          <span data-date-picker-target="triggerText"><%= t("dashboard.date_label") %></span>
         </button>
 
         <%# Popover %>

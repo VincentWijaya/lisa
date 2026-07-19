@@ -86,9 +86,8 @@
     <%= form_with model: @specimen, url: specimen_path(@specimen), method: :patch, class: "mt-4 space-y-4" do %>
       <%= text_area_tag "specimen[ai_summary]",
           @specimen.ai_summary,
-          rows: 3,
           disabled: @specimen.complete?,
-          class: "block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 disabled:cursor-not-allowed disabled:bg-slate-50",
+          class: "block w-full min-h-[250px] overflow-y-auto resize-y rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 disabled:cursor-not-allowed disabled:bg-slate-50",
           placeholder: t("specimens.show.ai_summary_placeholder") %>
       
       <%# Bottom Right Actions Area %>

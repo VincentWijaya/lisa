@@ -6,7 +6,7 @@ import { Controller } from "@hotwired/stimulus"
 // - "Terapkan" / "Reset" buttons update the trigger label + refresh the
 //   dashboard_stats Turbo Frame.
 export default class extends Controller {
-  static targets = [ "startInput", "endInput", "trigger", "popover", "applyBtn", "resetBtn" ]
+  static targets = [ "startInput", "endInput", "trigger", "popover", "applyBtn", "resetBtn", "triggerText" ]
   static values  = { baseUrl: String, max: String }
 
   connect() {
@@ -71,13 +71,13 @@ export default class extends Controller {
   }
 
   syncTrigger() {
-    if (!this.hasTriggerTarget) return
+    if (!this.hasTriggerTextTarget) return
     const s = this.startInputTarget.value
     const e = this.endInputTarget.value
     if (s || e) {
-      this.triggerTarget.textContent = `${s || "..."} → ${e || "..."}`
+      this.triggerTextTarget.textContent = `${s || "..."} → ${e || "..."}`
     } else {
-      this.triggerTarget.textContent = this.triggerTarget.dataset.placeholder || ""
+      this.triggerTextTarget.textContent = this.triggerTarget.dataset.placeholder || ""
     }
   }
 }
