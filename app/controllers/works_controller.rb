@@ -8,7 +8,7 @@ class WorksController < ApplicationController
                 .search(params[:q])
                 .filter_by_status(params[:status])
                 .distinct
-    @pagy, @works = pagy(:countless, scope, limit: 10)
+    @pagy, @works = pagy(scope, limit: 10)
   end
 
   def show

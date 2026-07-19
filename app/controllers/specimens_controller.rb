@@ -10,7 +10,7 @@ class SpecimensController < ApplicationController
                     .filter_by_medical_record_id(params[:medical_record_id])
                     .filter_by_order_number(params[:order_number])
                     .order(created_at: :desc)
-    @pagy, @specimens = pagy(:countless, scope, limit: 10)
+    @pagy, @specimens = pagy(scope, limit: 10)
   end
 
   def new

@@ -1,29 +1,46 @@
 <%#
-  Pagy Tailwind pagination nav.
+  Pagy Tailwind pagination nav — matches dashboard reference style.
   Usage: <render "shared/pagination", pagy: @pagy>
 %>
-<% if pagy.previous || pagy.next %>
+<% if pagy.pages > 1 %>
   <nav class="flex items-center justify-between px-4 py-3 sm:px-6" aria-label="<%= t('pagination.aria_label', default: 'Pagination') %>">
-    <div class="ml-auto flex gap-1">
-      <%# Previous %>
-      <% if pagy.previous %>
-        <%= link_to pagy.page_url(pagy.previous),
-              class: "inline-flex items-center rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50" do %>
-          ‹ <%= t("pagination.previous", default: "Sebelumnya") %>
+    <div class="flex items-center gap-[3px]">
+      <span class="text-blue-600 text-sm font-bold"><%= pagy.from %></span>
+      <span class="text-slate-400 text-sm">-</span>
+      <span class="text-slate-500 text-sm"><%= pagy.to %></span>
+      <span class="text-slate-500 text-sm ml-1"><%= t("pagination.of", default: "of") %> <%= pagy.count %></span>
+    </div>
+    <div class="flex items-center gap-4">
+      <div class="flex items-center gap-3">
+        <span class="text-slate-700 text-sm"><%= t("pagination.page", default: "Halaman") %></span>
+        <%= form_tag request.path, method: :get, data: { turbo_frame: "_top" }, class: "flex items-center" do %>
+          <% request.query_parameters.except("page", "utf8").each do |k, v| %>
+            <%= hidden_field_tag k, v %>
+          <% end %>
+          <div class="relative">
+            <%= select_tag :page, options_for_select(1..pagy.pages, pagy.page),
+                  onchange: "this.form.submit()",
+                  class: "block rounded-lg border border-slate-300 py-1 pl-2 pr-7 text-sm text-slate-700 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 appearance-none bg-white cursor-pointer" %>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 text-slate-700" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
         <% end %>
-      <% else %>
-        <span class="inline-flex items-center rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-400 cursor-not-allowed">‹ <%= t("pagination.previous", default: "Sebelumnya") %></span>
-      <% end %>
-
-      <%# Next %>
-      <% if pagy.next %>
-        <%= link_to pagy.page_url(pagy.next),
-              class: "inline-flex items-center rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50" do %>
-          <%= t("pagination.next", default: "Berikutnya") %> ›
+      </div>
+      <div class="flex items-center gap-1.5">
+        <% if pagy.previous %>
+          <%= link_to "<", pagy.page_url(pagy.previous),
+                class: "inline-flex items-center justify-center min-w-[32px] h-7 rounded-lg border border-slate-300 text-sm font-medium text-slate-700 hover:bg-slate-50 transition" %>
+        <% else %>
+          <span class="inline-flex items-center justify-center min-w-[32px] h-7 rounded-lg border border-slate-200 text-sm font-medium text-slate-400 cursor-not-allowed"><</span>
         <% end %>
-      <% else %>
-        <span class="inline-flex items-center rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-400 cursor-not-allowed"><%= t("pagination.next", default: "Berikutnya") %> ›</span>
-      <% end %>
+        <% if pagy.next %>
+          <%= link_to ">", pagy.page_url(pagy.next),
+                class: "inline-flex items-center justify-center min-w-[32px] h-7 rounded-lg border border-slate-300 text-sm font-medium text-slate-700 hover:bg-slate-50 transition" %>
+        <% else %>
+          <span class="inline-flex items-center justify-center min-w-[32px] h-7 rounded-lg border border-slate-200 text-sm font-medium text-slate-400 cursor-not-allowed">></span>
+        <% end %>
+      </div>
     </div>
   </nav>
 <% end %>
