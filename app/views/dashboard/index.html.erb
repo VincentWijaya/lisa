@@ -141,52 +141,123 @@
         </section>
       </div>
 
-      <%# List sections %>
+      <%# List sections — Lihat semua BELOW the list, centered, bigger (Figma style) %>
       <div class="grid gap-6 xl:grid-cols-2">
-        <%# Recent specimens %>
+        <%# Recent specimens (Spesimen Tertunda = pending) %>
         <section>
-          <h2 class="mb-4 flex items-center gap-2 border-l-4 border-[#0556cf] pl-3 text-[20px] font-semibold text-slate-900"><%= t("dashboard.recent_specimens.title") %></h2>
+          <h2 class="mb-4 flex items-center gap-2 border-l-4 border-[#0556cf] pl-3 text-[20px] font-semibold text-slate-900" style="font-family: 'Poppins', system-ui, sans-serif;">
+            <%= t("dashboard.recent_specimens.title") %>
+          </h2>
           <div class="overflow-hidden rounded-[12px] border-2 border-[#ececec]">
             <% @recent_specimens.each do |specimen| %>
               <%= link_to specimen_path(specimen), data: { turbo_frame: "_top" }, class: "flex items-center gap-[10px] border-b border-[#e5e5ea] bg-white px-4 py-4 last:border-b-0 hover:bg-slate-50" do %>
-                <div class="flex size-12 shrink-0 items-center justify-center rounded-[24px] bg-[#0556cf]"><span class="text-[16px] font-bold text-white">SP</span></div>
+                <%# Avatar %>
+                <div class="flex size-12 shrink-0 items-center justify-center rounded-[24px] bg-[#0556cf]">
+                  <span class="text-[16px] font-bold text-white" style="font-family: 'Poppins', system-ui, sans-serif;">SP</span>
+                </div>
+
+                <%# Details %>
                 <div class="flex flex-1 flex-col gap-[10px] py-1">
                   <div class="flex items-center gap-[10px]">
-                    <p class="text-[18px] font-semibold text-[#0556cf]"><%= specimen.order_number %></p>
-                    <p class="text-[16px] font-medium text-black"><%= specimen.medical_record_id %></p>
+                    <p class="text-[18px] font-semibold text-[#0556cf]" style="font-family: 'Poppins', system-ui, sans-serif;"><%= specimen.order_number %></p>
+                    <p class="text-[16px] font-medium text-black" style="font-family: 'Poppins', system-ui, sans-serif;"><%= specimen.medical_record_id %></p>
                   </div>
-                  <div class="flex items-center gap-4">
+                  
+                  <!-- Changed grid to flex w-full justify-between to force items to spread equally -->
+                  <div class="flex w-full justify-between items-center min-h-[25px]" bis_skin_checked="1">
+                    
+                    <!-- Item 1: Name -->
                     <div class="flex items-center gap-2">
-                      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" class="text-slate-700"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                      <p class="text-[12px] text-black"><%= specimen.patient_name %></p>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-700 shrink-0 w-4 h-4" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                      <p class="text-[12px] text-black truncate" style="font-family: 'Poppins', system-ui, sans-serif;"><%= specimen_gender_key(specimen.gender) == "female" && specimen.patient_name.to_s.length > 9 ? specimen.patient_name.to_s[0, 9] : specimen.patient_name %></p>
                     </div>
+                    
+                    <!-- Item 2: Gender -->
+                    <% if specimen.gender.present? %>
+                      <div class="flex items-center gap-2">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-700 shrink-0 w-4 h-4" aria-hidden="true"><%= specimen_gender_icon(specimen.gender) %></svg>
+                        <p class="text-[12px] text-black" style="font-family: 'Poppins', system-ui, sans-serif;"><%= t("specimens.gender.#{specimen_gender_key(specimen.gender)}", default: specimen.gender) %></p>
+                      </div>
+                    <% end %>
+                    
+                    <!-- Item 3: Age -->
+                    <% if specimen.age_in_years %>
+                      <div class="flex items-center gap-2">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-700 shrink-0 w-4 h-4" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <p class="text-[12px] text-black" style="font-family: 'Poppins', system-ui, sans-serif;"><%= t("specimens.show.age_value", years: specimen.age_in_years) %></p>
+                      </div>
+                    <% end %>
+                    
                   </div>
                 </div>
-                <div class="shrink-0"><span class="inline-flex items-center rounded-[13.5px] px-3 py-1 text-[14px] font-bold <%= specimen_status_classes(specimen.status) %>"><%= t("specimens.status.#{specimen.status}") %></span></div>
+
+                <%# Status badge %>
+                <div class="shrink-0">
+                  <span class="inline-flex items-center rounded-[13.5px] px-3 py-1 text-[14px] font-bold <%= specimen_status_classes(specimen.status) %>" style="font-family: 'Poppins', system-ui, sans-serif;">
+                    <%= t("specimens.status.#{specimen.status}") %>
+                  </span>
+                </div>
               <% end %>
             <% end %>
+            <% if @recent_specimens.empty? %>
+              <div class="bg-white p-12 text-center text-sm text-slate-500"><%= t("dashboard.recent_specimens.empty") %></div>
+            <% end %>
           </div>
-          <div class="mt-4 text-center"><%= link_to t("dashboard.recent_specimens.view_all"), specimens_path, data: { turbo_frame: "_top" }, class: "text-[20px] font-medium text-[#0556cf] hover:underline" %></div>
+          <%# Lihat semua — centered, below list %>
+          <div class="mt-4 text-center">
+            <%= link_to t("dashboard.recent_specimens.view_all"), specimens_path, data: { turbo_frame: "_top" }, class: "text-[20px] font-medium text-[#0556cf] hover:underline", style: "font-family: 'Poppins', system-ui, sans-serif;" %>
+          </div>
         </section>
 
-        <%# Recent works %>
+        <%# Recent works (Pekerjaan Terbaru) %>
         <section>
-          <h2 class="mb-4 flex items-center gap-2 border-l-4 border-[#0556cf] pl-3 text-[20px] font-semibold text-slate-900"><%= t("dashboard.recent_works.title") %></h2>
+          <h2 class="mb-4 flex items-center gap-2 border-l-4 border-[#0556cf] pl-3 text-[20px] font-semibold text-slate-900" style="font-family: 'Poppins', system-ui, sans-serif;">
+            <%= t("dashboard.recent_works.title") %>
+          </h2>
           <div class="overflow-hidden rounded-[12px] border-2 border-[#ececec]">
             <% @recent_works.each do |work| %>
               <%= link_to work_path(work), data: { turbo_frame: "_top" }, class: "flex items-center gap-[10px] border-b border-[#e5e5ea] bg-white px-4 py-4 last:border-b-0 hover:bg-slate-50" do %>
-                <div class="flex size-12 shrink-0 items-center justify-center rounded-[24px] bg-[#0556cf]"><span class="text-[16px] font-bold text-white">PK</span></div>
+                <%# Avatar %>
+                <div class="flex size-12 shrink-0 items-center justify-center rounded-[24px] bg-[#0556cf]">
+                  <span class="text-[16px] font-bold text-white" style="font-family: 'Poppins', system-ui, sans-serif;">PK</span>
+                </div>
+
+                <%# Details %>
                 <div class="flex flex-1 flex-col gap-[10px] py-1">
                   <div class="flex items-center gap-[10px]">
-                    <p class="text-[18px] font-semibold text-[#0556cf]"><%= work.barcode_id %></p>
-                    <p class="text-[16px] font-medium text-black"><%= work.specimen.medical_record_id || work.examination.name %></p>
+                    <p class="text-[18px] font-semibold text-[#0556cf]" style="font-family: 'Poppins', system-ui, sans-serif;"><%= work.barcode_id %></p>
+                    <p class="text-[16px] font-medium text-black" style="font-family: 'Poppins', system-ui, sans-serif;"><%= work.specimen.medical_record_id || work.examination.name %></p>
+                  </div>
+                  <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-700" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                      <p class="text-[12px] text-black" style="font-family: 'Poppins', system-ui, sans-serif;"><%= work.specimen.patient_name %></p>
+                    </div>
+                    <% if work.examination.code.present? %>
+                      <div class="flex items-center gap-2">
+                        <%= image_tag "sidebar/icon-specimens.svg", alt: "ic-specimen", class: "size-4" %>
+                        <p class="text-[12px] text-black" style="font-family: 'Poppins', system-ui, sans-serif;"><%= "#{work.examination.code}" %></p>
+                      </div>
+                    <% end %>
                   </div>
                 </div>
-                <div class="shrink-0"><span class="inline-flex items-center rounded-[13.5px] px-3 py-1 text-[14px] font-bold <%= work_status_classes(work.status) %>"><%= t("works.status.#{work.status}") %></span></div>
+
+                <%# Status badge %>
+                <div class="shrink-0">
+                  <span class="inline-flex items-center rounded-[13.5px] px-3 py-1 text-[14px] font-bold <%= work_status_classes(work.status) %>" style="font-family: 'Poppins', system-ui, sans-serif;">
+                    <%= t("works.status.#{work.status}") %>
+                  </span>
+                </div>
               <% end %>
             <% end %>
+            <% if @recent_works.empty? %>
+              <div class="bg-white p-12 text-center text-sm text-slate-500"><%= t("dashboard.recent_works.empty") %></div>
+            <% end %>
           </div>
-          <div class="mt-4 text-center"><%= link_to t("dashboard.recent_works.view_all"), works_path, data: { turbo_frame: "_top" }, class: "text-[20px] font-medium text-[#0556cf] hover:underline" %></div>
+          <%# Lihat semua — centered, below list %>
+          <div class="mt-4 text-center">
+            <%= link_to t("dashboard.recent_works.view_all"), works_path, data: { turbo_frame: "_top" }, class: "text-[20px] font-medium text-[#0556cf] hover:underline", style: "font-family: 'Poppins', system-ui, sans-serif;" %>
+          </div>
         </section>
       </div>
 
