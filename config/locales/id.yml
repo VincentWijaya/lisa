@@ -511,7 +511,7 @@ id:
       works_empty: "Belum ada pekerjaan yang terhubung ke spesimen ini."
     actions:
       view: "Lihat"
-      print_labels: "Cetak Label"
+      print_labels: "Cetak Barcode"
       print_report: "Cetak Laporan"
       print_barcode: "Cetak Barcode"
       send_report: "Kirim Laporan"

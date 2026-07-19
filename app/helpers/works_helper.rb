@@ -12,7 +12,7 @@ module WorksHelper
 
   def work_status_classes(status)
     case status
-    when "verified"  then "bg-[#cefde3] text-[#2f6740]"
+    when "verified"  then "bg-[#dbeafe] text-[#1e40af]"
     when "validated" then "bg-[#cefde3] text-[#2f6740]"
     when "cancelled" then "bg-rose-100 text-rose-800"
     else "bg-[#fceeb3] text-[#b28c2f]"
