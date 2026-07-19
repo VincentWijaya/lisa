@@ -121,10 +121,10 @@ RSpec.describe "Specimens manual input", type: :request do
       expect(flash[:alert]).to include("inactive")
     end
 
-    it "requires patient name, patient id, birth date, and lab id" do
+    it "requires patient name, patient id, and birth date" do
       expect {
         post specimens_path, params: valid_params.deep_merge(
-          specimen: { patient_name: "", patient_id: "", birth_date: "", lab_id: "" }
+          specimen: { patient_name: "", patient_id: "", birth_date: "" }
         )
       }.not_to change(Specimen, :count)
 

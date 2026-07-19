@@ -15,7 +15,6 @@ class Specimen < ApplicationRecord
   validates :patient_name, presence: true
   validates :birth_date,   presence: true
   validates :gender,       presence: true
-  validates :lab_id,       presence: true
   validates :order_number, presence: true, uniqueness: true
   validates :status,       presence: true
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_05_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_19_145812) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -110,7 +110,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_05_000000) do
     t.string "department"
     t.text "dianognes"
     t.string "gender", null: false
-    t.string "lab_id", null: false
+    t.string "lab_id", default: "LAB-01"
     t.string "medical_record_id"
     t.string "order_number", null: false
     t.text "patient_address"

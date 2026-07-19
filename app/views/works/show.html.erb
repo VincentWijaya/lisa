@@ -149,7 +149,6 @@
       <dl class="mt-4 space-y-3 text-sm text-slate-700">
         <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-900"><%= t("works.show.fields.status") %></dt><dd><span class="inline-flex items-center rounded-[13.5px] px-3 py-1 text-sm font-bold <%= work_status_classes(@work.status) %>"><%= t("works.status.#{@work.status}") %></span></dd></div>
         <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-900"><%= t("works.show.fields.specimen_type") %></dt><dd class="text-slate-900"><%= @work.specimen_type %></dd></div>
-        <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-900"><%= t("works.show.fields.result") %></dt><dd class="text-slate-900"><%= work_result_value(@work) %></dd></div>
         <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-900"><%= t("works.show.fields.interpretation") %></dt><dd class="text-slate-900"><%= work_interpretation_label(@work) %></dd></div>
         <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-900"><%= t("works.show.fields.verified_at") %></dt><dd class="text-slate-900"><%= @work.verified_at ? l(@work.verified_at, format: :short_with_year) : "-" %></dd></div>
         <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-900"><%= t("works.show.fields.validated_at") %></dt><dd class="text-slate-900"><%= @work.validated_at ? l(@work.validated_at, format: :short_with_year) : "-" %></dd></div>

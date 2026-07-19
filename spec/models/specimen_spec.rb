@@ -12,7 +12,7 @@ RSpec.describe Specimen, type: :model do
     it { is_expected.to validate_presence_of(:patient_name) }
     it { is_expected.to validate_presence_of(:birth_date) }
     it { is_expected.to validate_presence_of(:gender) }
-    it { is_expected.to validate_presence_of(:lab_id) }
+
     it { is_expected.to validate_presence_of(:order_number) }
     it { is_expected.to define_enum_for(:status).backed_by_column_of_type(:string).with_values(pending: "pending", in_progress: "in_progress", complete: "complete", cancelled: "cancelled") }
   end

@@ -18,7 +18,6 @@ class SpecimensController < ApplicationController
                                       .order(:category, :name)
                                       .group_by(&:category)
     @specimen = Specimen.new(
-      lab_id: "LAB-01",
       gender: "Laki-laki"
     )
   end
