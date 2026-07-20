@@ -61,8 +61,8 @@ module Dashboard
           }
         },
         stats: {
-          avg_tat_minutes: avg_tat_seconds ? (avg_tat_seconds / 60.0).round : nil,
-          pct_under_60:    total_verified.positive? ? ((under_60_count.to_f / total_verified) * 100).round : nil,
+          avg_tat_minutes: avg_tat_seconds ? (avg_tat_seconds / 60.0).round : 0,
+          pct_under_60:    total_verified.positive? ? ((under_60_count.to_f / total_verified) * 100).round : 0,
           target_minutes:  TARGET_MINUTES,
           verified_count:  total_verified
         }

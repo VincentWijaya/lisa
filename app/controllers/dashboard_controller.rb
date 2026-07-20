@@ -13,10 +13,10 @@ class DashboardController < ApplicationController
 
     processing = Rails.cache.fetch(cache_key_for(@start_date, @end_date, "processing"), expires_in: STATS_TTL) do
       Dashboard::ProcessingTimeService.call(start_date: @start_date, end_date: @end_date)
-    end
+    end.with_indifferent_access
+
     @processing_chart = processing[:chart]
     @time_stats      = build_time_stats(processing[:stats])
-
     @summary_cards = [
       {
         title:    t("dashboard.cards.pending_specimens"),
@@ -71,9 +71,6 @@ class DashboardController < ApplicationController
                         .for_range(@start_date, @end_date)
                         .order(created_at: :desc)
                         .limit(5)
-
-    @processing_chart = processing[:chart]
-    @time_stats      = build_time_stats(processing[:stats])
   end
 
   private
@@ -117,13 +114,13 @@ class DashboardController < ApplicationController
 
     [
       {
-        value: avg_tat ? "#{avg_tat} #{t('dashboard.time_stats.unit_minutes')}" : t("dashboard.time_stats.empty_value"),
-        tone:  avg_tat && avg_tat < target ? "emerald" : "dark",
+        value: avg_tat.nil? || avg_tat.zero? ? t("dashboard.time_stats.empty_value") : "#{avg_tat} #{t('dashboard.time_stats.unit_minutes')}",
+        tone:  avg_tat.nil? || avg_tat.zero? ? "dark" : (avg_tat > target ? "red" : "emerald"),
         label: t("dashboard.time_stats.avg_tat")
       },
       {
         value: pct_60.nil? ? t("dashboard.time_stats.empty_value") : "#{pct_60}%",
-        tone:  pct_60 && pct_60 >= 50 ? "emerald" : "dark",
+        tone:  pct_60.nil? || pct_60.zero? ? "dark" : (pct_60 < 50 ? "red" : "emerald"),
         label: t("dashboard.time_stats.tat_ratio")
       },
       {

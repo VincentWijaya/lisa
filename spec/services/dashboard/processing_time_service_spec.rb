@@ -23,6 +23,7 @@ RSpec.describe Dashboard::ProcessingTimeService do
     work = create(:work, specimen: specimen, examination: examination, status: "pending")
     work.update_columns(status: "verified",
                         created_at: Time.current - tat_minutes.minutes,
+                        validated_at: Time.current,
                         verified_at: Time.current)
     work
   end
@@ -121,10 +122,10 @@ RSpec.describe Dashboard::ProcessingTimeService do
         expect(result[:stats][:verified_count]).to eq(4)
       end
 
-      it "returns nil averages when no verified works exist" do
+      it "returns 0 averages when no verified works exist" do
         result = described_class.call(start_date: start_date, end_date: end_date)
-        expect(result[:stats][:avg_tat_minutes]).to be_nil
-        expect(result[:stats][:pct_under_60]).to be_nil
+        expect(result[:stats][:avg_tat_minutes]).to eq(0)
+        expect(result[:stats][:pct_under_60]).to eq(0)
         expect(result[:stats][:verified_count]).to eq(0)
       end
 

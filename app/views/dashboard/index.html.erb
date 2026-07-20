@@ -132,9 +132,9 @@
           <div class="space-y-5">
             <% @time_stats.each do |stat| %>
               <div>
-                <p class="text-[24px] font-bold <%= stat[:tone] == 'emerald' ? 'text-[#00b69b]' : 'text-slate-900' %>"><%= stat[:value] %></p>
+                <p class="text-[24px] font-bold <%= case stat[:tone] when 'emerald' then 'text-[#00b69b]' when 'red' then 'text-red-500' else 'text-slate-900' end %>"><%= stat[:value] %></p>
                 <p class="mt-1 text-[12px] text-slate-600"><%= stat[:label] %></p>
-                <div class="mt-2 h-px w-full bg-slate-200"></div>
+                <div class="mt-2 h-px w-full bg-sky-700"></div>
               </div>
             <% end %>
           </div>
