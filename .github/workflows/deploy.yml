@@ -53,5 +53,7 @@ jobs:
             OPENAI_KEY=${{ secrets.OPENAI_KEY }}
           cmd: |
             cd /root/lisa
+            git checkout -- docker-compose.yml
+            git clean -fd
             git pull origin master
             docker compose up -d --build

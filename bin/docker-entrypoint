@@ -1,7 +1,8 @@
 #!/bin/bash -e
 
-# If running the rails server then create or migrate existing database
-if [[ "$*" == *"bin/rails server"* ]]; then
+# Catch if the command contains 'server' or 'thrust'
+if [[ "$*" == *"server"* ]] || [[ "$*" == *"thrust"* ]]; then
+  echo "Preparing database..."
   ./bin/rails db:prepare
 fi
 
