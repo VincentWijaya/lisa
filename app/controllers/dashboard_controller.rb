@@ -21,7 +21,7 @@ class DashboardController < ApplicationController
       {
         title:    t("dashboard.cards.pending_specimens"),
         value:    stats[:pending_specimens],
-        subtitle: t("dashboard.cards.pending_specimens_sub"),
+        subtitle: t("dashboard.cards.pending_specimens_sub", percentage: stats[:pending_specimens_pct]),
         subtitle_tone: "rose",
         icon:     "ic-pending-specimen.svg"
       },
@@ -42,7 +42,7 @@ class DashboardController < ApplicationController
       {
         title:    t("dashboard.cards.validated_works"),
         value:    stats[:validated_works],
-        subtitle: t("dashboard.cards.validated_works_sub"),
+        subtitle: t("dashboard.cards.validated_works_sub", percentage: stats[:validated_works_pct]),
         subtitle_tone: "emerald",
         icon:     "ic-work-validated.svg"
       },
@@ -135,13 +135,34 @@ class DashboardController < ApplicationController
     work_counts     = Work.for_range(start_date, end_date).group(:status).count
     specimen_counts = Specimen.for_range(start_date, end_date).group(:status).count
 
+    yesterday = Date.current - 1
+    yesterday_work_counts     = Work.for_range(yesterday, yesterday).group(:status).count
+    yesterday_specimen_counts = Specimen.for_range(yesterday, yesterday).group(:status).count
+
+    pending_now  = specimen_counts["pending"] || 0
+    pending_yest = yesterday_specimen_counts["pending"] || 0
+
+    validated_now  = work_counts["validated"] || 0
+    validated_yest = yesterday_work_counts["validated"] || 0
+
     {
-      pending_specimens:     specimen_counts["pending"] || 0,
-      in_progress_specimens: specimen_counts["in_progress"] || 0,
-      complete_specimens:    specimen_counts["complete"] || 0,
-      validated_works:       work_counts["validated"] || 0,
-      verified_works:        work_counts["verified"] || 0,
-      total_works:           Work.for_range(start_date, end_date).count
+      pending_specimens:           pending_now,
+      in_progress_specimens:      specimen_counts["in_progress"] || 0,
+      complete_specimens:         specimen_counts["complete"] || 0,
+      validated_works:            validated_now,
+      verified_works:             work_counts["verified"] || 0,
+      total_works:                Work.for_range(start_date, end_date).count,
+      pending_specimens_pct:      calc_change(pending_now, pending_yest),
+      validated_works_pct:        calc_change(validated_now, validated_yest)
     }
+  end
+
+  def calc_change(current, previous)
+    return "0%" if previous.zero? && current.zero?
+    return "+100%" if previous.zero? && current.positive?
+    return "-100%" if current.zero? && previous.positive?
+
+    pct = ((current - previous).to_f / previous * 100).round(1)
+    pct > 0 ? "+#{pct}%" : "#{pct}%"
   end
 end
