@@ -91,3 +91,7 @@
 .claude/plans/*
 
 opencode*
+
+.build.log
+db:prepare
+environment
