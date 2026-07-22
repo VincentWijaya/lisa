@@ -133,7 +133,6 @@
       </div>
       <hr class="border-blue-600" />
       <dl class="space-y-3 text-sm">
-        <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-700"><%= t("specimens.show.fields.lab_id") %></dt><dd class="text-slate-900"><%= @specimen.lab_id %></dd></div>
         <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-700"><%= t("specimens.show.fields.medical_record") %></dt><dd class="text-slate-900"><%= @specimen.medical_record_id %></dd></div>
         <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-700"><%= t("specimens.show.fields.collected_at") %></dt><dd class="text-slate-900"><%= @specimen.collection_datetime ? l(@specimen.collection_datetime, format: :short_with_year) : "-" %></dd></div>
         <div class="flex items-center justify-between gap-4"><dt class="font-medium text-slate-700"><%= t("specimens.show.fields.dianognes") %></dt><dd class="text-slate-900"><%= @specimen.dianognes.presence || "-" %></dd></div>
