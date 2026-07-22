@@ -91,13 +91,13 @@ module SpecimensHelper
 
   # Returns "*" flag for abnormal/critical interpretation (matching lab report convention).
   def result_flag(interpretation)
-    switch interpretation:
-    case abnormal:
+    case interpretation
+    when "abnormal"
       return "H"
-    case critical:
+    when "critical"
       return "L"
-    default:
-    return ""
+    else
+      return ""
     # %w[abnormal critical].include?(interpretation) ? "*" : ""
   end
 end
