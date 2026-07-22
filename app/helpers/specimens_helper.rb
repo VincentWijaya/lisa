@@ -99,5 +99,6 @@ module SpecimensHelper
     else
       return ""
     # %w[abnormal critical].include?(interpretation) ? "*" : ""
+    end
   end
 end
